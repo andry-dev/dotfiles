@@ -1,6 +1,6 @@
 #!/bin/sh
 
-alias sudo='doas'
+#alias sudo='doas'
 alias clang='clang'
 alias ll='ls -lah'
 alias cp='rsync -avh --no-compress --progress'
