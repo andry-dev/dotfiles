@@ -1,0 +1,40 @@
+source $HOME/.profile
+source $HOME/.config/shell/functions
+source $HOME/.config/shell/alias
+
+PS1="%~ $(chk_current_sh zsh)%% "
+HISTFILE=
+HISTSIZE=1000
+SAVEHIST=
+unsetopt autocd beep
+bindkey -e
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey "^L" clear-screen
+
+p_wrap() {
+    p
+    zle reset-prompt
+}
+
+zle -N p "p_wrap"
+bindkey "^P" p
+
+open-dolphin() {
+    dolphin . > /dev/null 2>&1  &
+    zle reset-prompt
+}
+
+zle -N open-dolphin
+bindkey "^F" open-dolphin
+
+backward-kill-dir () {
+    local WORDCHARS=${WORDCHARS/\/}
+    zle backward-kill-word
+}
+
+# Make Meta-BS work like other shells
+zle -N backward-kill-dir
+bindkey '^[^?' backward-kill-dir
+
+eval "$(zoxide init zsh)"

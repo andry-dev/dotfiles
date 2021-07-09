@@ -1,0 +1,105 @@
+*auto-themes.txt*      Lua plugin for switching themes based on the current time
+*auto-themes.nvim*
+
+
+
+CONTENTS                                                *auto-themes-contents*
+Introduction                                            |auto-themes-intro|
+Quickstart                                              |auto-themes-quickstart|
+Callbacks                                               |auto-themes-callbacks|
+Merging configs                                         |auto-themes-merge|
+
+==============================================================================
+INTRODUCTION                                            *auto-themes-intro*
+
+This is a neovim plugin written in Lua for changing the colorscheme based on
+the current system time.
+
+==============================================================================
+QUICKSTART                                              *auto-themes-quickstart*
+
+First of all, generate a configuration for the themes: >
+
+    local config = require'themes'.setup{
+        -- Time in 24 hours when the day starts
+        daystart = 8,
+
+        -- Time in 24 hours when the day ends and night starts
+        dayend = 19,
+
+        -- Callback that returns the name of the theme to set during the day
+        light = function() return 'daytime-colorscheme-name' end,
+
+        -- Callback that returns the name of the theme to set during the night
+        dark = function() return  'nighttime-colorscheme-name' end
+    }
+<
+
+Then set the theme with `.set()`: >
+
+    config.set()
+<
+It should be noted that this configuration is not global. This plugin does not
+handle global state, the returned table is an instance of a configuration.
+To make it a global configuration (so that you can modify it by using
+`:lua config.dark = ...`) just don't make it `local`: >
+
+    config = require'themes'.setup{ ... }
+<
+==============================================================================
+CALLBACKS                                               *auto-themes-callbacks*
+
+A callback for a theme is a function that takes no arguments and returns the
+name of the theme as a string: >
+
+    function()
+        return 'colorscheme-name'
+    end
+<
+
+It's a function because some themes require special configuration other than
+setting them with `:colorscheme ...`, so you can put the required commands
+before the return: >
+
+    require'themes'.setup{
+        -- ...
+
+        light = function()
+            vim.o.background = 'light'
+            return 'solarized'
+        end,
+
+        dark = function()
+            vim.o.background = 'dark'
+            return 'solarized'
+        end
+
+        -- ...
+    }
+<
+
+In this case, the solarized theme switches its colors based on |'background'|,
+so just change it before the return.
+
+==============================================================================
+MERGING CONFIGS                                         *auto-themes-merge*
+
+Sometimes you may want to copy an existing configuration and change some
+options without touching others. The `setup` function can help you with that
+too: >
+
+    local main_config = require'themes'.setup{
+        -- Set some options
+        -- ...
+    }
+
+    -- Copy the previous configuration
+    local secondary_config = require'themes'.setup{main_config}
+
+    -- Override some options in the new config
+    secondary_config.daystart = 7
+    secondary_config.dark = function() return 'moonfly' end
+<
+
+
+ vim:tw=78:ts=8:noet:ft=help:norl:cc=78

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+until "${@}"
+do
+  echo "Failed, trying again"
+  sleep 2
+done

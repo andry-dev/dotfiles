@@ -1,0 +1,36 @@
+URxvt.font: xft:Terminus:size=12
+
+URxvt*.foreground:   #b9b9b9
+URxvt*.background:   #101010
+URxvt*.cursorColor:  #b9b9b9
+
+URxvt*.color0:       #101010
+URxvt*.color8:       #525252
+
+URxvt*.color1:       #7c7c7c
+URxvt*.color9:       #7c7c7c
+
+URxvt*.color2:       #8e8e8e
+URxvt*.color10:      #8e8e8e
+
+URxvt*.color3:       #a0a0a0
+URxvt*.color11:      #a0a0a0
+
+URxvt*.color4:       #686868
+URxvt*.color12:      #686868
+
+URxvt*.color5:       #747474
+URxvt*.color13:      #747474
+
+URxvt*.color6:       #868686
+URxvt*.color14:      #868686
+
+URxvt*.color7:       #b9b9b9
+URxvt*.color15:      #f7f7f7
+
+URxvt*scrollBar: false
+URxvt*visualBell: false
+
+Xcursor.theme: Yaru++
+Xcursor.size: 24
+Xft.dpi: 92

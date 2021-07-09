@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. $HOME/.profile
+
+exec schedule-at set-night-theme 19:00

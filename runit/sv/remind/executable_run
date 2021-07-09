@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec remind -z -m ~/.reminders

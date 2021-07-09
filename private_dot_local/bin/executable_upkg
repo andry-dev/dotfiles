@@ -1,0 +1,3 @@
+#!/bin/sh
+
+doas xbps-install $@ $(cat $HOME/.local/dotfiles/void-pkgs)

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+job_info_dir="/tmp/schedule-at/$(id -u)"
+mkdir -p "${job_info_dir}"
+
+job_file="${job_info_dir}/$1"
+
+if [ ! -f "${job_file}" ]; then
+    touch "${job_file}"
+fi
+
+
+arg_hour=$(echo "$2" | cut -f 1 -d ':')
+arg_min=$(echo "$2" | cut -f 2 -d ':')
+
+done_once=0
+
+while true; do
+    # Extract last touch time
+    last_touch=$(date -r "${job_file}" "+%d:%H:%M")
+
+    current_day=$(date "+%d")
+
+    last_day=$(echo "${last_touch}" | cut -f 1 -d ':')
+    last_hour=$(echo "${last_touch}" | cut -f 2 -d ':')
+    last_min=$(echo "${last_touch}" | cut -f 3 -d ':')
+
+    if [ "${last_hour}" -ge "${arg_hour}" ] &&
+        [ "${last_min}" -ge "${arg_min}" ] &&
+        [ "${last_day}" -ge "${current_day}" ]; then
+        if [ ${done_once} -eq 0 ]; then
+            $1
+            done_once=1
+            echo "Executed $1"
+        fi
+    else
+        touch "${job_file}"
+        done_once=0
+        echo "Touch!"
+    fi
+
+
+    sleep 60
+done

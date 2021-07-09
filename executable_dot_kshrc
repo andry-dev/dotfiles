@@ -1,0 +1,16 @@
+# shellcheck shell=ksh
+
+#relative_pwd() {
+#    if [ "${PWD:0:${#HOME}}" = "$HOME" ]
+#    then
+#            echo "~${PWD:${#HOME}}"
+#    else
+#            echo "$PWD"
+#    fi
+#}
+
+. "$HOME/.config/shell/functions"
+
+export PS1="\w $(chk_current_sh ksh)% "
+bind '^L=clear-screen'
+set -o emacs

@@ -1,0 +1,34 @@
+#!/bin/sh
+
+case "${1%%:*}" in
+    http|https)
+        exec firefox "$1"
+        ;;
+    smb)
+        exec dolphin "$1"
+        ;;
+    *.zip|*.7z|*.rar)
+        exec ark "$1"
+        ;;
+    *.pdf|*.epub|*.dvi|*.ps)
+        exec okular "$1"
+        ;;
+    *.exe|*.msi)
+        exec wine64 "$1"
+        ;;
+    *.png|*.jpg|*.jpeg|*.gif)
+        exec gwenview "$1"
+        ;;
+    *.mp4|*.mov|*.mkv)
+        exec mpv "$1"
+        ;;
+    steam)
+        exec steam "$1"
+        ;;
+    mailto)
+        exec thunderbird "$1"
+        ;;
+    *)
+        exec /usr/bin/xdg-open "$@"
+        ;;
+esac

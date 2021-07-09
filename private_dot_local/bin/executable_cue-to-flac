@@ -1,0 +1,9 @@
+#!/bin/sh
+
+shnsplit -f "$1" -t "%n - %t" -o flac "$2"
+
+mv "$2" "$2.bak"
+
+cuetag.sh "$1" *.flac
+
+mv "$1" "$1.fuckoff"

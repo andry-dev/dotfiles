@@ -1,0 +1,15 @@
+set $mod Mod4
+set $menu dmenu-wl_path | dmenu-wl | xargs swaymsg exec --
+
+output * {
+    bg ~/Pictures/marisa.png fill
+}
+
+input "2:7:SynPS/2_Synaptics_TouchPad" {
+    #accel_profile flat
+    pointer_accel -0.25
+    tap disabled
+    natural_scroll enabled
+    middle_emulation enabled
+    dwt enabled
+}

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#export RADV_PERFTEST=aco
+export PATH="$PATH:$HOME/.gem/ruby/2.7.0/bin"

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+alacritty -t "Note" -e nvim

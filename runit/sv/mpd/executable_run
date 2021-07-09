@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sv check pulseaudio >/dev/null || sv check pipewire-pulse || exit 1
+
+exec mpd --no-daemon

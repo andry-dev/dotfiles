@@ -1,0 +1,23 @@
+#!/bin/sh
+
+chk_current_sh() {
+    if [ $(basename "$SHELL") != "$1" ]; then
+	echo "[$1] "
+    else
+	echo ""
+    fi
+}
+
+cdlastex() {
+    cd "$(cat .lastexer)" || return
+}
+
+p() {
+    cd "$(select-prj)" || return
+}
+
+wlinit() {
+    . "$HOME/.wlprofile"
+
+    exec dbus-run-session -- runsvdir -P "$HOME/runit/wlservice"
+}

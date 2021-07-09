@@ -1,0 +1,8 @@
+#!/bin/sh
+
+. "$HOME/.wlprofile"
+
+runsvdir -P ~/runit/wlservice &
+sv restart ~/runit/wlservice/* &
+
+exec /usr/bin/sway

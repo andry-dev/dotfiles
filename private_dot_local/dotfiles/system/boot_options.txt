@@ -1,0 +1,8 @@
+Standard:
+splash quiet loglevel=0 udev.log_priority=0 vga=current rd.driver.pre=vfio-pci amd_iommu=on iommu=1 iommu=pt amdgpu.dc=1 resume=UUID=<snip> resume_offset=<snip> vfio-pci.ids=1002:67df,1002:aaf0 scsi_mod.use_blk_mq=1 elevator=bfq nowatchdog
+
+Debug:
+ro loglevel=7 rd.driver.pre=vfio-pci amd_iommu=on iommu=1 iommu=pt amdgpu.dc=0 resume=UUID=<snip> resume_offset=<snip> vfio-pci.ids=1002:67df,1002:aaf0 scsi_mod.use_blk_mq=1 elevator=bfq
+
+Recovery:
+ro loglevel=7 rd.shell rd.debug rd.break

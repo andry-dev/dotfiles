@@ -1,0 +1,9 @@
+# .bashrc
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+. "$HOME/.config/shell/functions"
+. "$HOME/.config/shell/alias"
+
+PS1="\w $(chk_current_sh bash)% "

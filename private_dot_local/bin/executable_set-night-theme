@@ -1,0 +1,11 @@
+#!/bin/bash
+
+alacritty-set-night
+
+#KDE_THEME_CONFIG=$HOME/.config/kdeglobals
+#rm $KDE_THEME_CONFIG
+#cp /usr/share/color-schemes/BreezeDark.colors $KDE_THEME_CONFIG
+
+sed -i 's@^Net/ThemeName .*$@Net/ThemeName "Yaru-dark"@' $HOME/.xsettingsd
+
+kill -HUP $(pgrep xsettingsd)

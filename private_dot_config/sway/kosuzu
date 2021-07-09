@@ -1,0 +1,25 @@
+set $mod Mod1
+set $menu wofi --show drun
+
+output * {
+	mode 1920x1080@144Hz
+}
+
+input "1133:16514:Logitech_MX_Master_3" {
+	pointer_accel 0
+	accel_profile flat
+}
+
+#exec runsvdir -P ~/runit/service
+
+exec /usr/libexec/gsd-xsettings
+
+set $gnome-schema org.gnome.desktop.interface
+exec_always {
+	gsettings set $gnome-schema gtk-theme 'Adwaita'
+	gsettings set $gnome-schema icon-theme 'Yaru++'
+	gsettings set $gnome-schema cursor-theme 'Yaru++'
+}
+#gsettings set $gnome-schema font-name 'Your font name'
+
+bindsym Mod4+l exec swaylock

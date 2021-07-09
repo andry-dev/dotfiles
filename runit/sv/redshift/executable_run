@@ -1,0 +1,8 @@
+#!/bin/sh
+
+pgrep X > /dev/null || exit 1
+
+export DISPLAY=:0
+export XAUTHORITY="/home/andry/.Xauthority"
+
+exec redshift > /dev/null

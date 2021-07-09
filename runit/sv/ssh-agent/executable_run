@@ -1,0 +1,4 @@
+#!/usr/bin/sh
+
+export SSH_AUTH_SOCK=${XDG_RUNTIME_DIR}/ssh-agent.socket
+/usr/bin/ssh-agent -D -a ${SSH_AUTH_SOCK}

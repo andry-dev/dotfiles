@@ -1,0 +1,5 @@
+#!/bin/sh
+
+[ -r conf ] && . ./conf
+
+exec xss-lock ${LOCKER} 1>&2

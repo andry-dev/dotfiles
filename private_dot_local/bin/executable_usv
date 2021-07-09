@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if ! sv $1 ~/runit/service/$2; then
+    sv $1 ~/runit/xservice/$2
+fi

@@ -1,0 +1,7 @@
+auto-themes-callbacks	auto-themes.txt	/*auto-themes-callbacks*
+auto-themes-contents	auto-themes.txt	/*auto-themes-contents*
+auto-themes-intro	auto-themes.txt	/*auto-themes-intro*
+auto-themes-merge	auto-themes.txt	/*auto-themes-merge*
+auto-themes-quickstart	auto-themes.txt	/*auto-themes-quickstart*
+auto-themes.nvim	auto-themes.txt	/*auto-themes.nvim*
+auto-themes.txt	auto-themes.txt	/*auto-themes.txt*

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. $HOME/.profile
+
+exec schedule-at set-day-theme 07:00

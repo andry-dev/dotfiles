@@ -1,0 +1,8 @@
+#!/bin/sh
+
+. "$HOME/.guiprofile"
+
+xrdb ~/.Xresources
+export SVDIR=~/runit/xservice
+
+. "$HOME/.config/m/$(hostname)/.xprofile"
