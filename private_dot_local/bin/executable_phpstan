@@ -1,0 +1,4 @@
+#!/bin/sh
+
+
+podman run -v "$PWD:/app" --rm ghcr.io/phpstan/phpstan "$@"

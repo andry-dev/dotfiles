@@ -2,4 +2,4 @@
 
 config="/home/andry/.config/alacritty/alacritty.yml"
 
-sed -i 's/^colors:.*$/colors: \*iterm_day/' ${config}
+sed -i 's/^colors:.*$/colors: \*acme/' ${config}

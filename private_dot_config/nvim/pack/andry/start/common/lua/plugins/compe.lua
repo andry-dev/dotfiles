@@ -1,31 +1,41 @@
-require'compe'.setup {
-  enabled = true,
-  autocomplete = true,
-  debug = false,
-  min_length = 1,
-  preselect = 'enable',
-  throttle_time = 80,
-  source_timeout = 200,
-  incomplete_delay = 400,
-  allow_prefix_unmatch = false,
-  documentation = {
-    border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
-    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-    max_width = 120,
-    min_width = 60,
-    max_height = math.floor(vim.o.lines * 0.3),
-    min_height = 1,
-  },
+local cmp = require'cmp'
+cmp.setup({
 
-  source = {
-    path = true,
-    -- buffer = true,
-    -- vsnip = true,
-    nvim_lsp = true,
-    -- nvim_lua = true,
-    spell = false,
-    snippets_nvim = true,
-    vim_dadbod_completion = true,
-    calc = true,
-  },
-}
+    mapping = {
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.close(),
+        ['<CR>'] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+        }),
+    },
+
+    formatting = {
+      format = function(entry, vim_item)
+        -- fancy icons and a name of kind
+        -- vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
+
+        -- set a name for each source
+        vim_item.menu = ({
+          buffer = "[Buffer]",
+          nvim_lsp = "[LSP]",
+          luasnip = "[LuaSnip]",
+          nvim_lua = "[Lua]",
+          latex_symbols = "[Latex]",
+        })[entry.source.name]
+        return vim_item
+      end,
+    },
+
+    sources = {
+        { name = 'path' },
+        -- buffer = true,
+        -- vsnip = true,
+        { name = 'nvim_lsp' },
+        -- { name = 'nvim_lua'},
+        -- { name = 'snippets_nvim'},
+        -- { name = 'vim_dadbod_completion'},
+    },
+})

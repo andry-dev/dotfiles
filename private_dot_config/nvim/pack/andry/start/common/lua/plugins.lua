@@ -7,16 +7,29 @@ return packer.startup(function()
     use {'wbthomason/packer.nvim', opt = true}
     use {'svermeulen/vimpeccable'}
 
-    -- use { 'camspiers/snap', rocks = {'fzy'} }
-
     use {'neovim/nvim-lspconfig', as = 'nvim-lspconfig'}
     use {'kabouzeid/nvim-lspinstall'}
+    use {'ray-x/lsp_signature.nvim'}
 
     use {'mfussenegger/nvim-jdtls', opt = true, ft = {"java"}}
 
     use {'nvim-lua/plenary.nvim'}
 
+    -- use {'jubnzv/virtual-types.nvim'}
+
+    use {
+        'jose-elias-alvarez/null-ls.nvim',
+         requires = {
+            'nvim-lua/plenary.nvim',
+            'neovim/nvim-lspconfig',
+         }
+     }
+
+    use {'folke/trouble.nvim'}
+
     use {'simrat39/symbols-outline.nvim'}
+
+    use { 'michaelb/sniprun', run = 'bash ./install.sh'}
 
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -28,33 +41,44 @@ return packer.startup(function()
         'nvim-treesitter/nvim-treesitter-textobjects',
         requires = 'nvim-treesitter/nvim-treesitter'
     }
-    -- use {'nvim-treesitter/nvim-tree-docs', requires = 'nvim-treesitter/nvim-treesitter'}
+
     use {
         'nvim-treesitter/nvim-treesitter-refactor',
         requires = 'nvim-treesitter/nvim-treesitter'
     }
 
-    -- Still can't decide which one to use
-    use {'puremourning/vimspector'}
+    use {'mfussenegger/nvim-dap'}
 
     use {
-        'mfussenegger/nvim-dap',
-        as = 'nvim-dap',
-        {
-            'theHamsta/nvim-dap-virtual-text',
-            requires = {'nvim-dap', 'nvim-treesitter/nvim-treesitter'}
+        "theHamsta/nvim-dap-virtual-text",
+        requires = {
+            "mfussenegger/nvim-dap",
+            "nvim-treesitter/nvim-treesitter",
+        }
+    }
+
+    use {
+        "rcarriga/nvim-dap-ui",
+        requires = {
+            "mfussenegger/nvim-dap"
         }
     }
 
     use {'tjdevries/nlua.nvim'}
 
-    use {'robertmeta/nofrils'}
+    use {'~/prj/nofrils'}
 
     -- use {'lervag/vimtex', ft = {'tex'}}
 
     use {'prabirshrestha/async.vim'}
 
-    use {'hrsh7th/nvim-compe'}
+    use {
+        'hrsh7th/nvim-cmp',
+        requires = {
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-nvim-lsp'
+        }
+   }
 
     use {'junegunn/fzf', as = 'fzf', {'junegunn/fzf.vim', requires = 'fzf'}}
 
@@ -70,9 +94,12 @@ return packer.startup(function()
         cmd = {'Dispatch', 'Make', 'Focus', 'Start'}
     }
 
-    use {'tpope/vim-fugitive', {
+    use {
+        'tpope/vim-fugitive',
+        {
         'tpope/vim-rhubarb'
-    }}
+        }
+    }
 
     use {'junegunn/gv.vim', requires = 'tpope/vim-fugitive'}
 
@@ -99,6 +126,7 @@ return packer.startup(function()
     -- I don't personally use them
     use {'bluz71/vim-moonfly-colors'}
     use {'gruvbox-community/gruvbox'}
+    use {'sainnhe/everforest'}
     -- use {'JaySandhu/xcode-vim'}
 
     use {'norcalli/snippets.nvim'}
@@ -106,4 +134,6 @@ return packer.startup(function()
     use {'vimwiki/vimwiki', {'tools-life/taskwiki'}}
 
     use {'b3nj5m1n/kommentary'}
+
+    use {'tami5/sqlite.lua'}
 end)

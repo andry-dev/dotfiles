@@ -2,6 +2,8 @@
 
 alacritty-set-night
 
+kitty +kitten themes --reload-in=all Everforest-dark
+
 #KDE_THEME_CONFIG=$HOME/.config/kdeglobals
 #rm $KDE_THEME_CONFIG
 #cp /usr/share/color-schemes/BreezeDark.colors $KDE_THEME_CONFIG

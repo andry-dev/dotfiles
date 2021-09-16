@@ -1,4 +1,36 @@
-URxvt.font: xft:Terminus:size=12
+XTerm.vt100.faceName: monospace:size=10:antialias=true
+XTerm.vt100.locale: false
+XTerm.vt100.utf8: true
+
+// XTerm.vt100.foreground:   #b9b9b9
+// XTerm.vt100.background:   #101010
+// XTerm.vt100.cursorColor:  #b9b9b9
+// 
+// XTerm.vt100.color0:       #101010
+// XTerm.vt100.color8:       #525252
+// 
+// XTerm.vt100.color1:       #7c7c7c
+// XTerm.vt100.color9:       #7c7c7c
+// 
+// XTerm.vt100.color2:       #8e8e8e
+// XTerm.vt100.color10:      #8e8e8e
+// 
+// XTerm.vt100.color3:       #a0a0a0
+// XTerm.vt100.color11:      #a0a0a0
+// 
+// XTerm.vt100.color4:       #686868
+// XTerm.vt100.color12:      #686868
+// 
+// XTerm.vt100.color5:       #747474
+// XTerm.vt100.color13:      #747474
+// 
+// XTerm.vt100.color6:       #868686
+// XTerm.vt100.color14:      #868686
+// 
+// XTerm.vt100.color7:       #b9b9b9
+// XTerm.vt100.color15:      #f7f7f7
+
+URxvt.font: xft:monospace:size=12
 
 URxvt*.foreground:   #b9b9b9
 URxvt*.background:   #101010

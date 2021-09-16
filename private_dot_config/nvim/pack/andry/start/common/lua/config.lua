@@ -22,16 +22,17 @@ local default_theme_config = require'themes'.setup {
 -- Theme configuration for screenshots and such
 local pretty_theme_config = require'themes'.setup {default_theme_config}
 
-pretty_theme_config.dark = "moonfly"
+pretty_theme_config.dark = "everforest"
 
 pretty_theme_config.dark_fn = function()
+    vim.g.everforest_background = "soft"
     vim.o.background = "dark"
 end
 
-pretty_theme_config.light = "gruvbox"
+pretty_theme_config.light = "everforest"
 
 pretty_theme_config.light_fn = function()
-    vim.g.gruvbox_contrast_light = "hard"
+    vim.g.everforest_background = "hard"
     vim.o.background = "light"
 end
 
@@ -75,7 +76,7 @@ vimp.nnoremap('<C-b>', ':Buffers<CR>')
 vimp.nnoremap('<C-h>', '<C-w>h')
 vimp.nnoremap('<C-j>', '<C-w>j')
 vimp.nnoremap('<C-k>', '<C-w>k')
-vimp.nnoremap('<C-l>', '<C-w>l')
+vimp.nnoremap({'override'}, '<C-l>', '<C-w>l')
 vimp.nnoremap('Q', 'q')
 vimp.cnoremap('Q', 'q')
 
@@ -106,15 +107,25 @@ vimp.inoremap({'expr'}, '<Tab>', function()
     end
 end)
 
-vimp.inoremap({'expr'}, '<S-Tab>', function()
-    if vim.fn.pumvisible() == 1 then
+vimp.inoremap({'expr', 'silent'}, '<S-Tab>', function()
+    if vim.fn.pumvisible() ~= 0 then
         return [[<C-p>]]
     else
         return [[<S-Tab>]]
     end
 end)
 
-vimp.nnoremap({'expr'}, '<CR>', function()
+vimp.inoremap({'expr', 'silent'}, '<CR>', function()
+    if vim.fn.pumvisible() ~= 0 then
+        if vim.fn.complete_info()["selected"] ~= -1 then
+            return vim.fn["compe#confirm"]()
+        end
+    end
+
+    return "<CR>"
+end)
+
+vimp.nnoremap({'expr', 'silent'}, '<CR>', function()
     vim.cmd [[nohlsearch]]
     return "<CR>"
 end)
@@ -166,3 +177,6 @@ vimp.nnoremap('<Leader>dr', ':call vimspector#Restart()<CR>')
 -- Iron
 vimp.xnoremap('<Leader>is', '<Plug>(iron-visual-send)')
 vimp.nnoremap('<Leader>is', '<Plug>(iron-send-line)')
+
+-- Vimwiki
+vimp.nnoremap('<Leader>wc', require('plugins/vimwiki-utils').compile)

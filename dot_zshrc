@@ -2,7 +2,7 @@ source $HOME/.profile
 source $HOME/.config/shell/functions
 source $HOME/.config/shell/alias
 
-PS1="%~ $(chk_current_sh zsh)%% "
+PS1="%B%~ $(chk_current_sh zsh)%% %b"
 HISTFILE=
 HISTSIZE=1000
 SAVEHIST=

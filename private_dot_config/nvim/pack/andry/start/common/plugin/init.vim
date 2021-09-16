@@ -14,6 +14,8 @@ lua << EOF
     require 'plugins/comment'
     -- require 'plugins/snap'
 
+    require('focus').setup()
+
     require 'config'
 EOF
 
@@ -75,11 +77,30 @@ let g:cmake_generate_options = ['-G Ninja']
 " Tex
 let g:tex_flavor="latex"
 
+" fn
+function! FocusHLCompl()
+    return luaeval("vim.tbl_keys(require('focus').config.colors)")
+endfunction()
+
+function! FocusHL()
+    return luaeval("vim.tbl_keys(require('focus').config.colors)")
+endfunction()
+
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+
 " Commands
 command! ExecUnderLine :execute getline(".")
 command! ExecSelection :execute getreg("*")
 command! OpenPlugFolder :Dispatch! dolphin ~/.config/nvim/pack/andry/start
 command! EditPlugin :FZF ~/.config/nvim/pack/andry/start
+
+command! -range -nargs=1 -complete=customlist,andry#focus_hl_complete FocusHL  :call andry#focus_hl(<f-args>)
+
 
 command! SetExecutableFlag :call andry#set_executable_flag()
 
@@ -93,8 +114,10 @@ command! E :e suda://%
 command! DefaultTheme :call andry#set_default_theme()
 command! PrettyTheme :call andry#set_pretty_theme()
 
-command! EnableAutoformat :lua require 'globals'.enable_autoformat(true)
-command! DisableAutoformat :lua require 'globals'.enable_autoformat(false)
+command! EnableAutoformat :lua require('globals').enable_autoformat(true)
+command! DisableAutoformat :lua require('globals').enable_autoformat(false)
+
+command! AsyncVimwiki2HTML :lua require('plugins/vimwiki-utils').compile()
 
 " command! AsyncW2HTML :lua require('plugins/vimwiki-utils').compile_async()
 
@@ -107,6 +130,9 @@ au BufRead,BufNewFile *.ex,*.exs setlocal filetype=elixir
 
 " Fix LaTeX filetypes
 au BufRead,BufNewFile *.cls setlocal filetype=tex
+
+" Async Vimwiki compilation
+au BufWritePost *.wiki :AsyncVimwiki2HTML
 
 " Diagnostics
 " au CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
@@ -122,5 +148,7 @@ au BufRead,BufNewFile *.cls setlocal filetype=tex
 " Java JDT
 augroup lsp
     autocmd!
-    autocmd FileType java lua require('jdtls').start_or_attach({cmd = {'java-jdtls.sh'}, on_attach = require('plugins/lsp').on_attach})
+    autocmd FileType java lua require('plugins/lsp').start_jdtls()
+    autocmd FileType java
+        \ autocmd! lsp BufWritePre <buffer> lua require('jdtls').organize_imports()
 augroup END

@@ -13,3 +13,16 @@ alias gre='git remote'
 alias gpl='git pull'
 alias gps='git push'
 alias mkdir='mkdir -p'
+
+# Error correction
+
+alias daos='doas'
+alias sduo='sudo'
+
+
+# Programs that I don't want to install
+
+alias butane='podman run --rm --tty --interactive \
+              --security-opt label=disable        \
+              --volume ${PWD}:/pwd --workdir /pwd \
+              quay.io/coreos/butane:release'

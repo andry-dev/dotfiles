@@ -27,6 +27,8 @@ vim.lsp.handlers["textDocument/formatting"] =
     end
 
 local custom_attach = function(client)
+    -- require('lsp_signature').on_attach()
+    -- require('virtualtypes').on_attach()
     if client.resolved_capabilities.document_formatting then
         vim.cmd [[augroup Format]]
         vim.cmd [[autocmd! * <buffer>]]
@@ -36,6 +38,8 @@ local custom_attach = function(client)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+--[[
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.resolveSupport = {
   properties = {
@@ -44,6 +48,7 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
     'additionalText'
   }
 }
+--]]
 
 lsp.solargraph.setup {on_attach = custom_attach}
 
@@ -83,12 +88,13 @@ lsp.intelephense.setup {
     capabilities = capabilities
 }
 
+--[[
 lsp.sqlls.setup {
     on_attach = custom_attach,
-    capabilities = capabilities
-    -- cmd = {'sql-language-server', 'up', '--method', 'stdio'}
+    capabilities = capabilities,
+    cmd = {'sql-language-server', 'up', '--method', 'stdio'}
 }
-
+--]]
 
 require('nlua.lsp.nvim').setup(lsp, {
     cmd = {globals.sumneko_binary, "-E", globals.sumneko_basepath .. "/main.lua"},
@@ -117,7 +123,7 @@ lsp.cssls.setup {
 
 }
 
-lsp.pyls.setup {
+lsp.pylsp.setup {
     on_attach = custom_attach,
     capabilities = capabilities
 }
@@ -125,14 +131,6 @@ lsp.pyls.setup {
 lsp.yamlls.setup {
     on_attach = custom_attach,
     capabilities = capabilities
-}
-
-lsp.efm.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities,
-    filetypes = {
-        "vim", "json", "html", "yaml", "css", "go", "sh", "javascript"
-    }
 }
 
 lsp.vuels.setup {
@@ -145,7 +143,14 @@ lsp.texlab.setup {
     capabilities = capabilities,
     settings = {
         latex = {
-            build = {onSave = true, forwardSearchAfter = true},
+            build = {
+                onSave = true,
+                forwardSearchAfter = true,
+                executable = "latexmk",
+                args = {
+                    "-xelatex", "%f"
+                },
+            },
             forwardSearch = {
                 executable = "okular",
                 args = {"--unique", "file:%p#src:%l%f"}
@@ -155,13 +160,90 @@ lsp.texlab.setup {
     }
 }
 
+local null_ls = require('null-ls')
+
+null_ls.config({
+    sources = {
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.formatting.stylua.with({
+            extra_args = {"--indent-type Spaces"}
+        }),
+
+        --[[
+        null_ls.builtins.formatting.isort,
+        null_ls.builtins.formatting.autopep8,
+        --]]
+
+        --null_ls.builtins.formatting.sqlformat,
+        null_ls.builtins.diagnostics.shellcheck,
+        --null_ls.builtins.diagnostics.flake8,
+        null_ls.builtins.diagnostics.eslint_d,
+        null_ls.builtins.diagnostics.hadolint,
+        --null_ls.builtins.diagnostics.selene,
+        null_ls.builtins.diagnostics.phpstan,
+    },
+})
+
+lsp['null-ls'].setup({
+    on_attach = custom_attach,
+    capabilities = capabilities
+})
+
 require('symbols-outline').setup({
     highlight_hovered_item = true,
     show_guides = true
 })
 
+require("trouble").setup {
+    icons = false,
+    fold_open = "*",
+    fold_closed = "-",
+    indent_lines = true,
+    use_lsp_diagnostic_signs = true,
+    signs = {
+        error = "[E]",
+        warning = "[W]",
+        hint = "?",
+        information = "!",
+        other = "`,:(",
+    }
+}
+
 -- require 'lspinstall'.setup()
 
+local M = {
+    on_attach = custom_attach
+}
+
+function M.start_jdtls()
+    --[[
+    local home = os.getenv('HOME')
+    local jar_patterns = {
+        '/.lsp/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar',
+    }
+
+    local bundles = {}
+
+    for _, jar_pattern in ipairs(jar_patterns) do
+        for _, bundle in ipairs(vim.split(vim.fn.glob(home .. jar_pattern), '\n')) do
+            table.insert(bundles, bundle)
+        end
+    end
+    --]]
+
+    local config = {
+        cmd = {'java-jdtls.sh'},
+        on_attach = custom_attach,
+        capabilities = capabilities,
+        --[[
+        init_options = {
+            bundles = bundles,
+        }
+        --]]
+    }
+
+    require('jdtls').start_or_attach(config)
+end
 
 -- Export my configuration to other modules just in case I need it elsewhere.
-return {on_attach = custom_attach}
+return M

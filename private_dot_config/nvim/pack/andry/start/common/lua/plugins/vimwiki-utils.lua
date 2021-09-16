@@ -1,13 +1,14 @@
+local async = require('plenary.async')
+
 local M = {}
 
---- Tries to async call Vimwiki2HTML
---- Right now it doesn't work
-function M.compile_async()
-    local fn = coroutine.create(function()
-        vim.cmd[[Vimwiki2HTML]]
-    end)
+--- Tries to async call VimwikiAll2HTML
+--- (doesn't work)
+M.compile = async.void(function()
+    local output = vim.api.nvim_exec('VimwikiAll2HTML', true)
+    vim.split(output, '\n')
 
-    coroutine.resume(fn)
-end
+    -- print(lines[#lines])
+end)
 
 return M

@@ -36,3 +36,15 @@ function! andry#setup_for_screenshots()
     exec "language " . saved_lang
     let &spell = saved_spell
 endfunction()
+
+function! andry#focus_hl(color)
+    call luaeval("require('focus'):add_range_highlight(_A)", a:color)
+endfunction()
+
+function! andry#remove_focus_hl()
+    call luaeval("require('focus'):(_A)", a:color)
+endfunction()
+
+function! andry#focus_hl_complete(A,L,P)
+    return luaeval("vim.tbl_keys(require('focus').config.colors)")
+endfunction()

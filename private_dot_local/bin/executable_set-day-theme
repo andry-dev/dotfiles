@@ -2,6 +2,8 @@
 
 alacritty-set-day
 
+kitty +kitten themes --reload-in=all Everforest-light
+
 #KDE_THEME_CONFIG=$HOME/.config/kdeglobals
 #rm $KDE_THEME_CONFIG
 #cp /usr/share/color-schemes/BreezeLight.colors $KDE_THEME_CONFIG
