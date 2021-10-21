@@ -14,13 +14,13 @@ function should_format()
 end
 
 vim.lsp.handlers["textDocument/formatting"] =
-    function(err, _, result, _, bufnr)
+    function(err, result, context, _)
         if err ~= nil or result == nil then return end
-        if not vim.api.nvim_buf_get_option(bufnr, "modified") then
+        if not vim.api.nvim_buf_get_option(context.bufnr, "modified") then
             local view = vim.fn.winsaveview()
-            vim.lsp.util.apply_text_edits(result, bufnr)
+            vim.lsp.util.apply_text_edits(result, context.bufnr)
             vim.fn.winrestview(view)
-            if bufnr == vim.api.nvim_get_current_buf() then
+            if context.bufnr == vim.api.nvim_get_current_buf() then
                 vim.api.nvim_command("noautocmd :update")
             end
         end
@@ -68,8 +68,15 @@ lsp.elixirls.setup {
     root_dir = lsp.util.root_pattern(".git", "mix.exs"),
     on_attach = custom_attach,
     capabilities = capabilities,
-    -- cmd = {ElixirLS_path .. '/release/language_server.sh'}
+    cmd = {globals.elixirls_basepath .. '/release/language_server.sh'}
 }
+
+--[[
+lsp.ansiblels.setup {
+    on_attach = custom_attach,
+    capabilities = capabilities,
+}
+--]]
 
 lsp.html.setup {
     on_attach = custom_attach,
@@ -142,19 +149,17 @@ lsp.texlab.setup {
     on_attach = custom_attach,
     capabilities = capabilities,
     settings = {
-        latex = {
+        texlab = {
             build = {
                 onSave = true,
                 forwardSearchAfter = true,
                 executable = "latexmk",
-                args = {
-                    "-xelatex", "%f"
-                },
+                args = {"-xelatex"},
             },
-            forwardSearch = {
+            --[[ forwardSearch = {
                 executable = "okular",
                 args = {"--unique", "file:%p#src:%l%f"}
-            },
+            }, ]]
             lint = {onChange = true}
         }
     }

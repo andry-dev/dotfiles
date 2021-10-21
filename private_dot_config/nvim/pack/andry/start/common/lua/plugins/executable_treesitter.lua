@@ -1,11 +1,22 @@
+-- Inject Neorg
+local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
+
+parser_configs.norg = {
+    install_info = {
+        url = "https://github.com/nvim-neorg/tree-sitter-norg",
+        files = { "src/parser.c", "src/scanner.cc" },
+        branch = "main"
+    },
+}
+
 local treesitter = require 'nvim-treesitter.configs'
 
 treesitter.setup {
     ensure_installed = "maintained",
 
     highlight = {
-        enable = true,
-        use_languagetree = false,
+        enable = false,
+        use_languagetree = true,
     },
 
     incremental_selection = {
@@ -29,14 +40,16 @@ treesitter.setup {
     --]]
 
     textobjects = {
-
         select = {
             enable = true,
+            lookahead = true,
             keymaps = {
                 ["af"] = "@function.outer",
                 ["if"] = "@function.inner",
                 ["ac"] = "@class.outer",
-                ["ic"] = "@class.inner",
+                ["ic"] = {
+                    cpp = "{ @class.inner }",
+                }, 
                 ["at"] = "@tag.outer",
                 ["it"] = "@tag.inner",
                 ["p"] = "@parameter.inner",
@@ -68,7 +81,7 @@ treesitter.setup {
         },
 
         lsp_interop = {
-            enable = false,
+            enable = true,
             peek_definition_code = {
                 ["df"] = "@function.outer",
                 ["dF"] = "@class.outer",
@@ -87,6 +100,10 @@ treesitter.setup {
             }
         }
     },
+
+    playground = {
+        enable = true,
+    }
 
     --tree_docs = {enable = true}
 }

@@ -99,22 +99,7 @@ vimp.inoremap('(<CR>', '(<CR>)<Esc>O')
 vimp.inoremap('[<CR>', '[<CR>]<Esc>O')
 vimp.inoremap('{<CR>', '{<CR>}<Esc>O')
 
-vimp.inoremap({'expr'}, '<Tab>', function()
-    if vim.fn.pumvisible() == 1 then
-        return [[<C-n>]]
-    else
-        return [[<Tab>]]
-    end
-end)
-
-vimp.inoremap({'expr', 'silent'}, '<S-Tab>', function()
-    if vim.fn.pumvisible() ~= 0 then
-        return [[<C-p>]]
-    else
-        return [[<S-Tab>]]
-    end
-end)
-
+--[[
 vimp.inoremap({'expr', 'silent'}, '<CR>', function()
     if vim.fn.pumvisible() ~= 0 then
         if vim.fn.complete_info()["selected"] ~= -1 then
@@ -124,6 +109,7 @@ vimp.inoremap({'expr', 'silent'}, '<CR>', function()
 
     return "<CR>"
 end)
+--]]
 
 vimp.nnoremap({'expr', 'silent'}, '<CR>', function()
     vim.cmd [[nohlsearch]]
@@ -179,4 +165,4 @@ vimp.xnoremap('<Leader>is', '<Plug>(iron-visual-send)')
 vimp.nnoremap('<Leader>is', '<Plug>(iron-send-line)')
 
 -- Vimwiki
-vimp.nnoremap('<Leader>wc', require('plugins/vimwiki-utils').compile)
+-- vimp.nnoremap('<Leader>wc', require('plugins/vimwiki-utils').compile)

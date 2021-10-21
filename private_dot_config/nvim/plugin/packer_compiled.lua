@@ -69,6 +69,10 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  LuaSnip = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/LuaSnip"
+  },
   ["async.vim"] = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/async.vim"
@@ -77,9 +81,17 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp-buffer"
   },
+  ["cmp-latex-symbols"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp-latex-symbols"
+  },
   ["cmp-nvim-lsp"] = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp"
+  },
+  cmp_luasnip = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp_luasnip"
   },
   dadbod = {
     loaded = true,
@@ -123,6 +135,10 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/lsp_signature.nvim"
   },
+  neorg = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/neorg"
+  },
   ["nlua.nvim"] = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/nlua.nvim"
@@ -130,6 +146,10 @@ _G.packer_plugins = {
   nofrils = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/nofrils"
+  },
+  ["nord.nvim"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nord.nvim"
   },
   ["null-ls.nvim"] = {
     loaded = true,
@@ -152,9 +172,8 @@ _G.packer_plugins = {
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-dap-virtual-text"
   },
   ["nvim-jdtls"] = {
-    loaded = false,
-    needs_bufread = false,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/nvim-jdtls"
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-jdtls"
   },
   ["nvim-lspconfig"] = {
     loaded = true,
@@ -167,6 +186,10 @@ _G.packer_plugins = {
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter"
+  },
+  ["nvim-treesitter-context"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter-context"
   },
   ["nvim-treesitter-refactor"] = {
     loaded = true,
@@ -185,10 +208,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/plenary.nvim"
   },
-  ["snippets.nvim"] = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/snippets.nvim"
-  },
   sniprun = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/sniprun"
@@ -200,10 +219,6 @@ _G.packer_plugins = {
   ["symbols-outline.nvim"] = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/symbols-outline.nvim"
-  },
-  taskwiki = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/taskwiki"
   },
   ["trouble.nvim"] = {
     loaded = true,
@@ -253,10 +268,6 @@ _G.packer_plugins = {
   vimpeccable = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/vimpeccable"
-  },
-  vimwiki = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vimwiki"
   }
 }
 
@@ -264,13 +275,13 @@ time([[Defining packer_plugins]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Make lua require("packer.load")({'vim-dispatch'}, { cmd = "Make", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]])
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Focus lua require("packer.load")({'vim-dispatch'}, { cmd = "Focus", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]])
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file TestifyFile lua require("packer.load")({'vim-testify'}, { cmd = "TestifyFile", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]])
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file IronReplHere lua require("packer.load")({'iron.nvim'}, { cmd = "IronReplHere", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]])
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file IronRepl lua require("packer.load")({'iron.nvim'}, { cmd = "IronRepl", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]])
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Dispatch lua require("packer.load")({'vim-dispatch'}, { cmd = "Dispatch", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]])
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Start lua require("packer.load")({'vim-dispatch'}, { cmd = "Start", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Make lua require("packer.load")({'vim-dispatch'}, { cmd = "Make", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Focus lua require("packer.load")({'vim-dispatch'}, { cmd = "Focus", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file TestifyFile lua require("packer.load")({'vim-testify'}, { cmd = "TestifyFile", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file IronReplHere lua require("packer.load")({'iron.nvim'}, { cmd = "IronReplHere", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file IronRepl lua require("packer.load")({'iron.nvim'}, { cmd = "IronRepl", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Dispatch lua require("packer.load")({'vim-dispatch'}, { cmd = "Dispatch", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Start lua require("packer.load")({'vim-dispatch'}, { cmd = "Start", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
 time([[Defining lazy-load commands]], false)
 
 vim.cmd [[augroup packer_load_aucmds]]
@@ -278,7 +289,6 @@ vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType elixir ++once lua require("packer.load")({'vim-elixir'}, { ft = "elixir" }, _G.packer_plugins)]]
-vim.cmd [[au FileType java ++once lua require("packer.load")({'nvim-jdtls'}, { ft = "java" }, _G.packer_plugins)]]
 vim.cmd [[au FileType vim ++once lua require("packer.load")({'vim-testify'}, { ft = "vim" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
 vim.cmd("augroup END")

@@ -13,6 +13,7 @@ lua << EOF
     require 'plugins/snippets'
     require 'plugins/comment'
     -- require 'plugins/snap'
+    require 'plugins/neorg'
 
     require('focus').setup()
 
@@ -132,7 +133,7 @@ au BufRead,BufNewFile *.ex,*.exs setlocal filetype=elixir
 au BufRead,BufNewFile *.cls setlocal filetype=tex
 
 " Async Vimwiki compilation
-au BufWritePost *.wiki :AsyncVimwiki2HTML
+" au BufWritePost *.wiki :AsyncVimwiki2HTML
 
 " Diagnostics
 " au CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
@@ -148,7 +149,6 @@ au BufWritePost *.wiki :AsyncVimwiki2HTML
 " Java JDT
 augroup lsp
     autocmd!
-    autocmd FileType java lua require('plugins/lsp').start_jdtls()
     autocmd FileType java
         \ autocmd! lsp BufWritePre <buffer> lua require('jdtls').organize_imports()
 augroup END

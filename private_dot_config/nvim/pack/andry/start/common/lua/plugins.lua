@@ -11,7 +11,7 @@ return packer.startup(function()
     use {'kabouzeid/nvim-lspinstall'}
     use {'ray-x/lsp_signature.nvim'}
 
-    use {'mfussenegger/nvim-jdtls', opt = true, ft = {"java"}}
+    use {'mfussenegger/nvim-jdtls'}
 
     use {'nvim-lua/plenary.nvim'}
 
@@ -47,6 +47,13 @@ return packer.startup(function()
         requires = 'nvim-treesitter/nvim-treesitter'
     }
 
+    use {
+        'romgrk/nvim-treesitter-context',
+        requires = 'nvim-treesitter/nvim-treesitter'
+    }
+
+    use { 'nvim-neorg/neorg'}
+
     use {'mfussenegger/nvim-dap'}
 
     use {
@@ -76,7 +83,8 @@ return packer.startup(function()
         'hrsh7th/nvim-cmp',
         requires = {
             'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-nvim-lsp'
+            'hrsh7th/cmp-nvim-lsp',
+            'kdheepak/cmp-latex-symbols',
         }
    }
 
@@ -127,11 +135,15 @@ return packer.startup(function()
     use {'bluz71/vim-moonfly-colors'}
     use {'gruvbox-community/gruvbox'}
     use {'sainnhe/everforest'}
+    use 'shaunsingh/nord.nvim'
     -- use {'JaySandhu/xcode-vim'}
 
-    use {'norcalli/snippets.nvim'}
+    -- use {'norcalli/snippets.nvim'}
 
-    use {'vimwiki/vimwiki', {'tools-life/taskwiki'}}
+    use {'L3MON4D3/LuaSnip'}
+    use {'saadparwaiz1/cmp_luasnip', requires = {'L3MON4D3/LuaSnip', 'hrsh7th/nvim-cmp'}}
+
+    -- use {'vimwiki/vimwiki', {'tools-life/taskwiki'}}
 
     use {'b3nj5m1n/kommentary'}
 
