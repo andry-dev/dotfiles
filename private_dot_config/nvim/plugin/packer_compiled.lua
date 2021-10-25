@@ -125,6 +125,7 @@ _G.packer_plugins = {
     commands = { "IronRepl", "IronReplHere" },
     loaded = false,
     needs_bufread = false,
+    only_cond = false,
     path = "/home/andry/.local/share/nvim/site/pack/packer/opt/iron.nvim"
   },
   kommentary = {
@@ -236,11 +237,13 @@ _G.packer_plugins = {
     commands = { "Dispatch", "Make", "Focus", "Start" },
     loaded = false,
     needs_bufread = false,
+    only_cond = false,
     path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-dispatch"
   },
   ["vim-elixir"] = {
     loaded = false,
     needs_bufread = true,
+    only_cond = false,
     path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-elixir"
   },
   ["vim-fugitive"] = {
@@ -263,6 +266,7 @@ _G.packer_plugins = {
     commands = { "TestifyFile" },
     loaded = false,
     needs_bufread = true,
+    only_cond = false,
     path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-testify"
   },
   vimpeccable = {

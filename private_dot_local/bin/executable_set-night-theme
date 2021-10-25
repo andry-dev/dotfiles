@@ -2,7 +2,7 @@
 
 alacritty-set-night
 
-kitty +kitten themes --reload-in=all Everforest-dark
+kitty +kitten themes --reload-in=all zenflesh_warm
 
 #KDE_THEME_CONFIG=$HOME/.config/kdeglobals
 #rm $KDE_THEME_CONFIG

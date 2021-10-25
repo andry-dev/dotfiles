@@ -12,20 +12,16 @@ cmp.setup({
                 cmp.select_next_item()
             elseif has_words_before() then
                 cmp.complete()
-            elseif vim.fn.pumvisible() == 1 then
-                return [[<C-n>]]
             else
-                return [[<Tab>]]
+                fallback()
             end
         end,
 
         ['<S-Tab>'] = function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
-            elseif vim.fn.pumvisible() ~= 0 then
-                return [[<C-p>]]
             else
-                return [[<S-Tab>]]
+                fallback()
             end
         end,
 
@@ -52,6 +48,7 @@ cmp.setup({
           nvim_lua = "[Lua]",
           latex_symbols = "[Latex]",
           neorg = "[Neorg]",
+          ['vim-dadbod-completion'] = "[DB]",
         })[entry.source.name]
         return vim_item
       end,
@@ -63,14 +60,18 @@ cmp.setup({
         end
     },
 
+    experimental = {
+        native_menu = true,
+    },
+
     sources = {
-        { name = 'path' },
         -- buffer = true,
-        { name = 'luasnip' },
         { name = 'nvim_lsp' },
-        { name = 'latex_symbols' },
+        { name = 'nvim_lua'},
+        { name = 'luasnip' },
+        { name = 'path' },
         { name = 'neorg' },
-        -- { name = 'nvim_lua'},
+        -- { name = 'latex_symbols' },
         -- { name = 'snippets_nvim'},
         -- { name = 'vim_dadbod_completion'},
     },

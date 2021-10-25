@@ -74,6 +74,8 @@ exec gammastep
 
 input * {
     accel_profile flat
+    repeat_rate 50
+    repeat_delay 250
 }
 
 ### Key bindings
@@ -128,6 +130,7 @@ input * {
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
 
+
     # Move the focused window with the same, but add Shift
     bindsym $mod+Shift+$left move left
     bindsym $mod+Shift+$down move down
@@ -180,7 +183,7 @@ input * {
     bindsym $mod+e layout toggle split
 
     # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
+    # bindsym $mod+f fullscreen
 
     # Toggle the current focus between tiling and floating mode
     bindsym $mod+Shift+space floating toggle
@@ -227,6 +230,8 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+include themes/base16-twilight
+
 #
 # Status Bar:
 #
@@ -242,15 +247,26 @@ bar {
     mode hide
 
     colors {
-        statusline #000000
-        background #BBBBBB
-        inactive_workspace #32323200 #32323200 #5c5c5c
+        background $base00
+        separator  $base01
+        statusline $base04
+
+        # State             Border  BG      Text
+        focused_workspace   $base05 $base0D $base00
+        active_workspace    $base05 $base03 $base00
+        inactive_workspace  $base03 $base01 $base05
+        urgent_workspace    $base08 $base08 $base00
+        binding_mode        $base00 $base0A $base00
     }
+
 }
 
-client.focused #FFFFFF #FFFFFF #000000
-client.focused_inactive #EEEEEE #EEEEEE #000000
-client.unfocused #DDDDDD #DDDDDD #000000
+client.focused          $base05 $base0D $base00 $base0D $base0D
+client.focused_inactive $base01 $base01 $base05 $base03 $base01
+client.unfocused        $base01 $base00 $base05 $base01 $base01
+client.urgent           $base08 $base08 $base00 $base08 $base08
+client.placeholder      $base00 $base00 $base05 $base00 $base00
+client.background       $base07
 
 include /etc/sway/config.d/*
 

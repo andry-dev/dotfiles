@@ -15,7 +15,9 @@ input "1133:16514:Logitech_MX_Master_3" {
 #exec runsvdir -P ~/runit/service
 
 exec /usr/libexec/gsd-xsettings
+exec /usr/libexec/xdg-desktop-portal
 exec /usr/libexec/xdg-desktop-portal-wlr
+exec gammastep
 
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
