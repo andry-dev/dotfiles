@@ -13,6 +13,12 @@ function should_format()
     if globals.autoformat_enabled() then vim.lsp.buf.formatting() end
 end
 
+local function add_if_executable_exists(lsp_name, executable, config)
+    if vim.fn.executable(executable) == 1 then
+        lsp[lsp_name].setup(config)
+    end
+end
+
 vim.lsp.handlers["textDocument/formatting"] =
     function(err, result, context, _)
         if err ~= nil or result == nil then return end
@@ -39,74 +45,111 @@ end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
---[[
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    'additionalText'
-  }
-}
---]]
 
-lsp.solargraph.setup {on_attach = custom_attach}
-
-lsp.clangd.setup {
+local default_config = {
     on_attach = custom_attach,
-    capabilities = capabilities,
-
-    cmd = {
-        "clangd", "--background-index", "--cross-file-rename", "--clang-tidy",
-        "--recovery-ast"
-    }
+    capabilities = capabilities
 }
 
-lsp.cmake.setup {on_attach = custom_attach}
+function default_config:with(new_options)
+    return vim.tbl_extend("force", self, new_options)
+end
 
-lsp.elixirls.setup {
+-- I specify all language serviers here and they will be conditionally enabled if the executable exists
+-- This prevents annoying issues in new machines when a language server is not configured
+local language_servers = {
+    clangd = {
+        executable = 'clangd',
+        config = default_config:with {
+            cmd = {
+                "clangd", "--background-index", "--cross-file-rename", "--clang-tidy",
+                "--recovery-ast"
+            }
+        }
+    },
+
+    cmake = {
+        executable = 'cmake-language-server',
+        config = default_config
+    },
+
+    solargraph = {
+        executable = 'solargraph',
+        config = default_config
+    },
+
+    html = {
+        executable = 'html-languageserver',
+        config = default_config
+    },
+
+    cssls = {
+        executable = 'css-languageserver',
+        config = default_config
+    },
+
+
+    intelephense = {
+        executable = 'intelephense',
+        config = default_config
+    },
+
+    sqlls = {
+        executable = 'sql-language-server',
+        config = default_config:with {
+            cmd = {'sql-language-server', 'up', '--method', 'stdio'}
+        }
+    },
+
+    pylsp = {
+        executable = 'pylsp',
+        config = default_config
+    },
+
+    yamlls = {
+        executable = 'yaml-language-server',
+        config = default_config
+    },
+
+
+    vuels = {
+        executable = 'vue-language-server',
+        config = default_config
+    },
+
+    texlab = {
+        executable = 'texlab',
+        config = default_config:with {
+            settings = {
+                texlab = {
+                    build = {
+                        onSave = true,
+                        forwardSearchAfter = true,
+                        executable = "latexmk",
+                        args = {"-xelatex"},
+                    },
+                    --[[ forwardSearch = {
+                        executable = "okular",
+                        args = {"--unique", "file:%p#src:%l%f"}
+                    }, ]]
+                    lint = {onChange = true}
+                }
+            }
+        }
+    },
+}
+
+for name, info in pairs(language_servers) do
+    add_if_executable_exists(name, info.executable, info.config)
+end
+
+lsp.elixirls.setup(default_config:with {
     root_dir = lsp.util.root_pattern(".git", "mix.exs"),
-    on_attach = custom_attach,
-    capabilities = capabilities,
     cmd = {globals.elixirls_basepath .. '/release/language_server.sh'}
-}
+})
 
---[[
-lsp.ansiblels.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities,
-}
---]]
-
-lsp.html.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities
-}
-
---[[
-lsp.jdtls.setup {
-    on_attach = custom_attach,
-    root_dir = lsp.util.root_pattern(".git", "pom.xml", "build.gradle")
-}
---]]
-
-lsp.intelephense.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities
-}
-
---[[
-lsp.sqlls.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities,
-    cmd = {'sql-language-server', 'up', '--method', 'stdio'}
-}
---]]
-
-require('nlua.lsp.nvim').setup(lsp, {
+require('nlua.lsp.nvim').setup(lsp, default_config:with {
     cmd = {globals.sumneko_binary, "-E", globals.sumneko_basepath .. "/main.lua"},
-    on_attach = custom_attach,
-    capabilities = capabilities
 })
 
 --[[
@@ -124,75 +167,31 @@ lsp.sumneko_lua.setup {
 }
 --]]
 
-lsp.cssls.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities
-
-}
-
-lsp.pylsp.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities
-}
-
-lsp.yamlls.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities
-}
-
-lsp.vuels.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities
-}
-
-lsp.texlab.setup {
-    on_attach = custom_attach,
-    capabilities = capabilities,
-    settings = {
-        texlab = {
-            build = {
-                onSave = true,
-                forwardSearchAfter = true,
-                executable = "latexmk",
-                args = {"-xelatex"},
-            },
-            --[[ forwardSearch = {
-                executable = "okular",
-                args = {"--unique", "file:%p#src:%l%f"}
-            }, ]]
-            lint = {onChange = true}
-        }
-    }
-}
 
 local null_ls = require('null-ls')
 
+local null_ls_sources = { sources = {} }
+
+function null_ls_sources:add(executable, source)
+    if vim.fn.executable(executable) == 1 then
+        vim.list_extend(self.sources, {source})
+    end
+end
+
+null_ls_sources:add('prettier', null_ls.builtins.formatting.prettier)
+null_ls_sources:add('stylua', null_ls.builtins.formatting.stylua.with({
+    extra_args = {"--indent-type Spaces"}
+}))
+null_ls_sources:add('shellcheck', null_ls.builtins.diagnostics.shellcheck)
+null_ls_sources:add('eslint_d', null_ls.builtins.diagnostics.eslint_d)
+null_ls_sources:add('hadolint', null_ls.builtins.diagnostics.hadolint)
+null_ls_sources:add('phpstan', null_ls.builtins.diagnostics.phpstan)
+
 null_ls.config({
-    sources = {
-        null_ls.builtins.formatting.prettier,
-        null_ls.builtins.formatting.stylua.with({
-            extra_args = {"--indent-type Spaces"}
-        }),
-
-        --[[
-        null_ls.builtins.formatting.isort,
-        null_ls.builtins.formatting.autopep8,
-        --]]
-
-        --null_ls.builtins.formatting.sqlformat,
-        null_ls.builtins.diagnostics.shellcheck,
-        --null_ls.builtins.diagnostics.flake8,
-        null_ls.builtins.diagnostics.eslint_d,
-        null_ls.builtins.diagnostics.hadolint,
-        --null_ls.builtins.diagnostics.selene,
-        null_ls.builtins.diagnostics.phpstan,
-    },
+    sources = null_ls_sources.sources,
 })
 
-lsp['null-ls'].setup({
-    on_attach = custom_attach,
-    capabilities = capabilities
-})
+lsp['null-ls'].setup(default_config)
 
 require('symbols-outline').setup({
     highlight_hovered_item = true,
