@@ -1,19 +1,16 @@
 let g:mapleader = ','
 
 lua << EOF
-    require 'globals'
-
     require 'plugins'
-    require 'plugins/lsp'
-    require 'plugins/dap'
-    require 'plugins/compe'
-    require 'plugins/treesitter'
-    require 'plugins/iron'
-    require 'plugins/diagnostics'
-    require 'plugins/snippets'
-    require 'plugins/comment'
+    -- require 'plugins/lsp'
+    -- require 'plugins/dap'
+    -- require 'plugins/compe'
+    -- require 'plugins/treesitter'
+    -- require 'plugins/iron'
+    -- require 'plugins/diagnostics'
+    -- require 'plugins/snippets'
+    -- require 'plugins/comment'
     -- require 'plugins/snap'
-    require 'plugins/neorg'
 
     require('focus').setup()
 
@@ -77,6 +74,8 @@ let g:cmake_generate_options = ['-G Ninja']
 
 " Tex
 let g:tex_flavor="latex"
+
+let g:vimtex_view_method = 'zathura'
 
 " fn
 function! FocusHLCompl()

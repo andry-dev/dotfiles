@@ -4,97 +4,195 @@ vim.cmd [[autocmd BufWritePost plugins.lua PackerCompile]]
 local packer = require('packer')
 
 return packer.startup(function()
+    local use = packer.use
+
     use {'wbthomason/packer.nvim', opt = true}
     use {'svermeulen/vimpeccable'}
 
-    use {'neovim/nvim-lspconfig', as = 'nvim-lspconfig'}
-    use {'kabouzeid/nvim-lspinstall'}
-    use {'ray-x/lsp_signature.nvim'}
-
-    use {'mfussenegger/nvim-jdtls'}
-
     use {'nvim-lua/plenary.nvim'}
 
-    -- use {'jubnzv/virtual-types.nvim'}
+    use {
+        'neovim/nvim-lspconfig',
+        'ray-x/lsp_signature.nvim',
+        'mfussenegger/nvim-jdtls',
+        'folke/trouble.nvim',
+        'simrat39/symbols-outline.nvim',
+
+        after = 'nvim-cmp',
+    }
 
     use {
         'jose-elias-alvarez/null-ls.nvim',
          requires = {
             'nvim-lua/plenary.nvim',
             'neovim/nvim-lspconfig',
-         }
+         },
      }
 
-    use {'folke/trouble.nvim'}
+    use {
+        'simrat39/rust-tools.nvim',
+        opt = true,
+        ft = 'rust',
+        config = function()
+            require('rust-tools').setup({})
+        end
+    }
 
-    use {'simrat39/symbols-outline.nvim'}
+
+    -- use {'jubnzv/virtual-types.nvim'}
 
     use { 'michaelb/sniprun', run = 'bash ./install.sh'}
 
     use {
         'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
-        -- {'nvim-treesitter/nvim-tree-docs', requires = 'nvim-treesitter'},
-    }
-
-    use {
-        'nvim-treesitter/nvim-treesitter-textobjects',
-        requires = 'nvim-treesitter/nvim-treesitter'
-    }
-
-    use {
-        'nvim-treesitter/nvim-treesitter-refactor',
-        requires = 'nvim-treesitter/nvim-treesitter'
-    }
-
-    use {
-        'romgrk/nvim-treesitter-context',
-        requires = 'nvim-treesitter/nvim-treesitter'
-    }
-
-    use { 'nvim-neorg/neorg'}
-
-    use {'mfussenegger/nvim-dap'}
-
-    use {
-        "theHamsta/nvim-dap-virtual-text",
+        run = ':TSUpdate',
         requires = {
-            "mfussenegger/nvim-dap",
-            "nvim-treesitter/nvim-treesitter",
+            'nvim-treesitter/nvim-treesitter-textobjects',
+            'nvim-treesitter/nvim-treesitter-refactor',
+            'romgrk/nvim-treesitter-context',
+            'windwp/nvim-ts-autotag',
+        }
+    }
+
+    use { 
+        'danymat/neogen',
+        config = function()
+            require('neogen').setup {
+                enabled = true
+            }
+        end,
+        requires = 'nvim-treesitter'
+    }
+
+    -- use { 'nvim-neorg/neorg'}
+    use {
+        'kristijanhusak/orgmode.nvim',
+        requires = {
+            'dhruvasagar/vim-table-mode'
+        },
+        config = function()
+            require('orgmode').setup{}
+        end
+    }
+
+    use {
+        'mfussenegger/nvim-dap',
+        config = function()
+            require('config.dap')
+        end
+    }
+
+    use {
+        'theHamsta/nvim-dap-virtual-text',
+        requires = {
+            'nvim-dap',
+            'nvim-treesitter',
         }
     }
 
     use {
         "rcarriga/nvim-dap-ui",
         requires = {
+            'mfussenegger/nvim-dap'
+        },
+        after = 'nvim-dap',
+        config = function()
+            require('dapui').setup()
+        end
+    }
+
+    use {
+        "mfussenegger/nvim-dap-python",
+        requires = {
             "mfussenegger/nvim-dap"
-        }
+        },
     }
 
     use {'tjdevries/nlua.nvim'}
 
-    use {'~/prj/nofrils'}
+    use {
+        -- My colorscheme
+        'andry-dev/nofrils',
 
-    -- use {'lervag/vimtex', ft = {'tex'}}
+        -- These color schemes are used for :SetupForScreens and :PrettyTheme
+        -- I don't personally use them
+        'bluz71/vim-moonfly-colors',
+        -- 'gruvbox-community/gruvbox',
+        -- 'sainnhe/everforest',
+        -- 'shaunsingh/nord.nvim',
+        'JaySandhu/xcode-vim',
+    }
+
+    use {'lervag/vimtex', ft = {'tex'}}
 
     use {'prabirshrestha/async.vim'}
 
     use {
         'hrsh7th/nvim-cmp',
         requires = {
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-nvim-lsp',
-            'kdheepak/cmp-latex-symbols',
-        }
-   }
+            'L3MON4D3/LuaSnip',
+            { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
+            { 'hrsh7th/cmp-nvim-lsp', after = 'nvim-cmp' },
+            { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
+            {
+                'saadparwaiz1/cmp_luasnip',
+                requires = {
+                    'LuaSnip',
+                    'nvim-cmp'
+                }
+            }
+        },
+        config = function()
+            require('config.cmp')
+        end
+    }
 
-    use {'junegunn/fzf', as = 'fzf', {'junegunn/fzf.vim', requires = 'fzf'}}
+    use {
+        'junegunn/fzf',
+        {'junegunn/fzf.vim', requires = 'fzf'}
+    }
 
+    -- Telescope
+    --
+    -- use {
+    --     {
+    --         'nvim-telescope/telescope.nvim',
+    --         requires = {
+    --             'nvim-lua/popup.nvim',
+    --             'nvim-lua/plenary.nvim',
+    --             'telescope-frecency.nvim',
+    --             'telescope-fzf-native.nvim',
+    --         },
+    --         config = function()
+    --             require('config.telescope')
+    --         end
+    --     },
+    --     {
+    --         'nvim-telescope/telescope-frecency.nvim',
+    --         -- after = 'telescope.nvim',
+    --         requires = 'tami5/sqlite.lua',
+    --         --[[ config = function()
+    --             require('telescope').load_extension('frecency')
+    --         end ]]
+    --     },
+    --     {
+    --         'nvim-telescope/telescope-fzf-native.nvim',
+    --         run = 'make',
+    --     },
+    -- }
+    --
     use {'cdelledonne/vim-cmake'}
 
     -- use {'lambdalisue/suda.vim'}
 
-    use {'hkupty/iron.nvim', opt = true, cmd = {'IronRepl', 'IronReplHere'}}
+    use {
+        'hkupty/iron.nvim',
+        opt = true,
+        cmd = {'IronRepl', 'IronReplHere'},
+        config = function()
+            require('config.iron')
+        end
+    }
 
     use {
         'tpope/vim-dispatch',
@@ -104,16 +202,15 @@ return packer.startup(function()
 
     use {
         'tpope/vim-fugitive',
-        {
-        'tpope/vim-rhubarb'
-        }
+        'tpope/vim-rhubarb',
+        {'junegunn/gv.vim', requires = 'tpope/vim-fugitive'}
     }
 
-    use {'junegunn/gv.vim', requires = 'tpope/vim-fugitive'}
 
-    use {'tpope/vim-dadbod', as = 'dadbod'}
-
-    use {'kristijanhusak/vim-dadbod-completion', requires = 'dadbod'}
+    use {
+        'tpope/vim-dadbod',
+        {'kristijanhusak/vim-dadbod-completion', requires = 'vim-dadbod'}
+    }
 
     use {'editorconfig/editorconfig-vim'}
 
@@ -130,22 +227,12 @@ return packer.startup(function()
 
     use {'elixir-editors/vim-elixir', opt = true, ft = {'elixir'}}
 
-    -- Both of these color schemes are used for :SetupForScreens and :PrettyTheme
-    -- I don't personally use them
-    use {'bluz71/vim-moonfly-colors'}
-    use {'gruvbox-community/gruvbox'}
-    use {'sainnhe/everforest'}
-    use 'shaunsingh/nord.nvim'
-    -- use {'JaySandhu/xcode-vim'}
-
-    -- use {'norcalli/snippets.nvim'}
-
-    use {'L3MON4D3/LuaSnip'}
-    use {'saadparwaiz1/cmp_luasnip', requires = {'L3MON4D3/LuaSnip', 'hrsh7th/nvim-cmp'}}
-
-    -- use {'vimwiki/vimwiki', {'tools-life/taskwiki'}}
-
-    use {'b3nj5m1n/kommentary'}
+    use {
+        'numToStr/Comment.nvim',
+        config = function()
+            require('config.comment')
+        end
+    }
 
     use {'tami5/sqlite.lua'}
 end)

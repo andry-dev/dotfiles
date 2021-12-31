@@ -27,3 +27,4 @@ export PATH="$GEM_HOME/bin:$PATH"
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 . "$HOME/.config/m/$(hostname)/.profile"
+. "$HOME/.cargo/env"

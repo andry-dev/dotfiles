@@ -57,7 +57,7 @@ end
 time([[Luarocks path setup]], false)
 time([[try_loadstring definition]], true)
 local function try_loadstring(s, component, name)
-  local success, result = pcall(loadstring(s))
+  local success, result = pcall(loadstring(s), name, _G.packer_plugins[name])
   if not success then
     vim.schedule(function()
       vim.api.nvim_notify('packer.nvim: Error running ' .. component .. ' for ' .. name .. ': ' .. result, vim.log.levels.ERROR, {})
@@ -69,213 +69,328 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ["Comment.nvim"] = {
+    config = { "\27LJ\2\2.\0\0\2\0\2\0\0046\0\0\0'\1\1\0B\0\2\1K\0\1\0\19config.comment\frequire\0" },
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/Comment.nvim",
+    url = "https://github.com/numToStr/Comment.nvim"
+  },
   LuaSnip = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/LuaSnip"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/LuaSnip",
+    url = "https://github.com/L3MON4D3/LuaSnip"
   },
   ["async.vim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/async.vim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/async.vim",
+    url = "https://github.com/prabirshrestha/async.vim"
   },
   ["cmp-buffer"] = {
+    after_files = { "/home/andry/.local/share/nvim/site/pack/packer/opt/cmp-buffer/after/plugin/cmp_buffer.lua" },
+    load_after = {},
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp-buffer"
-  },
-  ["cmp-latex-symbols"] = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp-latex-symbols"
+    needs_bufread = false,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/cmp-buffer",
+    url = "https://github.com/hrsh7th/cmp-buffer"
   },
   ["cmp-nvim-lsp"] = {
+    after_files = { "/home/andry/.local/share/nvim/site/pack/packer/opt/cmp-nvim-lsp/after/plugin/cmp_nvim_lsp.lua" },
+    load_after = {},
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp"
+    needs_bufread = false,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/cmp-nvim-lsp",
+    url = "https://github.com/hrsh7th/cmp-nvim-lsp"
+  },
+  ["cmp-path"] = {
+    after_files = { "/home/andry/.local/share/nvim/site/pack/packer/opt/cmp-path/after/plugin/cmp_path.lua" },
+    load_after = {},
+    loaded = true,
+    needs_bufread = false,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/cmp-path",
+    url = "https://github.com/hrsh7th/cmp-path"
   },
   cmp_luasnip = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp_luasnip"
-  },
-  dadbod = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/dadbod"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
+    url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
   ["editorconfig-vim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/editorconfig-vim"
-  },
-  everforest = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/everforest"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/editorconfig-vim",
+    url = "https://github.com/editorconfig/editorconfig-vim"
   },
   fzf = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/fzf"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/fzf",
+    url = "https://github.com/junegunn/fzf"
   },
   ["fzf.vim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/fzf.vim"
-  },
-  gruvbox = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/gruvbox"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/fzf.vim",
+    url = "https://github.com/junegunn/fzf.vim"
   },
   ["gv.vim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/gv.vim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/gv.vim",
+    url = "https://github.com/junegunn/gv.vim"
   },
   ["iron.nvim"] = {
     commands = { "IronRepl", "IronReplHere" },
+    config = { "\27LJ\2\2+\0\0\2\0\2\0\0046\0\0\0'\1\1\0B\0\2\1K\0\1\0\16config.iron\frequire\0" },
     loaded = false,
     needs_bufread = false,
     only_cond = false,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/iron.nvim"
-  },
-  kommentary = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/kommentary"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/iron.nvim",
+    url = "https://github.com/hkupty/iron.nvim"
   },
   ["lsp_signature.nvim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/lsp_signature.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/lsp_signature.nvim",
+    url = "https://github.com/ray-x/lsp_signature.nvim"
   },
-  neorg = {
+  neogen = {
+    config = { "\27LJ\2\2D\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\fenabled\2\nsetup\vneogen\frequire\0" },
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/neorg"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/neogen",
+    url = "https://github.com/danymat/neogen"
   },
   ["nlua.nvim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nlua.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nlua.nvim",
+    url = "https://github.com/tjdevries/nlua.nvim"
   },
   nofrils = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nofrils"
-  },
-  ["nord.nvim"] = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nord.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nofrils",
+    url = "https://github.com/andry-dev/nofrils"
   },
   ["null-ls.nvim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/null-ls.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
+    url = "https://github.com/jose-elias-alvarez/null-ls.nvim"
   },
   ["nvim-cmp"] = {
+    after = { "cmp-buffer", "cmp-path", "cmp-nvim-lsp" },
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-cmp"
+    only_config = true
   },
   ["nvim-dap"] = {
+    after = { "nvim-dap-ui" },
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-dap"
+    only_config = true
+  },
+  ["nvim-dap-python"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-dap-python",
+    url = "https://github.com/mfussenegger/nvim-dap-python"
   },
   ["nvim-dap-ui"] = {
+    config = { "\27LJ\2\0023\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ndapui\frequire\0" },
+    load_after = {},
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-dap-ui"
+    needs_bufread = false,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/nvim-dap-ui",
+    url = "https://github.com/rcarriga/nvim-dap-ui"
   },
   ["nvim-dap-virtual-text"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-dap-virtual-text"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-dap-virtual-text",
+    url = "https://github.com/theHamsta/nvim-dap-virtual-text"
   },
   ["nvim-jdtls"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-jdtls"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-jdtls",
+    url = "https://github.com/mfussenegger/nvim-jdtls"
   },
   ["nvim-lspconfig"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-lspconfig"
-  },
-  ["nvim-lspinstall"] = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-lspinstall"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
+    url = "https://github.com/neovim/nvim-lspconfig"
   },
   ["nvim-treesitter"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
+    url = "https://github.com/nvim-treesitter/nvim-treesitter"
   },
   ["nvim-treesitter-context"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter-context"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter-context",
+    url = "https://github.com/romgrk/nvim-treesitter-context"
   },
   ["nvim-treesitter-refactor"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter-refactor"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter-refactor",
+    url = "https://github.com/nvim-treesitter/nvim-treesitter-refactor"
   },
   ["nvim-treesitter-textobjects"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter-textobjects"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-treesitter-textobjects",
+    url = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
+  },
+  ["nvim-ts-autotag"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim-ts-autotag",
+    url = "https://github.com/windwp/nvim-ts-autotag"
+  },
+  ["orgmode.nvim"] = {
+    config = { "\27LJ\2\0029\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\forgmode\frequire\0" },
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/orgmode.nvim",
+    url = "https://github.com/kristijanhusak/orgmode.nvim"
   },
   ["packer.nvim"] = {
     loaded = false,
     needs_bufread = false,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/packer.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/packer.nvim",
+    url = "https://github.com/wbthomason/packer.nvim"
   },
   ["plenary.nvim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/plenary.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/plenary.nvim",
+    url = "https://github.com/nvim-lua/plenary.nvim"
+  },
+  ["rust-tools.nvim"] = {
+    config = { "\27LJ\2\2<\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\15rust-tools\frequire\0" },
+    loaded = false,
+    needs_bufread = true,
+    only_cond = false,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/rust-tools.nvim",
+    url = "https://github.com/simrat39/rust-tools.nvim"
   },
   sniprun = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/sniprun"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/sniprun",
+    url = "https://github.com/michaelb/sniprun"
   },
   ["sqlite.lua"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/sqlite.lua"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/sqlite.lua",
+    url = "https://github.com/tami5/sqlite.lua"
   },
   ["symbols-outline.nvim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/symbols-outline.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/symbols-outline.nvim",
+    url = "https://github.com/simrat39/symbols-outline.nvim"
   },
   ["trouble.nvim"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/trouble.nvim"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/trouble.nvim",
+    url = "https://github.com/folke/trouble.nvim"
   },
   ["vim-cmake"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-cmake"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-cmake",
+    url = "https://github.com/cdelledonne/vim-cmake"
+  },
+  ["vim-dadbod"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-dadbod",
+    url = "https://github.com/tpope/vim-dadbod"
   },
   ["vim-dadbod-completion"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-dadbod-completion"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-dadbod-completion",
+    url = "https://github.com/kristijanhusak/vim-dadbod-completion"
   },
   ["vim-dispatch"] = {
     commands = { "Dispatch", "Make", "Focus", "Start" },
     loaded = false,
     needs_bufread = false,
     only_cond = false,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-dispatch"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-dispatch",
+    url = "https://github.com/tpope/vim-dispatch"
   },
   ["vim-elixir"] = {
     loaded = false,
     needs_bufread = true,
     only_cond = false,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-elixir"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-elixir",
+    url = "https://github.com/elixir-editors/vim-elixir"
   },
   ["vim-fugitive"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-fugitive"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-fugitive",
+    url = "https://github.com/tpope/vim-fugitive"
   },
   ["vim-moonfly-colors"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-moonfly-colors"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-moonfly-colors",
+    url = "https://github.com/bluz71/vim-moonfly-colors"
   },
   ["vim-rhubarb"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-rhubarb"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-rhubarb",
+    url = "https://github.com/tpope/vim-rhubarb"
+  },
+  ["vim-table-mode"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-table-mode",
+    url = "https://github.com/dhruvasagar/vim-table-mode"
   },
   ["vim-test"] = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-test"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-test",
+    url = "https://github.com/vim-test/vim-test"
   },
   ["vim-testify"] = {
     commands = { "TestifyFile" },
     loaded = false,
     needs_bufread = true,
     only_cond = false,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-testify"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vim-testify",
+    url = "https://github.com/dhruvasagar/vim-testify"
   },
   vimpeccable = {
     loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vimpeccable"
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vimpeccable",
+    url = "https://github.com/svermeulen/vimpeccable"
+  },
+  vimtex = {
+    loaded = false,
+    needs_bufread = true,
+    only_cond = false,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/opt/vimtex",
+    url = "https://github.com/lervag/vimtex"
+  },
+  ["xcode-vim"] = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/xcode-vim",
+    url = "https://github.com/JaySandhu/xcode-vim"
   }
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: neogen
+time([[Config for neogen]], true)
+try_loadstring("\27LJ\2\2D\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\fenabled\2\nsetup\vneogen\frequire\0", "config", "neogen")
+time([[Config for neogen]], false)
+-- Config for: nvim-cmp
+time([[Config for nvim-cmp]], true)
+try_loadstring("\27LJ\2\2*\0\0\2\0\2\0\0046\0\0\0'\1\1\0B\0\2\1K\0\1\0\15config.cmp\frequire\0", "config", "nvim-cmp")
+time([[Config for nvim-cmp]], false)
+-- Config for: orgmode.nvim
+time([[Config for orgmode.nvim]], true)
+try_loadstring("\27LJ\2\0029\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\forgmode\frequire\0", "config", "orgmode.nvim")
+time([[Config for orgmode.nvim]], false)
+-- Config for: Comment.nvim
+time([[Config for Comment.nvim]], true)
+try_loadstring("\27LJ\2\2.\0\0\2\0\2\0\0046\0\0\0'\1\1\0B\0\2\1K\0\1\0\19config.comment\frequire\0", "config", "Comment.nvim")
+time([[Config for Comment.nvim]], false)
+-- Config for: nvim-dap
+time([[Config for nvim-dap]], true)
+try_loadstring("\27LJ\2\2*\0\0\2\0\2\0\0046\0\0\0'\1\1\0B\0\2\1K\0\1\0\15config.dap\frequire\0", "config", "nvim-dap")
+time([[Config for nvim-dap]], false)
+-- Load plugins in order defined by `after`
+time([[Sequenced loading]], true)
+vim.cmd [[ packadd nvim-dap-ui ]]
+
+-- Config for: nvim-dap-ui
+try_loadstring("\27LJ\2\0023\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ndapui\frequire\0", "config", "nvim-dap-ui")
+
+vim.cmd [[ packadd cmp-nvim-lsp ]]
+vim.cmd [[ packadd cmp-path ]]
+vim.cmd [[ packadd cmp-buffer ]]
+time([[Sequenced loading]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)
@@ -294,12 +409,23 @@ vim.cmd [[au!]]
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType elixir ++once lua require("packer.load")({'vim-elixir'}, { ft = "elixir" }, _G.packer_plugins)]]
 vim.cmd [[au FileType vim ++once lua require("packer.load")({'vim-testify'}, { ft = "vim" }, _G.packer_plugins)]]
+vim.cmd [[au FileType rust ++once lua require("packer.load")({'rust-tools.nvim'}, { ft = "rust" }, _G.packer_plugins)]]
+vim.cmd [[au FileType tex ++once lua require("packer.load")({'vimtex'}, { ft = "tex" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]
 time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vim-elixir/ftdetect/elixir.vim]], true)
 vim.cmd [[source /home/andry/.local/share/nvim/site/pack/packer/opt/vim-elixir/ftdetect/elixir.vim]]
 time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vim-elixir/ftdetect/elixir.vim]], false)
+time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/cls.vim]], true)
+vim.cmd [[source /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/cls.vim]]
+time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/cls.vim]], false)
+time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]], true)
+vim.cmd [[source /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]]
+time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]], false)
+time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tikz.vim]], true)
+vim.cmd [[source /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tikz.vim]]
+time([[Sourcing ftdetect script at: /home/andry/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tikz.vim]], false)
 vim.cmd("augroup END")
 if should_profile then save_profiles() end
 

@@ -16,23 +16,21 @@ local default_theme_config = require'themes'.setup {
     daystart = 8,
     dayend = 19,
     light = 'nofrils-acme',
-    dark = 'nofrils-dark'
+    dark = 'nofrils-dark',
 }
 
 -- Theme configuration for screenshots and such
 local pretty_theme_config = require'themes'.setup {default_theme_config}
 
-pretty_theme_config.dark = "everforest"
+pretty_theme_config.dark = "moonfly"
 
 pretty_theme_config.dark_fn = function()
-    vim.g.everforest_background = "soft"
     vim.o.background = "dark"
 end
 
-pretty_theme_config.light = "everforest"
+pretty_theme_config.light = "xcode"
 
 pretty_theme_config.light_fn = function()
-    vim.g.everforest_background = "hard"
     vim.o.background = "light"
 end
 
@@ -65,7 +63,7 @@ function get_theme_config() return current_theme_config end
 
 -- Options
 
-vim.o.statusline = [[%!luaeval("require 'plugins/statusline'.status_line()")]]
+vim.o.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
 
 -- Mappings
 
@@ -78,7 +76,6 @@ vimp.nnoremap('<C-j>', '<C-w>j')
 vimp.nnoremap('<C-k>', '<C-w>k')
 vimp.nnoremap({'override'}, '<C-l>', '<C-w>l')
 vimp.nnoremap('Q', 'q')
-vimp.cnoremap('Q', 'q')
 
 vimp.nnoremap(';', ':')
 vimp.nnoremap(':', ';')
@@ -138,7 +135,7 @@ vimp.nnoremap('<leader>lD', vim.lsp.buf.declaration)
 vimp.nnoremap('<leader>ld', vim.lsp.buf.definition)
 vimp.nnoremap('<leader>lr', vim.lsp.buf.rename)
 vimp.nnoremap('<leader>lh', vim.lsp.buf.hover)
-vimp.nnoremap('<leader>lH', vim.lsp.diagnostic.show_line_diagnostics)
+vimp.nnoremap('<leader>lH', vim.diagnostic.open_float)
 vimp.nnoremap('<leader>li', vim.lsp.buf.implementation)
 vimp.nnoremap('<leader>ls', vim.lsp.buf.signature_help)
 vimp.nnoremap('<leader>lt', vim.lsp.buf.type_definition)
@@ -166,3 +163,7 @@ vimp.nnoremap('<Leader>is', '<Plug>(iron-send-line)')
 
 -- Vimwiki
 -- vimp.nnoremap('<Leader>wc', require('plugins/vimwiki-utils').compile)
+
+-- MPD
+vimp.nnoremap('<Leader>mm', function() require('mpd'):status() end)
+vimp.nnoremap('<Leader>mp', function() require('mpd'):toggle() end)
