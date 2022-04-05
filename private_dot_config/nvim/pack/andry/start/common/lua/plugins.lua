@@ -18,6 +18,10 @@ return packer.startup(function()
         'folke/trouble.nvim',
         'simrat39/symbols-outline.nvim',
 
+        config = function()
+            require('config.lsp')
+        end,
+
         after = 'nvim-cmp',
     }
 
@@ -47,9 +51,9 @@ return packer.startup(function()
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate',
         requires = {
-            'nvim-treesitter/nvim-treesitter-textobjects',
+            -- 'nvim-treesitter/nvim-treesitter-textobjects',
             'nvim-treesitter/nvim-treesitter-refactor',
-            'romgrk/nvim-treesitter-context',
+            -- 'romgrk/nvim-treesitter-context',
             'windwp/nvim-ts-autotag',
         }
     }
@@ -66,9 +70,10 @@ return packer.startup(function()
 
     -- use { 'nvim-neorg/neorg'}
     use {
-        'kristijanhusak/orgmode.nvim',
+        'nvim-orgmode/orgmode',
         requires = {
-            'dhruvasagar/vim-table-mode'
+            'dhruvasagar/vim-table-mode',
+            'nvim-treesitter/nvim-treesitter'
         },
         config = function()
             require('orgmode').setup{}

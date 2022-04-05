@@ -2,7 +2,7 @@
 
 . "$HOME/.wlprofile"
 
-runsvdir -P ~/runit/wlservice &
-sv restart ~/runit/wlservice/* &
+# runsvdir -P ~/runit/wlservice &
+# sv restart ~/runit/wlservice/* &
 
-exec /usr/bin/sway
+exec /usr/bin/gnome-session
