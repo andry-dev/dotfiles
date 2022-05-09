@@ -18,9 +18,9 @@ return packer.startup(function()
         'folke/trouble.nvim',
         'simrat39/symbols-outline.nvim',
 
-        config = function()
-            require('config.lsp')
-        end,
+        -- config = function()
+        --     require('config.lsp')
+        -- end,
 
         after = 'nvim-cmp',
     }
@@ -125,7 +125,8 @@ return packer.startup(function()
         -- 'gruvbox-community/gruvbox',
         -- 'sainnhe/everforest',
         -- 'shaunsingh/nord.nvim',
-        'JaySandhu/xcode-vim',
+        -- 'JaySandhu/xcode-vim',
+        'daschw/leaf.nvim',
     }
 
     use {'lervag/vimtex', ft = {'tex'}}
@@ -202,7 +203,7 @@ return packer.startup(function()
     use {
         'tpope/vim-dispatch',
         opt = true,
-        cmd = {'Dispatch', 'Make', 'Focus', 'Start'}
+        cmd = {'Dispatch', 'Make', 'Start'}
     }
 
     use {

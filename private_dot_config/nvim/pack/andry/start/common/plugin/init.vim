@@ -2,7 +2,7 @@ let g:mapleader = ','
 
 lua << EOF
     require 'plugins'
-    -- require 'plugins/lsp'
+    require 'config/lsp'
     -- require 'plugins/dap'
     -- require 'plugins/compe'
     -- require 'plugins/treesitter'

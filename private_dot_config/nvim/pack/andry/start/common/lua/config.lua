@@ -22,16 +22,22 @@ local default_theme_config = require'themes'.setup {
 -- Theme configuration for screenshots and such
 local pretty_theme_config = require'themes'.setup {default_theme_config}
 
-pretty_theme_config.dark = "moonfly"
+pretty_theme_config.dark = "leaf"
 
 pretty_theme_config.dark_fn = function()
     vim.o.background = "dark"
+    require('leaf').setup({
+        theme = 'darkest'
+    })
 end
 
-pretty_theme_config.light = "xcode"
+pretty_theme_config.light = "leaf"
 
 pretty_theme_config.light_fn = function()
     vim.o.background = "light"
+    require('leaf').setup({
+        theme = 'lighter'
+    })
 end
 
 local current_theme_config = default_theme_config
