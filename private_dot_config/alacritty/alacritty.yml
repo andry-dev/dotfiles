@@ -320,7 +320,7 @@ schemes:
       cyan: "#424242"
       white: "#101412"
 
-colors: *acme
+colors: *iterm_night
 
 # Colors (Tomorrow Night Bright)
 #colors:

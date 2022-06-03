@@ -6,10 +6,9 @@ local packer = require('packer')
 return packer.startup(function()
     local use = packer.use
 
-    use {'wbthomason/packer.nvim', opt = true}
-    use {'svermeulen/vimpeccable'}
+    use { 'wbthomason/packer.nvim', opt = true }
 
-    use {'nvim-lua/plenary.nvim'}
+    use { 'nvim-lua/plenary.nvim' }
 
     use {
         'neovim/nvim-lspconfig',
@@ -27,11 +26,11 @@ return packer.startup(function()
 
     use {
         'jose-elias-alvarez/null-ls.nvim',
-         requires = {
+        requires = {
             'nvim-lua/plenary.nvim',
             'neovim/nvim-lspconfig',
-         },
-     }
+        },
+    }
 
     use {
         'simrat39/rust-tools.nvim',
@@ -45,7 +44,7 @@ return packer.startup(function()
 
     -- use {'jubnzv/virtual-types.nvim'}
 
-    use { 'michaelb/sniprun', run = 'bash ./install.sh'}
+    use { 'michaelb/sniprun', run = 'bash ./install.sh' }
 
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -58,7 +57,7 @@ return packer.startup(function()
         }
     }
 
-    use { 
+    use {
         'danymat/neogen',
         config = function()
             require('neogen').setup {
@@ -76,7 +75,7 @@ return packer.startup(function()
             'nvim-treesitter/nvim-treesitter'
         },
         config = function()
-            require('orgmode').setup{}
+            require('orgmode').setup {}
         end
     }
 
@@ -113,25 +112,27 @@ return packer.startup(function()
         },
     }
 
-    use {'tjdevries/nlua.nvim'}
+    use { 'tjdevries/nlua.nvim' }
 
     use {
         -- My colorscheme
         'andry-dev/nofrils',
 
+
         -- These color schemes are used for :SetupForScreens and :PrettyTheme
         -- I don't personally use them
-        'bluz71/vim-moonfly-colors',
+        'catppuccin/nvim',
+        -- 'bluz71/vim-moonfly-colors',
         -- 'gruvbox-community/gruvbox',
         -- 'sainnhe/everforest',
         -- 'shaunsingh/nord.nvim',
         -- 'JaySandhu/xcode-vim',
-        'daschw/leaf.nvim',
+        -- 'daschw/leaf.nvim',
     }
 
-    use {'lervag/vimtex', ft = {'tex'}}
+    use { 'lervag/vimtex', ft = { 'tex' } }
 
-    use {'prabirshrestha/async.vim'}
+    use { 'prabirshrestha/async.vim' }
 
     use {
         'hrsh7th/nvim-cmp',
@@ -155,7 +156,7 @@ return packer.startup(function()
 
     use {
         'junegunn/fzf',
-        {'junegunn/fzf.vim', requires = 'fzf'}
+        { 'junegunn/fzf.vim', requires = 'fzf' }
     }
 
     -- Telescope
@@ -187,14 +188,14 @@ return packer.startup(function()
     --     },
     -- }
     --
-    use {'cdelledonne/vim-cmake'}
+    use { 'cdelledonne/vim-cmake' }
 
     -- use {'lambdalisue/suda.vim'}
 
     use {
         'hkupty/iron.nvim',
         opt = true,
-        cmd = {'IronRepl', 'IronReplHere'},
+        cmd = { 'IronRepl', 'IronReplHere' },
         config = function()
             require('config.iron')
         end
@@ -203,35 +204,35 @@ return packer.startup(function()
     use {
         'tpope/vim-dispatch',
         opt = true,
-        cmd = {'Dispatch', 'Make', 'Start'}
+        cmd = { 'Dispatch', 'Make', 'Start' }
     }
 
     use {
         'tpope/vim-fugitive',
         'tpope/vim-rhubarb',
-        {'junegunn/gv.vim', requires = 'tpope/vim-fugitive'}
+        { 'junegunn/gv.vim', requires = 'tpope/vim-fugitive' }
     }
 
 
     use {
         'tpope/vim-dadbod',
-        {'kristijanhusak/vim-dadbod-completion', requires = 'vim-dadbod'}
+        { 'kristijanhusak/vim-dadbod-completion', requires = 'vim-dadbod' }
     }
 
-    use {'editorconfig/editorconfig-vim'}
+    use { 'editorconfig/editorconfig-vim' }
 
     -- use {'thaerkh/vim-workspace'}
 
-    use {'vim-test/vim-test'}
+    use { 'vim-test/vim-test' }
 
     use {
         'dhruvasagar/vim-testify',
         opt = true,
-        ft = {'vim'},
-        cmd = {'TestifyFile'}
+        ft = { 'vim' },
+        cmd = { 'TestifyFile' }
     }
 
-    use {'elixir-editors/vim-elixir', opt = true, ft = {'elixir'}}
+    use { 'elixir-editors/vim-elixir', opt = true, ft = { 'elixir' } }
 
     use {
         'numToStr/Comment.nvim',
@@ -240,5 +241,5 @@ return packer.startup(function()
         end
     }
 
-    use {'tami5/sqlite.lua'}
+    use { 'tami5/sqlite.lua' }
 end)

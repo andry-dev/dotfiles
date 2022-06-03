@@ -5,11 +5,11 @@ function! andry#set_executable_flag()
 endfunction()
 
 function! andry#set_default_theme()
-    lua set_default_theme()
+    lua require('config.themes').set_default_theme()
 endfunction()
 
 function! andry#set_pretty_theme()
-    lua set_pretty_theme()
+    lua require('config.themes').set_pretty_theme()
 endfunction()
 
 " People hate my setup, especially the lack of syntax highlight.

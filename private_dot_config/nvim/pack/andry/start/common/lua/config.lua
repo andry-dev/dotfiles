@@ -1,175 +1,89 @@
-if not pcall(require, 'vimp') then
-    vim.cmd [[ echom 'Cannot load `vimp`' ]]
-    return
-end
-
-vim.o.termguicolors = true
-
-vim.g.nofrils_heavylinenumbers = 0
-vim.g.nofrils_heavycomments = 1
-vim.g.nofrils_strbackgrounds = 0
-vim.g.gruvbox_contrast_light = 'hard'
-vim.g.gruvbox_contrast_dark = 'hard'
-
--- Normal theme configuration
-local default_theme_config = require'themes'.setup {
-    daystart = 8,
-    dayend = 19,
-    light = 'nofrils-acme',
-    dark = 'nofrils-dark',
-}
-
--- Theme configuration for screenshots and such
-local pretty_theme_config = require'themes'.setup {default_theme_config}
-
-pretty_theme_config.dark = "leaf"
-
-pretty_theme_config.dark_fn = function()
-    vim.o.background = "dark"
-    require('leaf').setup({
-        theme = 'darkest'
-    })
-end
-
-pretty_theme_config.light = "leaf"
-
-pretty_theme_config.light_fn = function()
-    vim.o.background = "light"
-    require('leaf').setup({
-        theme = 'lighter'
-    })
-end
-
-local current_theme_config = default_theme_config
-current_theme_config.set()
-
-if not theme_timer then theme_timer = vim.loop.new_timer() end
-
-function start_auto_theme()
-    local minutes = 1
-    theme_timer:start(0, minutes * 60 * 1000, vim.schedule_wrap(
-                          function() current_theme_config.set() end))
-end
-
-function stop_theme_timer() theme_timer:stop() end
-
-start_auto_theme()
-
-function set_default_theme()
-    current_theme_config = default_theme_config
-    current_theme_config.set()
-end
-
-function set_pretty_theme()
-    current_theme_config = pretty_theme_config
-    current_theme_config.set()
-end
-
-function get_theme_config() return current_theme_config end
+require('config.themes').setup()
 
 -- Options
-
-vim.o.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
+vim.opt.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
 
 -- Mappings
+vim.keymap.set('n', '<C-f>', ':GFiles<CR>')
+vim.keymap.set('n', '<M-f>', ':Files<CR>')
+vim.keymap.set('n', '<C-s>', ':Rg<CR>')
+vim.keymap.set('n', '<C-b>', ':Buffers<CR>')
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-j>', '<C-w>j')
+vim.keymap.set('n', '<C-k>', '<C-w>k')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
+vim.keymap.set('n', 'Q', 'q')
 
-vimp.nnoremap('<C-f>', ':GFiles<CR>')
-vimp.nnoremap('<M-f>', ':Files<CR>')
-vimp.nnoremap('<C-s>', ':Rg<CR>')
-vimp.nnoremap('<C-b>', ':Buffers<CR>')
-vimp.nnoremap('<C-h>', '<C-w>h')
-vimp.nnoremap('<C-j>', '<C-w>j')
-vimp.nnoremap('<C-k>', '<C-w>k')
-vimp.nnoremap({'override'}, '<C-l>', '<C-w>l')
-vimp.nnoremap('Q', 'q')
+vim.keymap.set('n', ';', ':')
+vim.keymap.set('n', ':', ';')
 
-vimp.nnoremap(';', ':')
-vimp.nnoremap(':', ';')
+vim.keymap.set('n', 'j', 'gj')
+vim.keymap.set('n', 'k', 'gk')
 
-vimp.nnoremap('j', 'gj')
-vimp.nnoremap('k', 'gk')
+vim.keymap.set('n', '<Left>', ':cprev<CR>')
+vim.keymap.set('n', '<Right>', ':cnext<CR>')
+vim.keymap.set('n', '<Up>', '<Nop>')
+vim.keymap.set('n', '<Down>', '<Nop>')
+vim.keymap.set('n', 'h', '<Nop>')
+vim.keymap.set('n', 'l', '<Nop>')
 
-vimp.nnoremap('<Left>', ':cprev<CR>')
-vimp.nnoremap('<Right>', ':cnext<CR>')
-vimp.nnoremap('<Up>', '<Nop>')
-vimp.nnoremap('<Down>', '<Nop>')
-vimp.nnoremap('h', '<Nop>')
-vimp.nnoremap('l', '<Nop>')
+vim.keymap.set('n', 'cw', 'ciw')
 
-vimp.nnoremap('cw', 'ciw')
+vim.keymap.set('i', '(<CR>', '(<CR>)<Esc>O')
+vim.keymap.set('i', '[<CR>', '[<CR>]<Esc>O')
+vim.keymap.set('i', '{<CR>', '{<CR>}<Esc>O')
 
-vimp.inoremap('(<CR>', '(<CR>)<Esc>O')
-vimp.inoremap('[<CR>', '[<CR>]<Esc>O')
-vimp.inoremap('{<CR>', '{<CR>}<Esc>O')
-
---[[
-vimp.inoremap({'expr', 'silent'}, '<CR>', function()
-    if vim.fn.pumvisible() ~= 0 then
-        if vim.fn.complete_info()["selected"] ~= -1 then
-            return vim.fn["compe#confirm"]()
-        end
-    end
-
-    return "<CR>"
-end)
---]]
-
-vimp.nnoremap({'expr', 'silent'}, '<CR>', function()
+vim.keymap.set('n', '<CR>', function()
     vim.cmd [[nohlsearch]]
     return "<CR>"
-end)
+end, { expr = true, silent = true })
 
-vimp.nnoremap({'silent'}, '<F1>', ':ExecUnderLine<CR>')
-vimp.xnoremap({'silent'}, '<F1>', 'normal! :ExecSelection<CR>')
-vimp.nnoremap('<Leader>se', ':silent! SetExecutableFlag<CR>')
-vimp.nnoremap('<Leader>fm', ':Dispatch! dolphin %:p:h<CR>')
-vimp.nnoremap('<F2>', ':Make<CR>')
-vimp.nnoremap('<F3>',
-              ':noautocmd vim /<FIND>/ **/* <Bar> cfdo %s//<REPLACE>/ce <Bar> wa')
+vim.keymap.set('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
+vim.keymap.set('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>se', ':silent! SetExecutableFlag<CR>')
+vim.keymap.set('n', '<Leader>fm', ':Dispatch! dolphin %:p:h<CR>')
+vim.keymap.set('n', '<F2>', ':Make<CR>')
+vim.keymap.set('n', '<F3>', ':noautocmd vim /<FIND>/ **/* <Bar> cfdo %s//<REPLACE>/ce <Bar> wa')
 
-vimp.tnoremap('<Esc>', [[<C-\><C-n>]])
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
 if vim.fn.executable('rg') then
-    vim.o.grepprg =
-        "rg --vimgrep --no-heading --smart-case --no-ignore-vcs --ignore-file ~/.config/.ignore"
-    vim.o.grepformat = '%f:%l:%c:%m,%f:%l:%m'
+    vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case --no-ignore-vcs --ignore-file ~/.config/.ignore"
+    vim.opt.grepformat = '%f:%l:%c:%m,%f:%l:%m'
 end
 
 -- LSP
-vimp.nnoremap('<leader>la', vim.lsp.buf.code_action)
-vimp.nnoremap('<leader>lD', vim.lsp.buf.declaration)
-vimp.nnoremap('<leader>ld', vim.lsp.buf.definition)
-vimp.nnoremap('<leader>lr', vim.lsp.buf.rename)
-vimp.nnoremap('<leader>lh', vim.lsp.buf.hover)
-vimp.nnoremap('<leader>lH', vim.diagnostic.open_float)
-vimp.nnoremap('<leader>li', vim.lsp.buf.implementation)
-vimp.nnoremap('<leader>ls', vim.lsp.buf.signature_help)
-vimp.nnoremap('<leader>lt', vim.lsp.buf.type_definition)
-vimp.nnoremap('<leader>lx', vim.lsp.buf.references)
-vimp.nnoremap('<leader>lS', vim.lsp.buf.document_symbol)
-vimp.nnoremap('<leader>lw', vim.lsp.buf.workspace_symbol)
-vimp.inoremap('<C-s>', vim.lsp.buf.signature_help)
+vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action)
+vim.keymap.set('n', '<leader>lD', vim.lsp.buf.declaration)
+vim.keymap.set('n', '<leader>ld', vim.lsp.buf.definition)
+vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename)
+vim.keymap.set('n', '<leader>lh', vim.lsp.buf.hover)
+vim.keymap.set('n', '<leader>lH', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation)
+vim.keymap.set('n', '<leader>ls', vim.lsp.buf.signature_help)
+vim.keymap.set('n', '<leader>lt', vim.lsp.buf.type_definition)
+vim.keymap.set('n', '<leader>lx', vim.lsp.buf.references)
+vim.keymap.set('n', '<leader>lS', vim.lsp.buf.document_symbol)
+vim.keymap.set('n', '<leader>lw', vim.lsp.buf.workspace_symbol)
+vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help)
 
 -- vim-test
-vimp.nnoremap({'silent'}, '<leader>tt', ':TestNearest<CR>')
-vimp.nnoremap({'silent'}, '<leader>tf', ':TestFile<CR>')
-vimp.nnoremap({'silent'}, '<leader>ta', ':TestSuite<CR>')
+vim.keymap.set('n', '<leader>tt', ':TestNearest<CR>', { silent = true })
+vim.keymap.set('n', '<leader>tf', ':TestFile<CR>', { silent = true })
+vim.keymap.set('n', '<leader>ta', ':TestSuite<CR>', { silent = true })
 
 -- vimspector
-vimp.nnoremap('<Leader>dc', ':call vimspector#Continue()<CR>')
-vimp.nnoremap('<Leader>db', ':call vimspector#ToggleBreakpoint()<CR>')
-vimp.nnoremap('<Leader>dn', ':call vimspector#StepOver()<CR>')
-vimp.nnoremap('<Leader>ds', ':call vimspector#StepInto()<CR>')
-vimp.nnoremap('<Leader>do', ':call vimspector#StepOut()<CR>')
-vimp.nnoremap('<Leader>dr', ':call vimspector#Restart()<CR>')
+vim.keymap.set('n', '<Leader>dc', ':call vimspector#Continue()<CR>')
+vim.keymap.set('n', '<Leader>db', ':call vimspector#ToggleBreakpoint()<CR>')
+vim.keymap.set('n', '<Leader>dn', ':call vimspector#StepOver()<CR>')
+vim.keymap.set('n', '<Leader>ds', ':call vimspector#StepInto()<CR>')
+vim.keymap.set('n', '<Leader>do', ':call vimspector#StepOut()<CR>')
+vim.keymap.set('n', '<Leader>dr', ':call vimspector#Restart()<CR>')
 
 -- Iron
-vimp.xnoremap('<Leader>is', '<Plug>(iron-visual-send)')
-vimp.nnoremap('<Leader>is', '<Plug>(iron-send-line)')
-
--- Vimwiki
--- vimp.nnoremap('<Leader>wc', require('plugins/vimwiki-utils').compile)
+vim.keymap.set('x', '<Leader>is', '<Plug>(iron-visual-send)')
+vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
 
 -- MPD
-vimp.nnoremap('<Leader>mm', function() require('mpd'):status() end)
-vimp.nnoremap('<Leader>mp', function() require('mpd'):toggle() end)
+vim.keymap.set('n', '<Leader>mm', function() require('mpd'):status() end)
+vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)

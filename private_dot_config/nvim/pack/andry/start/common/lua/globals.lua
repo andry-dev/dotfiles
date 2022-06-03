@@ -37,7 +37,7 @@ local system_name = get_system_name()
 
 M.elixirls_basepath = lsp_folder_path .. '/elixir-ls'
 M.sumneko_basepath = lsp_folder_path .. '/lua-language-server'
-M.sumneko_binary =  M.sumneko_basepath .. '/bin/' .. system_name .. '/lua-language-server'
+M.sumneko_binary =  M.sumneko_basepath .. '/bin/lua-language-server'
 M.pyls_ms_binary = lsp_folder_path .. '/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.dll'
 
 return M

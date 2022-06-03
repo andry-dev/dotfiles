@@ -143,11 +143,6 @@ _G.packer_plugins = {
     path = "/home/andry/.local/share/nvim/site/pack/packer/opt/iron.nvim",
     url = "https://github.com/hkupty/iron.nvim"
   },
-  ["leaf.nvim"] = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/leaf.nvim",
-    url = "https://github.com/daschw/leaf.nvim"
-  },
   ["lsp_signature.nvim"] = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/lsp_signature.nvim",
@@ -173,6 +168,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
     url = "https://github.com/jose-elias-alvarez/null-ls.nvim"
+  },
+  nvim = {
+    loaded = true,
+    path = "/home/andry/.local/share/nvim/site/pack/packer/start/nvim",
+    url = "https://github.com/catppuccin/nvim"
   },
   ["nvim-cmp"] = {
     after = { "cmp-nvim-lsp", "cmp-buffer", "cmp-path" },
@@ -307,11 +307,6 @@ _G.packer_plugins = {
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
   },
-  ["vim-moonfly-colors"] = {
-    loaded = true,
-    path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-moonfly-colors",
-    url = "https://github.com/bluz71/vim-moonfly-colors"
-  },
   ["vim-rhubarb"] = {
     loaded = true,
     path = "/home/andry/.local/share/nvim/site/pack/packer/start/vim-rhubarb",
@@ -397,9 +392,9 @@ vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType elixir ++once lua require("packer.load")({'vim-elixir'}, { ft = "elixir" }, _G.packer_plugins)]]
-vim.cmd [[au FileType vim ++once lua require("packer.load")({'vim-testify'}, { ft = "vim" }, _G.packer_plugins)]]
-vim.cmd [[au FileType rust ++once lua require("packer.load")({'rust-tools.nvim'}, { ft = "rust" }, _G.packer_plugins)]]
 vim.cmd [[au FileType tex ++once lua require("packer.load")({'vimtex'}, { ft = "tex" }, _G.packer_plugins)]]
+vim.cmd [[au FileType rust ++once lua require("packer.load")({'rust-tools.nvim'}, { ft = "rust" }, _G.packer_plugins)]]
+vim.cmd [[au FileType vim ++once lua require("packer.load")({'vim-testify'}, { ft = "vim" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]

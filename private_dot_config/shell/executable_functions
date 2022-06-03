@@ -22,6 +22,10 @@ wlinit() {
     exec dbus-run-session -- runsvdir -P "$HOME/runit/wlservice"
 }
 
+maskpath() {
+    export PS1='%B%%%b '
+}
+
 vagrant(){
   podman run -it --rm \
     -e LIBVIRT_DEFAULT_URI \
