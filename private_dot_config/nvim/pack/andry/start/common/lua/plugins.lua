@@ -155,8 +155,7 @@ return packer.startup(function()
     }
 
     use {
-        'junegunn/fzf',
-        { 'junegunn/fzf.vim', requires = 'fzf' }
+        'ibhagwan/fzf-lua'
     }
 
     -- Telescope
@@ -187,7 +186,7 @@ return packer.startup(function()
     --         run = 'make',
     --     },
     -- }
-    --
+
     use { 'cdelledonne/vim-cmake' }
 
     -- use {'lambdalisue/suda.vim'}

@@ -1,13 +1,25 @@
 require('config.themes').setup()
 
+local fzf = require('fzf-lua')
+
 -- Options
 vim.opt.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
 
 -- Mappings
-vim.keymap.set('n', '<C-f>', ':GFiles<CR>')
-vim.keymap.set('n', '<M-f>', ':Files<CR>')
-vim.keymap.set('n', '<C-s>', ':Rg<CR>')
-vim.keymap.set('n', '<C-b>', ':Buffers<CR>')
+
+vim.keymap.set('n', '<C-f>', function()
+    fzf.git_files()
+end)
+vim.keymap.set('n', '<M-f>', function()
+    fzf.files()
+end)
+vim.keymap.set('n', '<C-s>', function()
+    fzf.live_grep_native()
+end)
+vim.keymap.set('n', '<C-b>', function()
+    fzf.buffers()
+end)
+
 vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
