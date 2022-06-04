@@ -14,10 +14,10 @@ local default_config = {
 -- From norcalli
 local function nvim_create_augroups(definitions)
     for group_name, definition in pairs(definitions) do
-        vim.api.nvim_command('augroup '..group_name)
+        vim.api.nvim_command('augroup ' .. group_name)
         vim.api.nvim_command('autocmd!')
         for _, def in ipairs(definition) do
-            local command = table.concat(vim.tbl_flatten{'autocmd', def}, ' ')
+            local command = table.concat(vim.tbl_flatten { 'autocmd', def }, ' ')
             vim.api.nvim_command(command)
         end
         vim.api.nvim_command('augroup END')
@@ -101,9 +101,20 @@ function M:clear_autocmd()
     ]])
 end
 
+local function focus_hl_complete(arglead, cmdline, cursorpos)
+    return vim.tbl_keys(require('focus').config.colors)
+end
+
+local function setup_commands()
+    vim.api.nvim_create_user_command('FocusHL', function(opts)
+        require('focus'):add_range_highlight(opts.args)
+    end, { nargs = 1, complete = focus_hl_complete })
+end
+
 function M.setup(config)
     M.config = vim.tbl_extend("force", {}, default_config, config or {})
 
+    setup_commands()
     M:setup_highlights()
     if M.config.override_colors then
         M:setup_autocmd()
@@ -114,4 +125,4 @@ function M.setup(config)
     return M
 end
 
-return M;
+return M

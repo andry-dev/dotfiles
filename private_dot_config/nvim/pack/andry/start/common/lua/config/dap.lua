@@ -1,4 +1,4 @@
-dap = require('dap')
+local dap = require('dap')
 
 local globals = require('globals')
 
@@ -41,7 +41,7 @@ dap.configurations.elixir = {
         type = "mix_task",
         name = "mix test",
         task = "test",
-        taskArgs = {"--trace"},
+        taskArgs = { "--trace" },
         request = "launch",
         startApps = true,
         projectDir = "${workspaceFolder}",
@@ -53,5 +53,8 @@ dap.configurations.elixir = {
 }
 
 
-require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
 require('nvim-dap-virtual-text').setup()
+require('dapui').setup()
+require('dap-python').setup('~/.virtualenvs/debugpy/bin/python', {})
+
+return dap

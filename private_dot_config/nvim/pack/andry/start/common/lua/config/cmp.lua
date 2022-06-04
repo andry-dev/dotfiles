@@ -1,4 +1,4 @@
-local cmp = require'cmp'
+local cmp = require 'cmp'
 
 local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -54,6 +54,11 @@ cmp.setup({
     },
     --]]
 
+    enabled = function()
+        return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+            or require("cmp_dap").is_dap_buffer()
+    end,
+
     snippet = {
         expand = function(args)
             require 'luasnip'.lsp_expand(args.body)
@@ -67,12 +72,13 @@ cmp.setup({
     sources = {
         -- buffer = true,
         { name = 'nvim_lsp' },
-        { name = 'nvim_lua'},
+        { name = 'nvim_lua' },
         { name = 'luasnip' },
         { name = 'path' },
         { name = 'orgmode' },
         -- { name = 'latex_symbols' },
         -- { name = 'snippets_nvim'},
-        { name = 'vim_dadbod_completion'},
+        { name = 'vim_dadbod_completion' },
+        { name = 'dap' },
     },
 })

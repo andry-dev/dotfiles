@@ -1,5 +1,6 @@
 require('config.themes').setup()
 
+local globals = require('globals')
 local fzf = require('fzf-lua')
 
 -- Options
@@ -84,14 +85,6 @@ vim.keymap.set('n', '<leader>tt', ':TestNearest<CR>', { silent = true })
 vim.keymap.set('n', '<leader>tf', ':TestFile<CR>', { silent = true })
 vim.keymap.set('n', '<leader>ta', ':TestSuite<CR>', { silent = true })
 
--- vimspector
-vim.keymap.set('n', '<Leader>dc', ':call vimspector#Continue()<CR>')
-vim.keymap.set('n', '<Leader>db', ':call vimspector#ToggleBreakpoint()<CR>')
-vim.keymap.set('n', '<Leader>dn', ':call vimspector#StepOver()<CR>')
-vim.keymap.set('n', '<Leader>ds', ':call vimspector#StepInto()<CR>')
-vim.keymap.set('n', '<Leader>do', ':call vimspector#StepOut()<CR>')
-vim.keymap.set('n', '<Leader>dr', ':call vimspector#Restart()<CR>')
-
 -- Iron
 vim.keymap.set('x', '<Leader>is', '<Plug>(iron-visual-send)')
 vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
@@ -99,3 +92,60 @@ vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
 -- MPD
 vim.keymap.set('n', '<Leader>mm', function() require('mpd'):status() end)
 vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)
+
+-- Commands
+vim.api.nvim_create_user_command('DefaultTheme', function()
+    require('config.themes').set_default_theme()
+end, {})
+
+vim.api.nvim_create_user_command('PrettyTheme', function()
+    require('config.themes').set_pretty_theme()
+end, {})
+
+vim.api.nvim_create_user_command('EditPlugin', function()
+    fzf.files({ cwd = '~/.config/nvim/pack/andry/start' })
+end, {})
+
+vim.api.nvim_create_user_command('EnableAutoformat', function()
+    globals.enable_autoformat(true)
+end, {})
+
+vim.api.nvim_create_user_command('DisableAutoformat', function()
+    globals.enable_autoformat(false)
+end, {})
+
+
+local dap = require('dap')
+local dapui = require('dapui')
+
+vim.keymap.set('n', '<F4>', function()
+    dap.continue()
+end)
+
+vim.keymap.set('n', '<F5>', function()
+    dap.step_over()
+end)
+
+vim.keymap.set('n', '<F6>', function()
+    dap.step_into()
+end)
+
+vim.keymap.set('n', '<F7>', function()
+    dap.step_out()
+end)
+
+vim.keymap.set('n', '<Leader>db', function()
+    dap.toggle_breakpoint()
+end)
+
+vim.keymap.set('n', '<Leader>dB', function()
+    dap.set_breakpoint(vim.fn.input('When? '))
+end)
+
+vim.keymap.set('n', '<Leader>dr', function()
+    dap.repl_open()
+end)
+
+vim.api.nvim_create_user_command('ToggleDebug', function()
+    dapui.toggle()
+end, {})

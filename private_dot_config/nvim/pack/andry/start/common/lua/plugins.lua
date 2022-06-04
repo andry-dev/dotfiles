@@ -8,6 +8,23 @@ return packer.startup(function()
 
     use { 'wbthomason/packer.nvim', opt = true }
 
+    use {
+        -- My colorscheme
+        'andry-dev/nofrils',
+
+        -- These color schemes are used for :SetupForScreens and :PrettyTheme
+        -- I don't personally use them
+        'catppuccin/nvim',
+        'EdenEast/nightfox.nvim',
+        -- 'bluz71/vim-moonfly-colors',
+        -- 'gruvbox-community/gruvbox',
+        -- 'sainnhe/everforest',
+        -- 'shaunsingh/nord.nvim',
+        -- 'JaySandhu/xcode-vim',
+        -- 'daschw/leaf.nvim',
+    }
+
+
     use { 'nvim-lua/plenary.nvim' }
 
     use {
@@ -81,6 +98,11 @@ return packer.startup(function()
 
     use {
         'mfussenegger/nvim-dap',
+        requires = {
+            'theHamsta/nvim-dap-virtual-text',
+            'mfussenegger/nvim-dap-python',
+            'rcarriga/nvim-dap-ui',
+        },
         config = function()
             require('config.dap')
         end
@@ -89,46 +111,11 @@ return packer.startup(function()
     use {
         'theHamsta/nvim-dap-virtual-text',
         requires = {
-            'nvim-dap',
-            'nvim-treesitter',
+            'nvim-treesitter/nvim-treesitter',
         }
     }
 
-    use {
-        "rcarriga/nvim-dap-ui",
-        requires = {
-            'mfussenegger/nvim-dap'
-        },
-        after = 'nvim-dap',
-        config = function()
-            require('dapui').setup()
-        end
-    }
-
-    use {
-        "mfussenegger/nvim-dap-python",
-        requires = {
-            "mfussenegger/nvim-dap"
-        },
-    }
-
     use { 'tjdevries/nlua.nvim' }
-
-    use {
-        -- My colorscheme
-        'andry-dev/nofrils',
-
-
-        -- These color schemes are used for :SetupForScreens and :PrettyTheme
-        -- I don't personally use them
-        'catppuccin/nvim',
-        -- 'bluz71/vim-moonfly-colors',
-        -- 'gruvbox-community/gruvbox',
-        -- 'sainnhe/everforest',
-        -- 'shaunsingh/nord.nvim',
-        -- 'JaySandhu/xcode-vim',
-        -- 'daschw/leaf.nvim',
-    }
 
     use { 'lervag/vimtex', ft = { 'tex' } }
 
@@ -138,16 +125,20 @@ return packer.startup(function()
         'hrsh7th/nvim-cmp',
         requires = {
             'L3MON4D3/LuaSnip',
-            { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
-            { 'hrsh7th/cmp-nvim-lsp', after = 'nvim-cmp' },
-            { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
+            { 'hrsh7th/cmp-buffer' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-path' },
             {
                 'saadparwaiz1/cmp_luasnip',
                 requires = {
                     'LuaSnip',
                     'nvim-cmp'
                 }
-            }
+            },
+            {
+                'rcarriga/cmp-dap',
+                -- after = 'mfussenegger/nvim-dap'
+            },
         },
         config = function()
             require('config.cmp')

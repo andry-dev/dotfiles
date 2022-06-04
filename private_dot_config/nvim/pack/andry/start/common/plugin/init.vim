@@ -3,15 +3,6 @@ let g:mapleader = ','
 lua << EOF
     require 'plugins'
     require 'config/lsp'
-    -- require 'plugins/dap'
-    -- require 'plugins/compe'
-    -- require 'plugins/treesitter'
-    -- require 'plugins/iron'
-    -- require 'plugins/diagnostics'
-    -- require 'plugins/snippets'
-    -- require 'plugins/comment'
-    -- require 'plugins/snap'
-
     require('focus').setup()
 
     require 'config'
@@ -46,12 +37,6 @@ set dictionary+=/usr/share/hunspell/en_GB.dic
 
 set omnifunc=v:lua.vim.lsp.omnifunc
 
-
-" Mappings
-
-
-
-
 " Vimwiki
 let g:vimwiki_list = [{'path': '~/.local/share/vimwiki',
                     \}]
@@ -74,18 +59,9 @@ let g:cmake_generate_options = ['-G Ninja']
 
 " Tex
 let g:tex_flavor="latex"
-
 let g:vimtex_view_method = 'zathura'
 
 " fn
-function! FocusHLCompl()
-    return luaeval("vim.tbl_keys(require('focus').config.colors)")
-endfunction()
-
-function! FocusHL()
-    return luaeval("vim.tbl_keys(require('focus').config.colors)")
-endfunction()
-
 function! SynStack()
   if !exists("*synstack")
     return
@@ -97,29 +73,13 @@ endfunc
 command! ExecUnderLine :execute getline(".")
 command! ExecSelection :execute getreg("*")
 command! OpenPlugFolder :Dispatch! dolphin ~/.config/nvim/pack/andry/start
-command! EditPlugin :FZF ~/.config/nvim/pack/andry/start
-
-command! -range -nargs=1 -complete=customlist,andry#focus_hl_complete FocusHL  :call andry#focus_hl(<f-args>)
-
 
 command! SetExecutableFlag :call andry#set_executable_flag()
 
 command! SetupForScreens :call andry#setup_for_screenshots()
 
-command! P :call fzf#run({'source': 'list-prjs', 'sink': 'cd'})
-
 command! W :w suda://%
 command! E :e suda://%
-
-command! DefaultTheme :call andry#set_default_theme()
-command! PrettyTheme :call andry#set_pretty_theme()
-
-command! EnableAutoformat :lua require('globals').enable_autoformat(true)
-command! DisableAutoformat :lua require('globals').enable_autoformat(false)
-
-command! AsyncVimwiki2HTML :lua require('plugins/vimwiki-utils').compile()
-
-" command! AsyncW2HTML :lua require('plugins/vimwiki-utils').compile_async()
 
 " Auto commands
 
