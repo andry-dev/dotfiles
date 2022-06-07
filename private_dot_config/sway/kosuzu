@@ -1,3 +1,5 @@
+exec dbus-update-activation-environment DISPLAY I3SOCK SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway MOZ_ENABLE_WAYLAND=1
+
 set $mod Mod1
 set $menu wofi --show drun
 
@@ -12,12 +14,8 @@ input "1133:16514:Logitech_MX_Master_3" {
 	accel_profile flat
 }
 
-#exec runsvdir -P ~/runit/service
-
-exec /usr/libexec/gsd-xsettings
-exec /usr/libexec/xdg-desktop-portal
 exec /usr/libexec/xdg-desktop-portal-wlr
-exec gammastep
+exec ~/runit/sv/firefox-sync/run
 
 set $gnome-schema org.gnome.desktop.interface
 exec_always {

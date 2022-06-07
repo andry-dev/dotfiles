@@ -5,4 +5,4 @@
 # runsvdir -P ~/runit/wlservice &
 # sv restart ~/runit/wlservice/* &
 
-exec /usr/bin/gnome-session
+exec /usr/bin/sway

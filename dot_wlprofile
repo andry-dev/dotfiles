@@ -5,7 +5,7 @@
 export MOZ_ENABLE_WAYLAND=1
 export QT_QPA_PLATFORM=wayland
 #export SDL_VIDEODRIVER=wayland
-export SVDIR=~/runit/wlservice
+# export SVDIR=~/runit/wlservice
 export XDG_CURRENT_DESKTOP=sway
 
 # /usr/libexec/xdg-desktop-portal-wlr &
