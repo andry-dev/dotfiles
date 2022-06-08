@@ -1,6 +1,6 @@
 #!/bin/bash
 
-alacritty-set-night
+# alacritty-set-night
 
 kitty +kitten themes --reload-in=all terafox
 
@@ -8,6 +8,6 @@ kitty +kitten themes --reload-in=all terafox
 #rm $KDE_THEME_CONFIG
 #cp /usr/share/color-schemes/BreezeDark.colors $KDE_THEME_CONFIG
 
-sed -i 's@^Net/ThemeName .*$@Net/ThemeName "Yaru-dark"@' $HOME/.xsettingsd
-
-kill -HUP $(pgrep xsettingsd)
+# sed -i 's@^Net/ThemeName .*$@Net/ThemeName "Yaru-dark"@' $HOME/.xsettingsd
+#
+# kill -HUP $(pgrep xsettingsd)
