@@ -1,0 +1,9 @@
+[Unit]
+Description=Set night theme
+
+[Service]
+Type=oneshot
+ExecStart=/home/andry/.local/bin/set-night-theme
+
+[Install]
+WantedBy=graphical.target

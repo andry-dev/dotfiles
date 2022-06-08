@@ -1,0 +1,9 @@
+[Unit]
+Description=Set day theme
+
+[Service]
+Type=oneshot
+ExecStart=/home/andry/.local/bin/set-day-theme
+
+[Install]
+WantedBy=graphical.target

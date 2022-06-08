@@ -1,0 +1,9 @@
+[Unit]
+Description=Set day theme at 6:00
+
+[Timer]
+OnCalendar=*-*-* 6:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target graphical.target
