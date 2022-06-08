@@ -34,9 +34,9 @@ return packer.startup(function()
         'folke/trouble.nvim',
         'simrat39/symbols-outline.nvim',
 
-        -- config = function()
-        --     require('config.lsp')
-        -- end,
+        config = function()
+            require('config.lsp')
+        end,
 
         after = 'nvim-cmp',
     }
@@ -71,7 +71,10 @@ return packer.startup(function()
             'nvim-treesitter/nvim-treesitter-refactor',
             -- 'romgrk/nvim-treesitter-context',
             'windwp/nvim-ts-autotag',
-        }
+        },
+        config = function()
+            require('config.treesitter')
+        end
     }
 
     use {
@@ -142,6 +145,7 @@ return packer.startup(function()
         },
         config = function()
             require('config.cmp')
+            require('config.snippets')
         end
     }
 

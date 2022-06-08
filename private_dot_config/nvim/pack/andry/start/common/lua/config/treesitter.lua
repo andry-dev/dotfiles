@@ -95,7 +95,7 @@ treesitter.setup {
     },
 
     playground = {
-        enable = true,
+        enable = false,
     },
 
     autotag = {
