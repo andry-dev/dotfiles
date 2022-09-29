@@ -20,13 +20,20 @@ p_wrap() {
 zle -N p "p_wrap"
 bindkey "^P" p
 
-open-dolphin() {
-    dolphin . > /dev/null 2>&1  &
+open-fm() {
+    dbus-send --session \
+              --dest=org.freedesktop.FileManager1 \
+              --type=method_call \
+              /org/freedesktop/FileManager1 \
+              org.freedesktop.FileManager1.ShowFolders \
+              array:string:"file://${PWD}" \
+              string:""
+
     zle reset-prompt
 }
 
-zle -N open-dolphin
-bindkey "^F" open-dolphin
+zle -N open-fm
+bindkey "^F" open-fm
 
 backward-kill-dir () {
     local WORDCHARS=${WORDCHARS/\/}

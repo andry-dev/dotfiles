@@ -1,7 +1,10 @@
 local globals = require 'globals'
 
+require('mason-lspconfig').setup({
+    automatic_installation = true,
+})
+
 local lsp = require 'lspconfig'
--- local configs = require 'lspconfig/configs'
 
 
 -- require('lsp_signature').on_attach()
@@ -20,17 +23,17 @@ local function add_if_executable_exists(lsp_name, executable, config)
 end
 
 vim.lsp.handlers["textDocument/formatting"] =
-    function(err, result, context, _)
-        if err ~= nil or result == nil then return end
-        if not vim.api.nvim_buf_get_option(context.bufnr, "modified") then
-            local view = vim.fn.winsaveview()
-            vim.lsp.util.apply_text_edits(result, context.bufnr, vim.opt.fileencoding:get())
-            vim.fn.winrestview(view)
-            if context.bufnr == vim.api.nvim_get_current_buf() then
-                vim.api.nvim_command("noautocmd :update")
-            end
+function(err, result, context, _)
+    if err ~= nil or result == nil then return end
+    if not vim.api.nvim_buf_get_option(context.bufnr, "modified") then
+        local view = vim.fn.winsaveview()
+        vim.lsp.util.apply_text_edits(result, context.bufnr, vim.opt.fileencoding:get())
+        vim.fn.winrestview(view)
+        if context.bufnr == vim.api.nvim_get_current_buf() then
+            vim.api.nvim_command("noautocmd :update")
         end
     end
+end
 
 local custom_attach = function(client)
     -- require('lsp_signature').on_attach()
@@ -58,6 +61,11 @@ end
 -- I specify all language serviers here and they will be conditionally enabled if the executable exists
 -- This prevents annoying issues in new machines when a language server is not configured
 local language_servers = {
+    ansiblels = {
+        executable = 'ansiblels',
+        config = default_config,
+    },
+
     clangd = {
         executable = 'clangd',
         config = default_config:with {
@@ -71,6 +79,18 @@ local language_servers = {
     cmake = {
         executable = 'cmake-language-server',
         config = default_config
+    },
+
+    eslint = {
+        executable = 'eslint',
+        config = default_config,
+    },
+
+    elixirls = {
+        executable = 'elixir_ls',
+        config = default_config:with {
+            root_dir = lsp.util.root_pattern(".git", "mix.exs"),
+        }
     },
 
     solargraph = {
@@ -97,7 +117,7 @@ local language_servers = {
     sqlls = {
         executable = 'sql-language-server',
         config = default_config:with {
-            cmd = {'sql-language-server', 'up', '--method', 'stdio'}
+            cmd = { 'sql-language-server', 'up', '--method', 'stdio' }
         }
     },
 
@@ -122,16 +142,15 @@ local language_servers = {
         config = default_config
     },
 
-    --[[
     texlab = {
         executable = 'texlab',
         config = default_config:with {
-            cmd = {'texlab', '-vvvv', '--log-file', '/tmp/texlab.log'},
+            cmd = { 'texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
             settings = {
                 texlab = {
                     build = {
                         executable = 'latexmk',
-                        args = {'-verbose', '-synctex=1', '-pvc'},
+                        args = { '-verbose', '-synctex=1', '-pvc' },
                         forwardSearchAfter = true,
                         forwardSearch = {
                             executable = "zathura",
@@ -147,20 +166,22 @@ local language_servers = {
             },
         }
     },
-    --]]
 }
 
 for name, info in pairs(language_servers) do
-    add_if_executable_exists(name, info.executable, info.config)
+    lsp[name].setup(info.config)
+    -- add_if_executable_exists(name, info.executable, info.config)
 end
 
+
 lsp.elixirls.setup(default_config:with {
-    root_dir = lsp.util.root_pattern(".git", "mix.exs"),
-    cmd = {globals.elixirls_basepath .. '/release/language_server.sh'}
 })
 
+
+local sumneko_basepath = vim.fn.stdpath('data') .. '/mason/packages/lua-language-server/extension/server/bin'
+local sumneko_binary = sumneko_basepath .. '/lua-language-server'
 require('nlua.lsp.nvim').setup(lsp, default_config:with {
-    cmd = {globals.sumneko_binary, "-E", globals.sumneko_basepath .. "/main.lua"},
+    cmd = { sumneko_binary, "-E", sumneko_basepath .. "/main.lua" },
 })
 
 --[[
@@ -179,29 +200,28 @@ lsp.sumneko_lua.setup {
 --]]
 
 
-local null_ls = require('null-ls')
-
-local null_ls_sources = { sources = {} }
-
-function null_ls_sources:add(executable, source)
-    if vim.fn.executable(executable) == 1 then
-        vim.list_extend(self.sources, {source})
-    end
-end
-
-null_ls_sources:add('prettier', null_ls.builtins.formatting.prettier)
-null_ls_sources:add('stylua', null_ls.builtins.formatting.stylua.with({
-    extra_args = {"--indent-type Spaces"}
-}))
-null_ls_sources:add('shellcheck', null_ls.builtins.diagnostics.shellcheck)
-null_ls_sources:add('eslint_d', null_ls.builtins.diagnostics.eslint_d)
-null_ls_sources:add('hadolint', null_ls.builtins.diagnostics.hadolint)
-null_ls_sources:add('phpstan', null_ls.builtins.diagnostics.phpstan)
-
-null_ls.setup({
-
-    sources = null_ls_sources.sources,
-})
+-- local null_ls = require('null-ls')
+--
+-- local null_ls_sources = { sources = {} }
+--
+-- function null_ls_sources:add(executable, source)
+--     if vim.fn.executable(executable) == 1 then
+--         vim.list_extend(self.sources, {source})
+--     end
+-- end
+--
+-- null_ls_sources:add('prettier', null_ls.builtins.formatting.prettier)
+-- null_ls_sources:add('stylua', null_ls.builtins.formatting.stylua.with({
+--     extra_args = {"--indent-type Spaces"}
+-- }))
+-- null_ls_sources:add('shellcheck', null_ls.builtins.diagnostics.shellcheck)
+-- null_ls_sources:add('eslint_d', null_ls.builtins.diagnostics.eslint_d)
+-- null_ls_sources:add('hadolint', null_ls.builtins.diagnostics.hadolint)
+-- null_ls_sources:add('phpstan', null_ls.builtins.diagnostics.phpstan)
+--
+-- null_ls.setup({
+--     sources = null_ls_sources.sources,
+-- })
 
 require('symbols-outline').setup({
     highlight_hovered_item = true,
@@ -246,7 +266,7 @@ function M.start_jdtls()
     --]]
 
     local config = {
-        cmd = {'java-jdtls.sh'},
+        cmd = { 'java-jdtls.sh' },
         on_attach = custom_attach,
         capabilities = capabilities,
         --[[

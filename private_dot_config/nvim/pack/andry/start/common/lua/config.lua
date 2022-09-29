@@ -2,6 +2,7 @@ require('config.themes').setup()
 
 local globals = require('globals')
 local fzf = require('fzf-lua')
+local Job = require('plenary.job')
 
 -- Options
 vim.opt.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
@@ -54,7 +55,20 @@ end, { expr = true, silent = true })
 vim.keymap.set('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
 vim.keymap.set('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
 vim.keymap.set('n', '<Leader>se', ':silent! SetExecutableFlag<CR>')
-vim.keymap.set('n', '<Leader>fm', ':Dispatch! dolphin %:p:h<CR>')
+vim.keymap.set('n', '<Leader>fm', function()
+    Job:new {
+        command = 'dbus-send',
+        args = {
+            '--session',
+            '--dest=org.freedesktop.FileManager1',
+            '--type=method_call',
+            '/org/freedesktop/FileManager1',
+            'org.freedesktop.FileManager1.ShowFolders',
+            string.format([[array:string:file://%s]], vim.fn.expand('%:p:h')),
+            string.format([[string:nvim-%s]], require 'lua-utils.prng'.randstr(6))
+        }
+    }:start()
+end)
 vim.keymap.set('n', '<F2>', ':Make<CR>')
 vim.keymap.set('n', '<F3>', ':noautocmd vim /<FIND>/ **/* <Bar> cfdo %s//<REPLACE>/ce <Bar> wa')
 
@@ -103,7 +117,15 @@ vim.api.nvim_create_user_command('PrettyTheme', function()
 end, {})
 
 vim.api.nvim_create_user_command('EditPlugin', function()
-    fzf.files({ cwd = '~/.config/nvim/pack/andry/start' })
+    local plugin_path = '~/.local/share/chezmoi/private_dot_config/nvim/pack/andry/start'
+    vim.cmd("cd " .. plugin_path)
+    fzf.files({ cwd = plugin_path })
+end, {})
+
+vim.api.nvim_create_user_command('EditDotfiles', function()
+    local plugin_path = '~/.local/share/chezmoi'
+    vim.cmd("cd " .. plugin_path)
+    fzf.files({ cwd = plugin_path })
 end, {})
 
 vim.api.nvim_create_user_command('EnableAutoformat', function()
@@ -149,3 +171,16 @@ end)
 vim.api.nvim_create_user_command('ToggleDebug', function()
     dapui.toggle()
 end, {})
+
+vim.api.nvim_create_autocmd('BufWritePost', {
+    group = vim.api.nvim_create_augroup("DotfilesSave", { clear = true }),
+    pattern = '~/.local/share/chezmoi/*',
+    nested = true,
+    callback = function()
+        vim.cmd 'botright 5split | terminal chezmoi apply'
+        -- local buf = vim.api.nvim_create_buf(true, true)
+        -- vim.api.nvim_win_set_buf(win, buf)
+        -- local channel = vim.api.nvim_open_term(buf, {})
+        -- vim.api.nvim_chan_send(channel, "chezmoi apply")
+    end
+})

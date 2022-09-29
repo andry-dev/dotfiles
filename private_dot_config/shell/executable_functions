@@ -41,3 +41,15 @@ vagrant(){
     docker.io/vagrantlibvirt/vagrant-libvirt:latest \
       vagrant $@
 }
+
+git_checkout() {
+    branch=$(git branch --all | fzf | sed "s/remotes\/origin\///" | xargs)
+    if [ "${branch}" ]; then
+        git checkout "${branch}"
+    fi
+}
+
+podman_stop() {
+    id=$(podman ps | tail -n -1 | fzf | awk '{ print $1; }')
+    podman stop "${id}"
+}

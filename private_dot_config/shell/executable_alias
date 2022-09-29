@@ -1,18 +1,18 @@
 #!/bin/sh
 
-#alias sudo='doas'
 alias clang='clang'
 alias ll='ls -lah'
 alias cp='rsync -avh --no-compress --progress'
 alias htop='htop'
 alias gs='git status'
 alias gcm='git commit'
-alias gco='git checkout'
+alias gco='git_checkout'
 alias grb='git rebase'
 alias gre='git remote'
 alias gpl='git pull'
 alias gps='git push'
 alias mkdir='mkdir -p'
+alias pstop='podman_stop'
 
 # Error correction
 

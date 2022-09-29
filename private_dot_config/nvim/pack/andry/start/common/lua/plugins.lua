@@ -28,7 +28,22 @@ return packer.startup(function()
     use { 'nvim-lua/plenary.nvim' }
 
     use {
+        'lewis6991/spellsitter.nvim',
+        config = function()
+            require('spellsitter').setup()
+        end
+    }
+
+    use {
+        "williamboman/mason.nvim",
+        config = function()
+            require('mason').setup()
+        end
+    }
+
+    use {
         'neovim/nvim-lspconfig',
+        'williamboman/mason-lspconfig.nvim',
         'ray-x/lsp_signature.nvim',
         'mfussenegger/nvim-jdtls',
         'folke/trouble.nvim',
@@ -38,7 +53,7 @@ return packer.startup(function()
             require('config.lsp')
         end,
 
-        after = 'nvim-cmp',
+        after = {'nvim-cmp', 'williamboman/mason.nvim'},
     }
 
     use {
