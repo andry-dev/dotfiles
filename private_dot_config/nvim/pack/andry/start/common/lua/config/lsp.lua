@@ -13,7 +13,7 @@ local lsp = require 'lspconfig'
 -- Maybe refactor it to something better?
 
 function should_format()
-    if globals.autoformat_enabled() then vim.lsp.buf.formatting() end
+    if globals.autoformat_enabled() then vim.lsp.buf.format({ async = true }) end
 end
 
 local function add_if_executable_exists(lsp_name, executable, config)
@@ -46,8 +46,7 @@ local custom_attach = function(client)
     end
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local default_config = {
     on_attach = custom_attach,
