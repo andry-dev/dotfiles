@@ -6,7 +6,6 @@ require('mason-lspconfig').setup({
 
 local lsp = require 'lspconfig'
 
-
 -- require('lsp_signature').on_attach()
 
 -- TODO(andry, 2021-01-04): This is actually bad tbh.
@@ -38,7 +37,7 @@ end
 local custom_attach = function(client)
     -- require('lsp_signature').on_attach()
     -- require('virtualtypes').on_attach()
-    if client.resolved_capabilities.document_formatting then
+    if client.server_capabilities.documentFormattingProvider then
         vim.cmd [[augroup Format]]
         vim.cmd [[autocmd! * <buffer>]]
         vim.cmd [[autocmd BufWritePost <buffer> lua should_format()]]
@@ -165,6 +164,10 @@ local language_servers = {
             },
         }
     },
+
+    gopls = {
+        config = default_config
+    }
 }
 
 for name, info in pairs(language_servers) do
@@ -179,24 +182,19 @@ lsp.elixirls.setup(default_config:with {
 
 local sumneko_basepath = vim.fn.stdpath('data') .. '/mason/packages/lua-language-server/extension/server/bin'
 local sumneko_binary = sumneko_basepath .. '/lua-language-server'
-require('nlua.lsp.nvim').setup(lsp, default_config:with {
-    cmd = { sumneko_binary, "-E", sumneko_basepath .. "/main.lua" },
-})
 
---[[
--- TODO(andry, 2021-01-04): This only works for neovim :(
-lsp.sumneko_lua.setup {
-    on_attach = custom_attach,
-    cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},
+require('neodev').setup()
+
+lsp.sumneko_lua.setup(default_config:with {
+    cmd = { sumneko_binary, "-E", sumneko_basepath .. "/main.lua" },
     settings = {
         Lua = {
-            runtime = {version = 'LuaJIT', path = vim.split(package.path, ';')},
-            workspace = {
+            completion = {
+                callSnippet = 'Replace'
             }
         }
     }
-}
---]]
+})
 
 
 -- local null_ls = require('null-ls')

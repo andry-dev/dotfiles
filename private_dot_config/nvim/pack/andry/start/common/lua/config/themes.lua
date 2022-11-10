@@ -1,7 +1,7 @@
 -- Normal theme configuration
 local default_theme_config = require 'themes'.setup {
-    daystart = 8,
-    dayend = 19,
+    daystart = 7,
+    dayend = 18,
     light = 'nofrils-acme',
     dark = 'nofrils-dark',
 }

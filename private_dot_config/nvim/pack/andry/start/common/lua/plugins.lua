@@ -48,12 +48,13 @@ return packer.startup(function()
         'mfussenegger/nvim-jdtls',
         'folke/trouble.nvim',
         'simrat39/symbols-outline.nvim',
+        'folke/neodev.nvim',
 
         config = function()
             require('config.lsp')
         end,
 
-        after = {'nvim-cmp', 'williamboman/mason.nvim'},
+        after = { 'nvim-cmp', 'williamboman/mason.nvim' },
     }
 
     use {
@@ -133,7 +134,7 @@ return packer.startup(function()
         }
     }
 
-    use { 'tjdevries/nlua.nvim' }
+    -- use { 'tjdevries/nlua.nvim' }
 
     use { 'lervag/vimtex', ft = { 'tex' } }
 
@@ -219,7 +220,11 @@ return packer.startup(function()
     use {
         'tpope/vim-fugitive',
         'tpope/vim-rhubarb',
-        { 'junegunn/gv.vim', requires = 'tpope/vim-fugitive' }
+        { 'junegunn/gv.vim', requires = 'tpope/vim-fugitive' },
+        { 'lewis6991/gitsigns.nvim',
+            config = function()
+                require('gitsigns').setup()
+            end }
     }
 
 
@@ -230,7 +235,21 @@ return packer.startup(function()
 
     use { 'editorconfig/editorconfig-vim' }
 
-    -- use {'thaerkh/vim-workspace'}
+    use {
+        'nvim-neotest/neotest',
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'nvim-treesitter/nvim-treesitter',
+            'nvim-neotest/neotest-go',
+        },
+        config = function()
+            require('neotest').setup({
+                adapters = {
+                    require('neotest-go'),
+                }
+            })
+        end
+    }
 
     use { 'vim-test/vim-test' }
 

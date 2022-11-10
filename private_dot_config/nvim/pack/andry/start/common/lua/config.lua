@@ -172,15 +172,17 @@ vim.api.nvim_create_user_command('ToggleDebug', function()
     dapui.toggle()
 end, {})
 
-vim.api.nvim_create_autocmd('BufWritePost', {
-    group = vim.api.nvim_create_augroup("DotfilesSave", { clear = true }),
-    pattern = '~/.local/share/chezmoi/*',
-    nested = true,
-    callback = function()
-        vim.cmd 'botright 5split | terminal chezmoi apply'
-        -- local buf = vim.api.nvim_create_buf(true, true)
-        -- vim.api.nvim_win_set_buf(win, buf)
-        -- local channel = vim.api.nvim_open_term(buf, {})
-        -- vim.api.nvim_chan_send(channel, "chezmoi apply")
-    end
-})
+vim.api.nvim_create_user_command('NeotestRun', function()
+    require('neotest').run.run()
+end, {})
+
+-- vim.api.nvim_create_autocmd('BufWritePost', {
+--     group = vim.api.nvim_create_augroup("DotfilesSave", { clear = true }),
+--     pattern = vim.env.HOME .. '/.local/share/chezmoi/*',
+--     nested = true,
+--     callback = function()
+--         vim.cmd 'botright 5split | terminal chezmoi apply'
+--     end
+-- })
+
+vim.opt.formatoptions:append 'cro'

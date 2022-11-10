@@ -1,8 +1,8 @@
 [Unit]
-Description=Set day theme at 19:00
+Description=Set day theme at 18:00
 
 [Timer]
-OnCalendar=*-*-* 19:00:00
+OnCalendar=*-*-* 18:00:00
 Persistent=true
 
 [Install]
