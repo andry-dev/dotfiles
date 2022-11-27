@@ -4,6 +4,7 @@ Description=Set day theme
 [Service]
 Type=oneshot
 ExecStart=/home/andry/.local/bin/set-day-theme
+Restart=on-failure
 
 [Install]
 WantedBy=graphical.target

@@ -2,7 +2,7 @@
 Description=Set day theme at 18:00
 
 [Timer]
-OnCalendar=*-*-* 18:00:00
+OnCalendar=*-*-* 16:00:00
 Persistent=true
 
 [Install]
