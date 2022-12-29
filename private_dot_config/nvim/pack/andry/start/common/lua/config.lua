@@ -186,3 +186,5 @@ end, {})
 -- })
 
 vim.opt.formatoptions:append 'cro'
+
+vim.g.cmake_build_dir_location = 'build'

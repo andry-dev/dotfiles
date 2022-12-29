@@ -106,6 +106,10 @@ local language_servers = {
         config = default_config
     },
 
+    denols = {
+        config = default_config
+    },
+
 
     intelephense = {
         executable = 'intelephense',
@@ -132,6 +136,11 @@ local language_servers = {
 
     vuels = {
         executable = 'vue-language-server',
+        config = default_config
+    },
+
+    solidity = {
+        executable = 'solidity-ls',
         config = default_config
     },
 
