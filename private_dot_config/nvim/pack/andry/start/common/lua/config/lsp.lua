@@ -116,6 +116,10 @@ local language_servers = {
         config = default_config
     },
 
+    solidity = {
+        config = default_config
+    },
+
     sqlls = {
         executable = 'sql-language-server',
         config = default_config:with {
@@ -157,7 +161,7 @@ local language_servers = {
                 texlab = {
                     build = {
                         executable = 'latexmk',
-                        args = { '-verbose', '-synctex=1', '-pvc' },
+                        args = { '-verbose', '-synctex=1', '-pvc', '%f' },
                         forwardSearchAfter = true,
                         forwardSearch = {
                             executable = "zathura",

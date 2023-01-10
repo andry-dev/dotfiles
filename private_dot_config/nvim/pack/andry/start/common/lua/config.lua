@@ -95,9 +95,15 @@ vim.keymap.set('n', '<leader>lw', vim.lsp.buf.workspace_symbol)
 vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help)
 
 -- vim-test
-vim.keymap.set('n', '<leader>tt', ':TestNearest<CR>', { silent = true })
-vim.keymap.set('n', '<leader>tf', ':TestFile<CR>', { silent = true })
-vim.keymap.set('n', '<leader>ta', ':TestSuite<CR>', { silent = true })
+vim.keymap.set('n', '<leader>tt', function()
+    require('neotest').run.run()
+end, { silent = true })
+vim.keymap.set('n', '<leader>tf', function()
+    require('neotest').run.run(vim.fn.expand('%'))
+end, { silent = true })
+vim.keymap.set('n', '<leader>ts', function()
+    require('neotest').summary.toggle()
+end, { silent = true })
 
 -- Iron
 vim.keymap.set('x', '<Leader>is', '<Plug>(iron-visual-send)')
@@ -107,13 +113,23 @@ vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
 vim.keymap.set('n', '<Leader>mm', function() require('mpd'):status() end)
 vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)
 
+local function enableTSHighlight()
+    require('nvim-treesitter.configs').commands.TSEnable.run('highlight')
+end
+
+local function disableTSHighlight()
+    require('nvim-treesitter.configs').commands.TSDisable.run('highlight')
+end
+
 -- Commands
 vim.api.nvim_create_user_command('DefaultTheme', function()
     require('config.themes').set_default_theme()
+    disableTSHighlight()
 end, {})
 
 vim.api.nvim_create_user_command('PrettyTheme', function()
     require('config.themes').set_pretty_theme()
+    enableTSHighlight()
 end, {})
 
 vim.api.nvim_create_user_command('EditPlugin', function()
@@ -174,6 +190,14 @@ end, {})
 
 vim.api.nvim_create_user_command('NeotestRun', function()
     require('neotest').run.run()
+end, {})
+
+vim.api.nvim_create_user_command('NeotestSummary', function()
+    require('neotest').summary.toggle()
+end, {})
+
+vim.api.nvim_create_user_command('NeotestFileRun', function()
+    require('neotest').run.run(vim.fn.expand('%'))
 end, {})
 
 -- vim.api.nvim_create_autocmd('BufWritePost', {

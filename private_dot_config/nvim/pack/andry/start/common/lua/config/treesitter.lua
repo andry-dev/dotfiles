@@ -1,12 +1,12 @@
 -- Inject Neorg
-local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
-
 require('orgmode').setup_ts_grammar()
 
 local treesitter = require 'nvim-treesitter.configs'
 
 treesitter.setup {
-    ensure_installed = { "bash", "c", "cpp", "cmake", "css", "cuda", "dockerfile", "html", "elixir", "erlang", "fennel", "glsl", "go", "html", "http", "java", "javascript", "jsdoc", "json", "json5", "latex", "kotlin", "lua", "llvm", "ninja", "nix", "php", "python", "rust", "scala", "solidity", "scss", "toml", "typescript", "vim", "vue", "yaml" },
+    ensure_installed = { "bash", "c", "cpp", "cmake", "css", "cuda", "dockerfile", "html", "elixir", "erlang", "fennel",
+        "glsl", "go", "html", "http", "java", "javascript", "jsdoc", "json", "json5", "latex", "kotlin", "lua", "llvm",
+        "ninja", "nix", "php", "python", "rust", "scala", "solidity", "scss", "toml", "typescript", "vim", "vue", "yaml" },
 
     highlight = {
         enable = false,
@@ -104,6 +104,3 @@ treesitter.setup {
 
     --tree_docs = {enable = true}
 }
-
--- vim.opt.foldmethod = 'expr'
--- vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
