@@ -1,11 +1,83 @@
+vim.cmd.syntax = 'enable'
+vim.cmd.filetype('plugin indent on')
+
+vim.g.mapleader = ','
+
+require('plugins')
+require('focus').setup()
 require('config.themes').setup()
 
+-- Tecnically, this is called by packer, but it just doesn't for some reason.
+require('config.lsp')
+
+vim.g.netrw_liststype = 3
+vim.g.netrw_banner = 0
+vim.g.netrw_browse_split = 1
+
+vim.g.cmake_link_compile_commands = 1
+vim.g.cmake_generate_options = { '-G Ninja' }
+
+vim.g.tex_flavor = 'latex'
+vim.g.vimtex_view_method = 'zathura'
+vim.g.cmake_build_dir_location = 'build'
+
+local Job = require('plenary.job')
 local globals = require('globals')
 local fzf = require('fzf-lua')
-local Job = require('plenary.job')
 
--- Options
+vim.opt.wildmenu = true
+vim.opt.hlsearch = true
+vim.opt.smartcase = true
+vim.opt.incsearch = true
+vim.opt.inccommand = 'split'
+vim.opt.gdefault = true
+vim.opt.undofile = true
+vim.opt.hidden = true
+vim.opt.spelllang = 'en,it,cjk'
+vim.opt.mouse = 'a'
+vim.opt.listchars = 'tab:> ,nbsp:!,trail:.'
+vim.opt.list = true
+vim.opt.colorcolumn = '80,120'
+vim.opt.foldlevelstart = 99
+vim.opt.cpoptions:append('J')
+vim.opt.formatoptions:append('p')
+vim.opt.completeopt = 'menu,menuone,noselect'
+vim.opt.ts = 4
+vim.opt.sts = 4
+vim.opt.sw = 4
+vim.opt.expandtab = true
+vim.opt.updatetime = 1000
+vim.opt.dictionary:append('/usr/share/hunspell/en_GB.dic')
+vim.opt.dictionary:append('/usr/share/hunspell/it_IT.dic')
+vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
 vim.opt.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
+vim.opt.formatoptions:append('cro')
+
+if vim.fn.executable('rg') then
+    vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case --no-ignore-vcs --ignore-file ~/.config/.ignore"
+    vim.opt.grepformat = '%f:%l:%c:%m,%f:%l:%m'
+end
+
+-- Misc functions
+
+local function enableTSHighlight()
+    require('nvim-treesitter.configs').commands.TSEnable.run('highlight')
+end
+
+local function disableTSHighlight()
+    require('nvim-treesitter.configs').commands.TSDisable.run('highlight')
+end
+
+local function set_pretty_theme()
+    require('config.themes').set_pretty_theme()
+    enableTSHighlight()
+end
+
+local function set_default_theme()
+    require('config.themes').set_default_theme()
+    disableTSHighlight()
+end
+
 
 -- Mappings
 
@@ -74,11 +146,6 @@ vim.keymap.set('n', '<F3>', ':noautocmd vim /<FIND>/ **/* <Bar> cfdo %s//<REPLAC
 
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
-if vim.fn.executable('rg') then
-    vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case --no-ignore-vcs --ignore-file ~/.config/.ignore"
-    vim.opt.grepformat = '%f:%l:%c:%m,%f:%l:%m'
-end
-
 -- LSP
 vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action)
 vim.keymap.set('n', '<leader>lD', vim.lsp.buf.declaration)
@@ -113,14 +180,6 @@ vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
 vim.keymap.set('n', '<Leader>mm', function() require('mpd'):status() end)
 vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)
 
-local function enableTSHighlight()
-    require('nvim-treesitter.configs').commands.TSEnable.run('highlight')
-end
-
-local function disableTSHighlight()
-    require('nvim-treesitter.configs').commands.TSDisable.run('highlight')
-end
-
 -- Commands
 vim.api.nvim_create_user_command('DefaultTheme', function()
     require('config.themes').set_default_theme()
@@ -134,13 +193,13 @@ end, {})
 
 vim.api.nvim_create_user_command('EditPlugin', function()
     local plugin_path = '~/.local/share/chezmoi/private_dot_config/nvim/pack/andry/start'
-    vim.cmd("cd " .. plugin_path)
+    vim.cmd.cd(plugin_path)
     fzf.files({ cwd = plugin_path })
 end, {})
 
 vim.api.nvim_create_user_command('EditDotfiles', function()
     local plugin_path = '~/.local/share/chezmoi'
-    vim.cmd("cd " .. plugin_path)
+    vim.cmd.cd(plugin_path)
     fzf.files({ cwd = plugin_path })
 end, {})
 
@@ -200,6 +259,14 @@ vim.api.nvim_create_user_command('NeotestFileRun', function()
     require('neotest').run.run(vim.fn.expand('%'))
 end, {})
 
+vim.api.nvim_create_user_command('DisableThemeTimer', function()
+    require('config.themes').stop_timer()
+end, {})
+
+vim.api.nvim_create_user_command('EnableThemeTimer', function()
+    require('config.themes').start_timer()
+end, {})
+
 -- vim.api.nvim_create_autocmd('BufWritePost', {
 --     group = vim.api.nvim_create_augroup("DotfilesSave", { clear = true }),
 --     pattern = vim.env.HOME .. '/.local/share/chezmoi/*',
@@ -209,6 +276,41 @@ end, {})
 --     end
 -- })
 
-vim.opt.formatoptions:append 'cro'
+vim.api.nvim_create_user_command('SetExecutableFlag', function()
+    local file = vim.fn.expand('%')
+    Job:new({
+        command = 'git',
+        args = { 'add', '-f', file }
+    }):sync()
 
-vim.g.cmake_build_dir_location = 'build'
+    Job:new({
+        command = 'git',
+        args = { 'update-index', '--chmod=+x', file }
+    }):sync()
+
+    Job:new({
+        command = 'chmod',
+        args = { '+x', file }
+    }):sync()
+end, {})
+
+vim.api.nvim_create_user_command('SetupForScreens', function()
+    local lang = vim.v.lang
+    local spell = vim.opt.spell:get()
+
+    vim.cmd.language("en_US.UTF-8")
+    vim.opt.spell = false
+
+    set_pretty_theme()
+
+    vim.cmd.redraw()
+    vim.fn.getchar()
+
+    set_default_theme()
+
+    vim.cmd.language(lang)
+    vim.opt.spell = spell
+end, {})
+
+vim.opt.exrc = true
+vim.opt.secure = true

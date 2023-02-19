@@ -2,6 +2,15 @@ source $HOME/.profile
 source $HOME/.config/shell/functions
 source $HOME/.config/shell/alias
 
+if [ -f "$HOME/.asdf/asdf.sh" ]; then
+    . $HOME/.asdf/asdf.sh
+    # append completions to fpath
+    fpath=(${ASDF_DIR}/completions $fpath)
+fi
+
+# initialise completions with ZSH's compinit
+autoload -Uz compinit && compinit
+
 PS1="%B%~ $(chk_current_sh zsh)%% %b"
 HISTFILE=
 HISTSIZE=1000

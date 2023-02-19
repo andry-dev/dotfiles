@@ -6,19 +6,8 @@ require('mason-lspconfig').setup({
 
 local lsp = require 'lspconfig'
 
--- require('lsp_signature').on_attach()
-
--- TODO(andry, 2021-01-04): This is actually bad tbh.
--- Maybe refactor it to something better?
-
 function should_format()
     if globals.autoformat_enabled() then vim.lsp.buf.format({ async = true }) end
-end
-
-local function add_if_executable_exists(lsp_name, executable, config)
-    if vim.fn.executable(executable) == 1 then
-        lsp[lsp_name].setup(config)
-    end
 end
 
 vim.lsp.handlers["textDocument/formatting"] =
@@ -63,7 +52,6 @@ local language_servers = {
         executable = 'ansiblels',
         config = default_config,
     },
-
     clangd = {
         executable = 'clangd',
         config = default_config:with {
@@ -73,95 +61,73 @@ local language_servers = {
             }
         }
     },
-
     cmake = {
         executable = 'cmake-language-server',
         config = default_config
     },
-
     eslint = {
         executable = 'eslint',
         config = default_config,
     },
-
     elixirls = {
         executable = 'elixir_ls',
         config = default_config:with {
             root_dir = lsp.util.root_pattern(".git", "mix.exs"),
         }
     },
-
     solargraph = {
         executable = 'solargraph',
         config = default_config
     },
-
     html = {
         executable = 'html-languageserver',
         config = default_config
     },
-
     cssls = {
         executable = 'css-languageserver',
         config = default_config
     },
-
     denols = {
         config = default_config
     },
-
-
     intelephense = {
         executable = 'intelephense',
         config = default_config
     },
-
-    solidity = {
-        config = default_config
-    },
-
     sqlls = {
         executable = 'sql-language-server',
         config = default_config:with {
             cmd = { 'sql-language-server', 'up', '--method', 'stdio' }
         }
     },
-
     pylsp = {
         executable = 'pylsp',
         config = default_config
     },
-
     yamlls = {
         executable = 'yaml-language-server',
         config = default_config
     },
-
-
     vuels = {
         executable = 'vue-language-server',
         config = default_config
     },
-
     solidity = {
         executable = 'solidity-ls',
         config = default_config
     },
-
     terraformls = {
         executable = 'terraform-ls',
         config = default_config
     },
-
     texlab = {
-        executable = 'texlab',
         config = default_config:with {
-            cmd = { 'texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
+            -- cmd = { 'texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
             settings = {
                 texlab = {
                     build = {
                         executable = 'latexmk',
-                        args = { '-verbose', '-synctex=1', '-pvc', '%f' },
+                        args = { '-verbose', '-synctex=1', '-interaction=nonstopmode', '-pdf', '%f' },
                         forwardSearchAfter = true,
                         forwardSearch = {
                             executable = "zathura",
@@ -177,7 +143,6 @@ local language_servers = {
             },
         }
     },
-
     gopls = {
         config = default_config
     }
@@ -185,29 +150,11 @@ local language_servers = {
 
 for name, info in pairs(language_servers) do
     lsp[name].setup(info.config)
-    -- add_if_executable_exists(name, info.executable, info.config)
 end
-
-
-lsp.elixirls.setup(default_config:with {
-})
-
-
-local sumneko_basepath = vim.fn.stdpath('data') .. '/mason/packages/lua-language-server/extension/server/bin'
-local sumneko_binary = sumneko_basepath .. '/lua-language-server'
 
 require('neodev').setup()
 
-lsp.sumneko_lua.setup(default_config:with {
-    cmd = { sumneko_binary, "-E", sumneko_basepath .. "/main.lua" },
-    settings = {
-        Lua = {
-            completion = {
-                callSnippet = 'Replace'
-            }
-        }
-    }
-})
+lsp.lua_ls.setup(default_config:with {})
 
 
 -- local null_ls = require('null-ls')
@@ -274,7 +221,6 @@ function M.start_jdtls()
         end
     end
     --]]
-
     local config = {
         cmd = { 'java-jdtls.sh' },
         on_attach = custom_attach,

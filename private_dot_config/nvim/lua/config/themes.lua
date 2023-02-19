@@ -9,14 +9,24 @@ local default_theme_config = require 'themes'.setup {
 -- Theme configuration for screenshots and such
 local pretty_theme_config = require 'themes'.setup { default_theme_config }
 
-pretty_theme_config.dark = "catppuccin"
+pretty_theme_config.dark = "onedark"
 pretty_theme_config.dark_fn = function()
-    vim.g.catppuccin_flavour = "mocha"
+    -- vim.opt.background = "dark"
+    -- vim.g.catppuccin_flavour = "mocha"
+    require('onedark').setup {
+        -- style = 'darker'
+    }
+    -- require('onedark').load()
 end
 
-pretty_theme_config.light = "catppuccin"
+pretty_theme_config.light = "onedark"
 pretty_theme_config.light_fn = function()
-    vim.g.catppuccin_flavour = "latte"
+    -- vim.opt.background = "light"
+    -- vim.g.catppuccin_flavour = "latte"
+    require('onedark').setup {
+        style = 'light'
+    }
+    -- require('onedark').load()
 end
 
 local function setup_theming()
@@ -36,13 +46,13 @@ local current_theme_config = default_theme_config
 
 local M = {}
 
-function M.start_auto_theme()
+function M.start_timer()
     local minutes = 1
     theme_timer:start(0, minutes * 60 * 1000, vim.schedule_wrap(
         function() current_theme_config.set() end))
 end
 
-function M.stop_theme_timer() theme_timer:stop() end
+function M.stop_timer() theme_timer:stop() end
 
 function M.set_default_theme()
     current_theme_config = default_theme_config
@@ -59,7 +69,7 @@ function M.get_theme_config() return current_theme_config end
 function M.setup()
     setup_theming()
     current_theme_config.set()
-    M.start_auto_theme()
+    M.start_timer()
 end
 
 return M

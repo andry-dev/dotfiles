@@ -3,19 +3,40 @@ vim.cmd [[autocmd BufWritePost plugins.lua PackerCompile]]
 
 local packer = require('packer')
 
+local function file_exists(path)
+    local f = io.open(path, "r")
+    if f ~= nil then
+        f:close()
+        return true
+    else
+        return false
+    end
+end
+
 return packer.startup(function()
     local use = packer.use
 
     use { 'wbthomason/packer.nvim', opt = true }
 
+    local nofrils_path = (function()
+            local expanded_path = vim.fn.expand('~/prj/nofrils')
+            if file_exists(expanded_path) then
+                return expanded_path
+            end
+
+            return 'andry-dev/nofrils'
+        end)()
+
     use {
         -- My colorscheme
-        'andry-dev/nofrils',
+        nofrils_path,
 
         -- These color schemes are used for :SetupForScreens and :PrettyTheme
         -- I don't personally use them
-        'catppuccin/nvim',
-        'EdenEast/nightfox.nvim',
+        -- 'catppuccin/nvim',
+        -- 'EdenEast/nightfox.nvim',
+        -- 'savq/melange-nvim',
+        'navarasu/onedark.nvim',
         -- 'bluz71/vim-moonfly-colors',
         -- 'gruvbox-community/gruvbox',
         -- 'sainnhe/everforest',
@@ -117,26 +138,25 @@ return packer.startup(function()
 
     use {
         'mfussenegger/nvim-dap',
+
         requires = {
+            'nvim-treesitter/nvim-treesitter',
+            'williamboman/mason.nvim',
+            'jay-babu/mason-nvim-dap.nvim',
             'theHamsta/nvim-dap-virtual-text',
             'mfussenegger/nvim-dap-python',
             'rcarriga/nvim-dap-ui',
         },
+
         config = function()
             require('config.dap')
-        end
-    }
+        end,
 
-    use {
-        'theHamsta/nvim-dap-virtual-text',
-        requires = {
-            'nvim-treesitter/nvim-treesitter',
-        }
+        -- after = { 'williamboman/mason.nvim' }
     }
-
     -- use { 'tjdevries/nlua.nvim' }
 
-    use { 'lervag/vimtex', ft = { 'tex' } }
+    -- use { 'lervag/vimtex', ft = { 'tex' } }
 
     use { 'prabirshrestha/async.vim' }
 
@@ -202,14 +222,14 @@ return packer.startup(function()
 
     -- use {'lambdalisue/suda.vim'}
 
-    use {
-        'hkupty/iron.nvim',
-        opt = true,
-        cmd = { 'IronRepl', 'IronReplHere' },
-        config = function()
-            require('config.iron')
-        end
-    }
+    -- use {
+    --     'hkupty/iron.nvim',
+    --     opt = true,
+    --     cmd = { 'IronRepl', 'IronReplHere' },
+    --     config = function()
+    --         require('config.iron')
+    --     end
+    -- }
 
     use {
         'tpope/vim-dispatch',
@@ -227,11 +247,10 @@ return packer.startup(function()
             end }
     }
 
-
-    use {
-        'tpope/vim-dadbod',
-        { 'kristijanhusak/vim-dadbod-completion', requires = 'vim-dadbod' }
-    }
+    -- use {
+    --     'tpope/vim-dadbod',
+    --     { 'kristijanhusak/vim-dadbod-completion', requires = 'vim-dadbod' }
+    -- }
 
     use { 'editorconfig/editorconfig-vim' }
 
