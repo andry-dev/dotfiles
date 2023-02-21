@@ -13,19 +13,27 @@ local function file_exists(path)
     end
 end
 
+local function dev_plugin(path)
+    local expanded_path = vim.fn.expand(path)
+    if file_exists(expanded_path) then
+        return expanded_path
+    end
+
+    return nil
+end
+
 return packer.startup(function()
     local use = packer.use
 
     use { 'wbthomason/packer.nvim', opt = true }
 
-    local nofrils_path = (function()
-            local expanded_path = vim.fn.expand('~/prj/nofrils')
-            if file_exists(expanded_path) then
-                return expanded_path
-            end
+    local nofrils_path = dev_plugin('~/prj/nofrils') or 'andry-dev/nofrils'
 
-            return 'andry-dev/nofrils'
-        end)()
+    local kyouko_path = dev_plugin('~/prj/kyouko.nvim') or 'andry-dev/kyouko.nvim'
+
+    use {
+        kyouko_path
+    }
 
     use {
         -- My colorscheme
@@ -162,26 +170,15 @@ return packer.startup(function()
 
     use {
         'hrsh7th/nvim-cmp',
-        requires = {
-            'L3MON4D3/LuaSnip',
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'hrsh7th/cmp-path' },
-            {
-                'saadparwaiz1/cmp_luasnip',
-                requires = {
-                    'LuaSnip',
-                    'nvim-cmp'
-                }
-            },
-            {
-                'rcarriga/cmp-dap',
-                -- after = 'mfussenegger/nvim-dap'
-            },
-        },
+        'L3MON4D3/LuaSnip',
+        'saadparwaiz1/cmp_luasnip',
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-path',
+        'rcarriga/cmp-dap',
         config = function()
-            require('config.cmp')
             require('config.snippets')
+            require('config.cmp')
         end
     }
 
@@ -286,6 +283,11 @@ return packer.startup(function()
         config = function()
             require('config.comment')
         end
+    }
+
+    use {
+        'stevearc/oil.nvim',
+        config = function() require('oil').setup() end
     }
 
     use { 'tami5/sqlite.lua' }
