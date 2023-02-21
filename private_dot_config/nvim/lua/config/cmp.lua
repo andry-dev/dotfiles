@@ -6,7 +6,12 @@ local has_words_before = function()
     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+
+
 cmp.setup({
+    view = {
+        entries = "custom"
+    },
     mapping = {
         ['<Tab>'] = function(fallback)
             if cmp.visible() then
@@ -36,28 +41,26 @@ cmp.setup({
         ['<C-e>'] = cmp.mapping.close(),
         ['<CR>'] = cmp.mapping.confirm(),
     },
-    --[[
-    formatting = {
-      format = function(entry, vim_item)
-        -- fancy icons and a name of kind
-        -- vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
+    --[[ formatting = {
+        format = function(entry, vim_item)
+            -- fancy icons and a name of kind
+            -- vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
 
-        -- set a name for each source
-        vim_item.menu = ({
-          buffer = "[Buffer]",
-          nvim_lsp = "[LSP]",
-          luasnip = "[LuaSnip]",
-          nvim_lua = "[Lua]",
-          path = "[Path]",
-          -- latex_symbols = "[Latex]",
-          neorg = "[Neorg]",
-          ['vim-dadbod-completion'] = "[DB]",
-        })[entry.source.name]
-        return vim_item
-      end,
+            -- set a name for each source
+            vim_item.menu = ({
+                    buffer = "[Buffer]",
+                    nvim_lsp = "[LSP]",
+                    luasnip = "[LuaSnip]",
+                    nvim_lua = "[Lua]",
+                    path = "[Path]",
+                    -- latex_symbols = "[Latex]",
+                    neorg = "[Neorg]",
+                    ['vim-dadbod-completion'] = "[DB]",
+                })[entry.source.name]
+            return vim_item
+        end,
     },
-    --]]
-
+    ]] --
     enabled = function()
         return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
             or require("cmp_dap").is_dap_buffer()
@@ -67,19 +70,20 @@ cmp.setup({
             require 'luasnip'.lsp_expand(args.body)
         end
     },
-    view = {
-        entries = "native"
-    },
     sources = {
         -- buffer = true,
         { name = 'nvim_lsp' },
-        { name = 'nvim_lua' },
+        { name = 'nvim_lsp_signature_help' },
+        -- { name = 'nvim_lua' },
+        { name = 'dap' },
         { name = 'luasnip' },
-        { name = 'path' },
-        { name = 'orgmode' },
+        -- { name = 'orgmode' },
         -- { name = 'latex_symbols' },
         -- { name = 'snippets_nvim'},
-        { name = 'vim_dadbod_completion' },
-        { name = 'dap' },
+        -- { name = 'vim_dadbod_completion' },
+        { name = 'git' },
+        { name = 'path' },
     },
 })
+
+require("cmp_git").setup()

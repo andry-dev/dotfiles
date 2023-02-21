@@ -14,6 +14,9 @@ ls.config.set_config({
 
 ls.add_snippets('tex', {
     ls.parser.parse_snippet({ trig = "beg", wordTrig = true }, "\\begin{$1}\n\t$2\n\\end{$1}"),
+    ls.parser.parse_snippet({ trig = 'ls', wordTrig = true }, '\\begin{itemize}\n\t\\item $0\n\\end{itemize}'),
+    ls.parser.parse_snippet({ trig = 'enm', wordTrig = true }, '\\begin{enumerate}\n\t\\item $0\n\\end{enumerate}'),
+    ls.parser.parse_snippet({ trig = 'eq', wordTrig = true }, '\\begin{equation*}\n\t$0\n\\end{equation*}'),
     -- s('beg', {
     --     t { '\\begin{' }, i(1), t { '}', '' },
     --     i(0),
@@ -21,17 +24,9 @@ ls.add_snippets('tex', {
     -- })
 })
 
--- ls.snippets = {
---     cpp = { s("main", {
---         t { "int main(int argc, char* argv[]) {", "\t" },
---         i(0),
---         t { "", "}" },
---     }),
---
---     tex = {
---         s('beg', {
---
---         }
---     }
--- },
--- }
+ls.add_snippets('cpp', {
+    ls.parser.parse_snippet({ trig = "main", wordTrig = true },
+        [[int main(int argc, char* argv[]) {
+    $0
+}]]),
+})

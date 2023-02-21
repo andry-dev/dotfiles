@@ -1,8 +1,3 @@
-vim.cmd [[packadd packer.nvim]]
-vim.cmd [[autocmd BufWritePost plugins.lua PackerCompile]]
-
-local packer = require('packer')
-
 local function file_exists(path)
     local f = io.open(path, "r")
     if f ~= nil then
@@ -22,96 +17,106 @@ local function dev_plugin(path)
     return nil
 end
 
-return packer.startup(function()
-    local use = packer.use
+return {
+    { 'wbthomason/packer.nvim', lazy = true },
 
-    use { 'wbthomason/packer.nvim', opt = true }
+    {
+        'andry-dev/kyouko.nvim',
+        dir = '~/prj/kyouko.nvim',
+        dev = true,
+        lazy = true,
+        cmd = 'Kyouko',
+    },
 
-    local nofrils_path = dev_plugin('~/prj/nofrils') or 'andry-dev/nofrils'
+    -- My colorscheme
+    {
+        'andry-dev/nofrils',
+        dir = '~/prj/nofrils',
+        dev = true,
+        lazy = false,
+        priority = 10000,
+    },
 
-    local kyouko_path = dev_plugin('~/prj/kyouko.nvim') or 'andry-dev/kyouko.nvim'
-
-    use {
-        kyouko_path
-    }
-
-    use {
-        -- My colorscheme
-        nofrils_path,
-
-        -- These color schemes are used for :SetupForScreens and :PrettyTheme
-        -- I don't personally use them
-        -- 'catppuccin/nvim',
-        -- 'EdenEast/nightfox.nvim',
-        -- 'savq/melange-nvim',
+    -- These color schemes are used for :SetupForScreens and :PrettyTheme
+    -- I don't personally use them
+    -- 'catppuccin/nvim',
+    -- 'EdenEast/nightfox.nvim',
+    -- 'savq/melange-nvim',
+    -- 'bluz71/vim-moonfly-colors',
+    -- 'gruvbox-community/gruvbox',
+    -- 'sainnhe/everforest',
+    -- 'shaunsingh/nord.nvim',
+    -- 'JaySandhu/xcode-vim',
+    -- 'daschw/leaf.nvim',
+    {
         'navarasu/onedark.nvim',
-        -- 'bluz71/vim-moonfly-colors',
-        -- 'gruvbox-community/gruvbox',
-        -- 'sainnhe/everforest',
-        -- 'shaunsingh/nord.nvim',
-        -- 'JaySandhu/xcode-vim',
-        -- 'daschw/leaf.nvim',
-    }
+        lazy = true
+    },
 
 
-    use { 'nvim-lua/plenary.nvim' }
+    { 'nvim-lua/plenary.nvim' },
 
-    use {
+    {
         'lewis6991/spellsitter.nvim',
         config = function()
             require('spellsitter').setup()
         end
-    }
+    },
 
-    use {
+    {
         "williamboman/mason.nvim",
         config = function()
             require('mason').setup()
         end
-    }
+    },
 
-    use {
+    {
         'neovim/nvim-lspconfig',
-        'williamboman/mason-lspconfig.nvim',
-        'ray-x/lsp_signature.nvim',
-        'mfussenegger/nvim-jdtls',
-        'folke/trouble.nvim',
-        'simrat39/symbols-outline.nvim',
-        'folke/neodev.nvim',
+        dependencies = {
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
+            'ray-x/lsp_signature.nvim',
+            {
+                'mfussenegger/nvim-jdtls',
+                ft = 'java'
+            },
+            {
+                'folke/trouble.nvim',
+                cmd = 'Trouble'
+            },
+            {
+                'simrat39/symbols-outline.nvim',
+                cmd = 'SymbolsOutline'
+            },
+            'folke/neodev.nvim',
+        },
 
         config = function()
             require('config.lsp')
         end,
+    },
 
-        after = { 'nvim-cmp', 'williamboman/mason.nvim' },
-    }
-
-    use {
+    {
         'jose-elias-alvarez/null-ls.nvim',
-        requires = {
+        dependencies = {
             'nvim-lua/plenary.nvim',
             'neovim/nvim-lspconfig',
         },
-    }
+    },
 
-    use {
+    {
         'simrat39/rust-tools.nvim',
-        opt = true,
+        lazy = true,
         ft = 'rust',
         config = function()
             require('rust-tools').setup({})
         end
-    }
+    },
 
-
-    -- use {'jubnzv/virtual-types.nvim'}
-
-    use { 'michaelb/sniprun', run = 'bash ./install.sh' }
-
-    use {
+    {
         'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-        requires = {
+        build = ':TSUpdate',
+        dependencies = {
             -- 'nvim-treesitter/nvim-treesitter-textobjects',
             'nvim-treesitter/nvim-treesitter-refactor',
             -- 'romgrk/nvim-treesitter-context',
@@ -120,34 +125,38 @@ return packer.startup(function()
         config = function()
             require('config.treesitter')
         end
-    }
+    },
 
-    use {
+    {
         'danymat/neogen',
         config = function()
             require('neogen').setup {
                 enabled = true
             }
         end,
-        requires = 'nvim-treesitter'
-    }
+        lazy = true,
+        cmd = 'Neogen',
+        dependencies = 'nvim-treesitter'
+    },
 
-    -- use { 'nvim-neorg/neorg'}
-    use {
-        'nvim-orgmode/orgmode',
-        requires = {
-            'dhruvasagar/vim-table-mode',
-            'nvim-treesitter/nvim-treesitter'
-        },
-        config = function()
-            require('orgmode').setup {}
-        end
-    }
+    -- { 'nvim-neorg/neorg'},
+    -- {
+    --     'nvim-orgmode/orgmode',
+    --
+    --     dependencies = {
+    --         'dhruvasagar/vim-table-mode',
+    --         'nvim-treesitter/nvim-treesitter'
+    --     },
+    --
+    --     config = function()
+    --         require('orgmode').setup {}
+    --     end
+    -- },
 
-    use {
+    {
         'mfussenegger/nvim-dap',
 
-        requires = {
+        dependencies = {
             'nvim-treesitter/nvim-treesitter',
             'williamboman/mason.nvim',
             'jay-babu/mason-nvim-dap.nvim',
@@ -159,39 +168,45 @@ return packer.startup(function()
         config = function()
             require('config.dap')
         end,
+    },
 
-        -- after = { 'williamboman/mason.nvim' }
-    }
-    -- use { 'tjdevries/nlua.nvim' }
+    { 'prabirshrestha/async.vim' },
 
-    -- use { 'lervag/vimtex', ft = { 'tex' } }
-
-    use { 'prabirshrestha/async.vim' }
-
-    use {
-        'hrsh7th/nvim-cmp',
+    {
         'L3MON4D3/LuaSnip',
-        'saadparwaiz1/cmp_luasnip',
-        'hrsh7th/cmp-buffer',
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-path',
-        'rcarriga/cmp-dap',
+
         config = function()
             require('config.snippets')
+        end,
+    },
+
+    {
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-nvim-lsp-signature-help',
+            'petertriho/cmp-git',
+            'hrsh7th/cmp-path',
+            'rcarriga/cmp-dap',
+        },
+        config = function()
             require('config.cmp')
         end
-    }
+    },
 
-    use {
+    {
         'ibhagwan/fzf-lua'
-    }
+    },
 
     -- Telescope
     --
-    -- use {
+    -- {
     --     {
     --         'nvim-telescope/telescope.nvim',
-    --         requires = {
+    --         dependencies = {
     --             'nvim-lua/popup.nvim',
     --             'nvim-lua/plenary.nvim',
     --             'telescope-frecency.nvim',
@@ -204,60 +219,80 @@ return packer.startup(function()
     --     {
     --         'nvim-telescope/telescope-frecency.nvim',
     --         -- after = 'telescope.nvim',
-    --         requires = 'tami5/sqlite.lua',
+    --         dependencies = 'tami5/sqlite.lua',
     --         --[[ config = function()
     --             require('telescope').load_extension('frecency')
     --         end ]]
     --     },
     --     {
     --         'nvim-telescope/telescope-fzf-native.nvim',
-    --         run = 'make',
+    --         build = 'make',
     --     },
-    -- }
+    -- },
 
-    use { 'cdelledonne/vim-cmake' }
+    {
+        'cdelledonne/vim-cmake',
+        lazy = true,
+        ft = 'cmake'
+    },
 
-    -- use {'lambdalisue/suda.vim'}
+    -- {'lambdalisue/suda.vim'},
 
-    -- use {
+    -- {
     --     'hkupty/iron.nvim',
-    --     opt = true,
+    --     lazy = true,
     --     cmd = { 'IronRepl', 'IronReplHere' },
     --     config = function()
     --         require('config.iron')
     --     end
-    -- }
+    -- },
 
-    use {
+    {
         'tpope/vim-dispatch',
-        opt = true,
+        lazy = true,
         cmd = { 'Dispatch', 'Make', 'Start' }
-    }
+    },
 
-    use {
+    {
         'tpope/vim-fugitive',
+    },
+
+    {
         'tpope/vim-rhubarb',
-        { 'junegunn/gv.vim', requires = 'tpope/vim-fugitive' },
-        { 'lewis6991/gitsigns.nvim',
-            config = function()
-                require('gitsigns').setup()
-            end }
-    }
+        lazy = true,
+        cmd = 'GBrowse'
+    },
 
-    -- use {
+    {
+        'junegunn/gv.vim',
+        lazy = true,
+        cmd = 'GV'
+    },
+
+    {
+        'lewis6991/gitsigns.nvim',
+        config = function()
+            require('gitsigns').setup()
+        end
+    },
+
+    -- {
     --     'tpope/vim-dadbod',
-    --     { 'kristijanhusak/vim-dadbod-completion', requires = 'vim-dadbod' }
-    -- }
+    --     { 'kristijanhusak/vim-dadbod-completion', dependencies = 'vim-dadbod' }
+    -- },
 
-    use { 'editorconfig/editorconfig-vim' }
+    { 'editorconfig/editorconfig-vim' },
 
-    use {
+    {
         'nvim-neotest/neotest',
-        requires = {
+        dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-treesitter/nvim-treesitter',
             'nvim-neotest/neotest-go',
         },
+        lazy = true,
+        cmd = { 'NeotestFileRun', 'NeotestRun', 'NeotestSummary' },
+        -- ft = {'go'},
         config = function()
             require('neotest').setup({
                 adapters = {
@@ -265,30 +300,39 @@ return packer.startup(function()
                 }
             })
         end
-    }
+    },
 
-    use { 'vim-test/vim-test' }
+    { 'vim-test/vim-test' },
 
-    use {
+    {
         'dhruvasagar/vim-testify',
-        opt = true,
+        lazy = true,
         ft = { 'vim' },
         cmd = { 'TestifyFile' }
-    }
+    },
 
-    use { 'elixir-editors/vim-elixir', opt = true, ft = { 'elixir' } }
+    {
+        'elixir-editors/vim-elixir',
+        lazy = true,
+        ft = { 'elixir' }
+    },
 
-    use {
+    {
         'numToStr/Comment.nvim',
         config = function()
             require('config.comment')
         end
-    }
+    },
 
-    use {
+    {
         'stevearc/oil.nvim',
-        config = function() require('oil').setup() end
-    }
+        config = function()
+            require('oil').setup()
+        end
+    },
 
-    use { 'tami5/sqlite.lua' }
-end)
+    {
+        'tami5/sqlite.lua',
+        lazy = true
+    },
+}

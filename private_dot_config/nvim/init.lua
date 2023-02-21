@@ -16,9 +16,40 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- require("lazy").setup('plugins')
+local base_plugin_path = vim.fn.stdpath('config') .. '/pack/andry/start/'
 
-require('plugins')
+require("lazy").setup('plugins', {
+    dev = {
+        path = '~/prj'
+    },
+    performance = {
+        rtp = {
+            paths = {
+                base_plugin_path .. 'focus',
+                base_plugin_path .. 'lua-utils',
+                base_plugin_path .. 'auto-themes'
+            }
+        }
+    },
+    ui = {
+        icons = {
+            cmd = "⌘",
+            config = "🛠",
+            event = "📅",
+            ft = "📂",
+            init = "⚙",
+            keys = "🗝",
+            plugin = "🔌",
+            runtime = "💻",
+            source = "📄",
+            start = "🚀",
+            task = "📌",
+            lazy = "💤 ",
+        },
+    },
+})
+
+-- require('plugins')
 require('focus').setup()
 require('config.themes').setup()
 
