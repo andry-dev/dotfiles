@@ -77,7 +77,7 @@ cmp.setup({
         -- { name = 'nvim_lua' },
         { name = 'dap' },
         { name = 'luasnip' },
-        -- { name = 'orgmode' },
+        { name = 'neorg' },
         -- { name = 'latex_symbols' },
         -- { name = 'snippets_nvim'},
         -- { name = 'vim_dadbod_completion' },

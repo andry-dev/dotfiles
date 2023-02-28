@@ -139,19 +139,32 @@ return {
         dependencies = 'nvim-treesitter'
     },
 
-    -- { 'nvim-neorg/neorg'},
-    -- {
-    --     'nvim-orgmode/orgmode',
-    --
-    --     dependencies = {
-    --         'dhruvasagar/vim-table-mode',
-    --         'nvim-treesitter/nvim-treesitter'
-    --     },
-    --
-    --     config = function()
-    --         require('orgmode').setup {}
-    --     end
-    -- },
+    {
+        "nvim-neorg/neorg",
+        build = ":Neorg sync-parsers",
+        opts = {
+            load = {
+                ['core.defaults'] = {}, -- Loads default behaviour
+                ['core.norg.concealer'] = {}, -- Adds pretty icons to your documents
+                ['core.norg.dirman'] = { -- Manages Neorg workspaces
+                    config = {
+                        workspaces = {
+                            concurrent_systems = '~/prj/uni/2022-2023//concurrent_systems',
+                        },
+                    },
+                },
+                ['core.integrations.treesitter'] = {
+                    config = {}
+                },
+                ['core.norg.completion'] = {
+                    config = {
+                        engine = 'nvim-cmp'
+                    }
+                }
+            },
+        },
+        dependencies = { { "nvim-lua/plenary.nvim" } },
+    },
 
     {
         'mfussenegger/nvim-dap',
