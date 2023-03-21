@@ -8,7 +8,7 @@ local acme_colors = {
     ansi = {
         'black',
         'maroon',
-        'green',
+        '#50AA50', -- green
         'olive',
         'navy',
         'purple',

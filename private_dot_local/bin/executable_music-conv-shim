@@ -1,0 +1,16 @@
+#!/usr/bin/sh
+
+
+fullfile="$1"
+filename="${1##*/}"
+filename="${filename%.*}.$3"
+fulldir=$(dirname "${1}")
+# reldir="$(echo $fulldir | cut -d'/' -f5-)"
+outdir="${2}/${fulldir}"
+outfile="${outdir}/${filename}"
+mkdir -p "${outdir}"
+
+echo Relative dir: "$reldir"
+echo Output file: "$outfile"
+
+ffmpeg -i "$1" "${@:4}" "${outfile}"
