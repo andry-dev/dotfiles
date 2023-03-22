@@ -22,8 +22,8 @@ return {
 
     {
         'andry-dev/kyouko.nvim',
-        dir = '~/prj/kyouko.nvim',
-        dev = true,
+        -- dir = '~/prj/kyouko.nvim',
+        -- dev = true,
         lazy = true,
         cmd = 'Kyouko',
     },
@@ -31,8 +31,7 @@ return {
     -- My colorscheme
     {
         'andry-dev/nofrils',
-        dir = '~/prj/nofrils',
-        dev = true,
+        -- dev = true,
         lazy = false,
         priority = 10000,
     },
@@ -90,7 +89,6 @@ return {
             },
             'folke/neodev.nvim',
         },
-
         config = function()
             require('config.lsp')
         end,
@@ -144,19 +142,19 @@ return {
         build = ":Neorg sync-parsers",
         opts = {
             load = {
-                ['core.defaults'] = {}, -- Loads default behaviour
-                ['core.norg.concealer'] = {}, -- Adds pretty icons to your documents
-                ['core.norg.dirman'] = { -- Manages Neorg workspaces
+                    ['core.defaults'] = {}, -- Loads default behaviour
+                    ['core.norg.concealer'] = {}, -- Adds pretty icons to your documents
+                    ['core.norg.dirman'] = { -- Manages Neorg workspaces
                     config = {
                         workspaces = {
                             concurrent_systems = '~/prj/uni/2022-2023//concurrent_systems',
                         },
                     },
                 },
-                ['core.integrations.treesitter'] = {
+                    ['core.integrations.treesitter'] = {
                     config = {}
                 },
-                ['core.norg.completion'] = {
+                    ['core.norg.completion'] = {
                     config = {
                         engine = 'nvim-cmp'
                     }
@@ -168,7 +166,6 @@ return {
 
     {
         'mfussenegger/nvim-dap',
-
         dependencies = {
             'nvim-treesitter/nvim-treesitter',
             'williamboman/mason.nvim',
@@ -177,7 +174,6 @@ return {
             'mfussenegger/nvim-dap-python',
             'rcarriga/nvim-dap-ui',
         },
-
         config = function()
             require('config.dap')
         end,
@@ -187,7 +183,6 @@ return {
 
     {
         'L3MON4D3/LuaSnip',
-
         config = function()
             require('config.snippets')
         end,
