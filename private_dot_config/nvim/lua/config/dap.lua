@@ -5,7 +5,7 @@ require("mason-nvim-dap").setup({
     automatic_setup = true,
     -- automatic_installation = true,
 })
-require('mason-nvim-dap').setup_handlers()
+-- require('mason-nvim-dap').setup_handlers()
 
 -- local globals = require('globals')
 

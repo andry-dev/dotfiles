@@ -65,9 +65,12 @@ end
 return {
     color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
     color_schemes = {
-        ['nofrils_acme'] = acme_colors,
-        ['nofrils_dark'] = dark_colors,
+            ['nofrils_acme'] = acme_colors,
+            ['nofrils_dark'] = dark_colors,
     },
+    font = wezterm.font(
+        'Go Mono'
+    ),
     window_padding = {
         left = 0,
         right = 0,
@@ -75,4 +78,5 @@ return {
         bottom = 0,
     },
     font_size = 10,
+    hide_mouse_cursor_when_typing = false
 }
