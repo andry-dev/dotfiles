@@ -142,19 +142,19 @@ return {
         build = ":Neorg sync-parsers",
         opts = {
             load = {
-                    ['core.defaults'] = {}, -- Loads default behaviour
-                    ['core.norg.concealer'] = {}, -- Adds pretty icons to your documents
-                    ['core.norg.dirman'] = { -- Manages Neorg workspaces
+                ['core.defaults'] = {}, -- Loads default behaviour
+                ['core.concealer'] = {}, -- Adds pretty icons to your documents
+                ['core.dirman'] = { -- Manages Neorg workspaces
                     config = {
                         workspaces = {
                             concurrent_systems = '~/prj/uni/2022-2023//concurrent_systems',
                         },
                     },
                 },
-                    ['core.integrations.treesitter'] = {
+                ['core.integrations.treesitter'] = {
                     config = {}
                 },
-                    ['core.norg.completion'] = {
+                ['core.completion'] = {
                     config = {
                         engine = 'nvim-cmp'
                     }
