@@ -11,17 +11,17 @@ function should_format()
 end
 
 vim.lsp.handlers["textDocument/formatting"] =
-function(err, result, context, _)
-    if err ~= nil or result == nil then return end
-    if not vim.api.nvim_buf_get_option(context.bufnr, "modified") then
-        local view = vim.fn.winsaveview()
-        vim.lsp.util.apply_text_edits(result, context.bufnr, vim.opt.fileencoding:get())
-        vim.fn.winrestview(view)
-        if context.bufnr == vim.api.nvim_get_current_buf() then
-            vim.api.nvim_command("noautocmd :update")
+    function(err, result, context, _)
+        if err ~= nil or result == nil then return end
+        if not vim.api.nvim_buf_get_option(context.bufnr, "modified") then
+            local view = vim.fn.winsaveview()
+            vim.lsp.util.apply_text_edits(result, context.bufnr, vim.opt.fileencoding:get())
+            vim.fn.winrestview(view)
+            if context.bufnr == vim.api.nvim_get_current_buf() then
+                vim.api.nvim_command("noautocmd :update")
+            end
         end
     end
-end
 
 local custom_attach = function(client)
     -- require('lsp_signature').on_attach()
@@ -122,23 +122,27 @@ local language_servers = {
     },
     texlab = {
         config = default_config:with {
-            -- cmd = { 'texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
+            cmd = { vim.fn.stdpath('data') .. '/mason/bin/texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
+            -- on_new_config = function(new_config, new_root_dir)
+            --     new_config.settings.texlab.rootDirectory = new_root_dir
+            -- end,
             settings = {
                 texlab = {
                     build = {
                         executable = 'latexmk',
-                        args = { '-verbose', '-synctex=1', '-interaction=nonstopmode', '-pdf', '%f' },
-                        forwardSearchAfter = true,
-                        forwardSearch = {
-                            executable = "zathura",
-                            args = {
-                                "--synctex-forward",
-                                "%l:1:%f",
-                                "%p"
-                            },
-                        },
+                        args = { '-verbose', '-synctex=1', '-interaction=nonstopmode', '-pv' },
+                        -- forwardSearchAfter = true,
                         onSave = true,
                     },
+                    -- forwardSearch = {
+                    --     executable = 'evince-synctex',
+                    --     args = {
+                    --         '-f',
+                    --         '%l',
+                    --         '%p',
+                    --         '/usr/bin/true'
+                    --     },
+                    -- },
                 }
             },
         }

@@ -53,3 +53,9 @@ podman_stop() {
     id=$(podman ps | tail -n -1 | fzf | awk '{ print $1; }')
     podman stop "${id}"
 }
+
+check_ns() {
+    for ns in 1.1.1.1 8.8.8.8 9.9.9.9; do
+        dig ${1:-a} +short @${ns} ${2:-suzunaan.org}
+    done
+}

@@ -6,7 +6,7 @@ export CXX="clang++"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share"
 
-export PATH="$HOME/.local/bin/m/$(hostname):$HOME/.local/bin:$HOME/.local/bin/secret:$PATH"
+export PATH="$HOME/.local/bin/m/$(hostname):$HOME/.local/bin:$HOME/.local/bin/secret:$HOME/.local/subbin/sass_embedded:$PATH"
 # yarn global bin  = .yarn/global/bin
 export PATH="$HOME/.yarn/global/bin:$PATH"
 export EDITOR="nvim"
