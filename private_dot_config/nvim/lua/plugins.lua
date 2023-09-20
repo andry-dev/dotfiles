@@ -18,8 +18,6 @@ local function dev_plugin(path)
 end
 
 return {
-    { 'wbthomason/packer.nvim', lazy = true },
-
     {
         'andry-dev/kyouko.nvim',
         -- dir = '~/prj/kyouko.nvim',
@@ -95,11 +93,9 @@ return {
     },
 
     {
-        'jose-elias-alvarez/null-ls.nvim',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'neovim/nvim-lspconfig',
-        },
+        'creativenull/efmls-configs-nvim',
+        version = '^v1',
+        dependencies = { 'neovim/nvim-lspconfig' },
     },
 
     {
@@ -142,9 +138,9 @@ return {
         build = ":Neorg sync-parsers",
         opts = {
             load = {
-                ['core.defaults'] = {}, -- Loads default behaviour
+                ['core.defaults'] = {},  -- Loads default behaviour
                 ['core.concealer'] = {}, -- Adds pretty icons to your documents
-                ['core.dirman'] = { -- Manages Neorg workspaces
+                ['core.dirman'] = {      -- Manages Neorg workspaces
                     config = {
                         workspaces = {
                             concurrent_systems = '~/prj/uni/2022-2023//concurrent_systems',

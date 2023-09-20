@@ -147,10 +147,48 @@ local language_servers = {
             },
         }
     },
+
     gopls = {
         config = default_config
-    }
+    },
 }
+
+
+local function setup_efm()
+    local shellcheck = require('efmls-configs.linters.shellcheck')
+    local proselint = require('efmls-configs.linters.proselint')
+    local textlint = require('efmls-configs.linters.textlint')
+    local write_good = require('efmls-configs.linters.write_good')
+
+
+    local languages = {
+        text = { proselint, textlint, write_good },
+        tex = { proselint, textlint, write_good },
+        markdown = { proselint, textlint, write_good },
+
+        sh = { shellcheck },
+        bash = { shellcheck },
+        zsh = { shellcheck },
+    }
+
+    local efmls_config = {
+        filetypes = vim.tbl_keys(languages),
+        settings = {
+            rootMarkers = { '.git/' },
+            languages = languages,
+        },
+        init_options = {
+            documentFormatting = true,
+            docuemntRangeFormatting = true
+        }
+    }
+
+    language_servers.efm = {
+        config = default_config:with(efmls_config)
+    }
+end
+
+setup_efm()
 
 for name, info in pairs(language_servers) do
     lsp[name].setup(info.config)
@@ -160,29 +198,6 @@ require('neodev').setup()
 
 lsp.lua_ls.setup(default_config:with {})
 
-
--- local null_ls = require('null-ls')
---
--- local null_ls_sources = { sources = {} }
---
--- function null_ls_sources:add(executable, source)
---     if vim.fn.executable(executable) == 1 then
---         vim.list_extend(self.sources, {source})
---     end
--- end
---
--- null_ls_sources:add('prettier', null_ls.builtins.formatting.prettier)
--- null_ls_sources:add('stylua', null_ls.builtins.formatting.stylua.with({
---     extra_args = {"--indent-type Spaces"}
--- }))
--- null_ls_sources:add('shellcheck', null_ls.builtins.diagnostics.shellcheck)
--- null_ls_sources:add('eslint_d', null_ls.builtins.diagnostics.eslint_d)
--- null_ls_sources:add('hadolint', null_ls.builtins.diagnostics.hadolint)
--- null_ls_sources:add('phpstan', null_ls.builtins.diagnostics.phpstan)
---
--- null_ls.setup({
---     sources = null_ls_sources.sources,
--- })
 
 require('symbols-outline').setup({
     highlight_hovered_item = true,

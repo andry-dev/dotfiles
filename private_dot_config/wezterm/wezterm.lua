@@ -18,8 +18,8 @@ local acme_colors = {
     brights = {
         'grey',
         'red',
-        'lime',
-        'yellow',
+        'lch(20% 200% 140)', -- Light Green
+        'lch(20% 50% 90)',   -- Light Yellow
         '#5050AA',
         'fuchsia',
         '#509090',
@@ -31,25 +31,25 @@ local dark_colors = {
     background = '#262626',
     foreground = '#eeeeee',
     cursor_fg = 'black',
-    cursor_bg = '#00ffff',
+    cursor_bg = 'lch(90% 0% 0)',
     ansi = {
-        'black',
-        '#B09090', -- Maroon
-        'green',
-        'olive',
-        'navy',
-        'purple',
-        'teal',
-        'silver',
+        'black',            -- Black
+        'lch(80% 150% 20)', -- Red
+        'lch(80% 10% 140)', -- Green
+        'lch(80% 10% 90)',  -- Yellow
+        'lch(80% 10% -90)', -- Blue
+        'lch(80% 20% 0)',   -- Purple
+        'lch(80% 10% 200)', -- Teal
+        'lch(80% 0% 0)',    -- Silver
     },
     brights = {
-        'grey',
-        '#FFA0A0', -- Red
-        'lime',
-        'yellow',
-        '#A0A0E0', -- Blue
-        'fuchsia',
-        '#90E0E0', -- Acqua
+        'lch(50% 0% 0)',
+        'lch(100% 200% 20)', -- Red
+        'lch(80% 20% 140)',
+        'lch(80% 20% 90)',
+        'lch(80% 20% -90)', -- Blue
+        'lch(100% 20% 0)',  -- Purple
+        'lch(80% 20% 200)', -- Teal
         'white',
     },
 }
@@ -79,5 +79,5 @@ return {
     },
     font_size = 10,
     front_end = 'WebGpu',
-    hide_mouse_cursor_when_typing = false
+    hide_mouse_cursor_when_typing = false,
 }
