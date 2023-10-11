@@ -1,14 +1,12 @@
 #!/bin/sh
 
-export CC="clang"
-export CXX="clang++"
-
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share"
 
-export PATH="$HOME/.local/bin/m/$(hostname):$HOME/.local/bin:$HOME/.local/bin/secret:$HOME/.local/subbin/sass_embedded:$PATH"
+export PATH="$HOME/.local/bin_custom/m/$(hostname):$HOME/.local/bin_custom:$HOME/.local/subbin/sass_embedded:$PATH"
 # yarn global bin  = .yarn/global/bin
-export PATH="$HOME/.yarn/global/bin:$PATH"
+export PATH="$HOME/.local/share/yarn/global/bin:$PATH"
+
 export EDITOR="nvim"
 export VISUAL="nvim"
 export SUDO_EDITOR="nvim"
@@ -26,4 +24,3 @@ export GEM_HOME="$HOME/.cache/gems"
 export PATH="$GEM_HOME/bin:$PATH"
 
 [ -f "$HOME/.config/m/$(hostname)/.profile" ] && . "$HOME/.config/m/$(hostname)/.profile"
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"

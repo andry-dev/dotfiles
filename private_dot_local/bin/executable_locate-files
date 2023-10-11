@@ -1,7 +1,0 @@
-#!/bin/sh
-
-index_file=$HOME/.local/fs-index
-
-query_result=$(rofi -dmenu -i -p "open" < "${index_file}")
-
-xdg-open "${query_result}"

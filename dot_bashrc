@@ -7,4 +7,3 @@
 . "$HOME/.config/shell/alias"
 
 PS1="\w $(chk_current_sh bash)% "
-. "$HOME/.cargo/env"

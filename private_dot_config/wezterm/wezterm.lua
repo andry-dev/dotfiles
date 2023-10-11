@@ -68,9 +68,18 @@ return {
         ['nofrils_acme'] = acme_colors,
         ['nofrils_dark'] = dark_colors,
     },
-    font = wezterm.font(
-        'Go Mono'
-    ),
+    font = wezterm.font {
+        family = 'Pragmasevka',
+        weight = 'Regular',
+        -- stretch = 'Expanded',
+        harfbuzz_features = {
+            -- != == >= <=
+
+            'calt=0',
+            -- 'clig=0',
+            -- 'liga=0'
+        },
+    },
     window_padding = {
         left = 0,
         right = 0,

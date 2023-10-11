@@ -1,8 +1,7 @@
 #!/bin/sh
 
-alias clang='clang'
 alias ll='ls -lah'
-alias cp='rsync -avh --no-compress --progress'
+alias rsync='rsync --progress -r'
 alias htop='htop'
 alias gs='git status'
 alias gcm='git commit'
@@ -26,3 +25,5 @@ alias butane='podman run --rm --tty --interactive \
               --security-opt label=disable        \
               --volume ${PWD}:/pwd --workdir /pwd \
               quay.io/coreos/butane:release'
+
+alias phpstan='podman run -v "$PWD:/app" --rm ghcr.io/.phpstan/phpstan'

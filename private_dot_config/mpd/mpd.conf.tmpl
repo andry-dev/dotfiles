@@ -5,9 +5,7 @@ db_file            "~/.config/mpd/database"
 #log_file           "syslog"
 
 # The music directory is by default the XDG directory, uncomment to amend and choose a different directory
-{{- if eq .chezmoi.hostname "kosuzu" }}
-music_directory    "~/cirno_failover/Music"
-{{- end }}
+music_directory    "/run/media/andry/NAS Failover/Music"
 
 # Uncomment to refresh the database whenever files in the music_directory are changed
 auto_update "yes"

@@ -2,9 +2,9 @@
 
 export GUI_TERM="alacritty"
 export TERMINAL="${GUI_TERM}"
-export XDG_SESSION_DESKTOP=KDE
-export XDG_CURRENT_DESKTOP="$XDG_SESSION_DESKTOP"
-export DESKTOP_SESSION="$XDG_SESSION_DESKTOP"
+# export XDG_SESSION_DESKTOP=KDE
+# export XDG_CURRENT_DESKTOP="$XDG_SESSION_DESKTOP"
+# export DESKTOP_SESSION="$XDG_SESSION_DESKTOP"
 
 # Broken for 120Hz+ monitors
 #for output in $(xrandr --prop | grep -E -o -i "^[A-Z\-]+-[0-9]+"); do xrandr --output "$output" --set "scaling mode" "Full aspect"; done

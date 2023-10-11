@@ -1,0 +1,7 @@
+{{- if ne .chezmoi.osRelease.id "void" }}
+runit/
+.wlinit
+.wlprofile
+.xprofile
+.local/dotfiles
+{{- end }}
