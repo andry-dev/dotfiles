@@ -1,33 +1,58 @@
 -- Normal theme configuration
-local default_theme_config = require 'themes'.setup {
-    daystart = 7,
-    dayend = 20,
-    light = 'nofrils-acme',
-    dark = 'nofrils-dark',
+
+local themes = {
+    {
+        set_dark_mode = function()
+            vim.api.nvim_set_option("background", "dark")
+            vim.cmd.colorscheme("nofrils-dark")
+        end,
+        set_light_mode = function()
+            vim.api.nvim_set_option("background", "light")
+            vim.cmd.colorscheme("nofrils-acme")
+        end,
+    },
+    {
+        set_dark_mode = function()
+            require('onedark').setup {
+                style = 'dark'
+            }
+
+            vim.cmd.colorscheme("onedark")
+        end,
+        set_light_mode = function()
+            require('onedark').setup {
+                style = 'light'
+            }
+
+            vim.cmd.colorscheme("onedark")
+        end,
+    }
 }
 
--- Theme configuration for screenshots and such
-local pretty_theme_config = require 'themes'.setup { default_theme_config }
+local current_theme = 1
 
-pretty_theme_config.dark = "onedark"
-pretty_theme_config.dark_fn = function()
-    -- vim.opt.background = "dark"
-    -- vim.g.catppuccin_flavour = "mocha"
-    require('onedark').setup {
-        -- style = 'darker'
-    }
-    -- require('onedark').load()
-end
+local LIGHT_SETTINGS = {
+    LIGHT = 1,
+    DARK = 2
+}
 
-pretty_theme_config.light = "onedark"
-pretty_theme_config.light_fn = function()
-    -- vim.opt.background = "light"
-    -- vim.g.catppuccin_flavour = "latte"
-    require('onedark').setup {
-        style = 'light'
-    }
-    -- require('onedark').load()
-end
+-- 1 = light
+-- 2 = dark
+local last_light_setting = LIGHT_SETTINGS.LIGHT
+
+local theme_config_shim = {
+    update_interval = 1000,
+    set_dark_mode = function()
+        themes[current_theme].set_dark_mode()
+        last_light_setting = LIGHT_SETTINGS.DARK
+    end,
+
+    set_light_mode = function()
+        themes[current_theme].set_light_mode()
+        last_light_setting = LIGHT_SETTINGS.LIGHT
+    end,
+}
+
 
 local function setup_theming()
     vim.opt.termguicolors = true
@@ -39,37 +64,36 @@ local function setup_theming()
     -- vim.g.gruvbox_contrast_dark = 'hard'
 end
 
--- These are basically globals.
--- Needed to make the module idempotent with respect to state.
-local theme_timer = vim.loop.new_timer()
-local current_theme_config = default_theme_config
+local function reset_theme()
+    local t = themes[current_theme]
+    if last_light_setting == LIGHT_SETTINGS.LIGHT then
+        t.set_light_mode()
+    else
+        t.set_dark_mode()
+    end
+end
 
 local M = {}
 
-function M.start_timer()
-    local minutes = 1
-    theme_timer:start(0, minutes * 60 * 1000, vim.schedule_wrap(
-        function() current_theme_config.set() end))
+local auto_dark_mode = require('auto-dark-mode');
+
+function M.disable()
+    auto_dark_mode.disable()
 end
 
-function M.stop_timer() theme_timer:stop() end
-
 function M.set_default_theme()
-    current_theme_config = default_theme_config
-    current_theme_config.set()
+    current_theme = 1
+    reset_theme()
 end
 
 function M.set_pretty_theme()
-    current_theme_config = pretty_theme_config
-    current_theme_config.set()
+    current_theme = 2
+    reset_theme()
 end
-
-function M.get_theme_config() return current_theme_config end
 
 function M.setup()
     setup_theming()
-    current_theme_config.set()
-    M.start_timer()
+    auto_dark_mode.setup(theme_config_shim)
 end
 
 return M

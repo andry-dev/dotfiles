@@ -50,6 +50,10 @@ return {
         lazy = true
     },
 
+    {
+        "f-person/auto-dark-mode.nvim",
+    },
+
 
     { 'nvim-lua/plenary.nvim' },
 

@@ -75,10 +75,10 @@ local language_servers = {
             root_dir = lsp.util.root_pattern(".git", "mix.exs"),
         }
     },
-    solargraph = {
-        executable = 'solargraph',
-        config = default_config
-    },
+    -- solargraph = {
+    --     executable = 'solargraph',
+    --     config = default_config
+    -- },
     html = {
         executable = 'html-languageserver',
         config = default_config
