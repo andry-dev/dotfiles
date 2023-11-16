@@ -1,7 +1,9 @@
 local globals = require 'globals'
 
 require('mason-lspconfig').setup({
-    automatic_installation = true,
+    automatic_installation = {
+        exclude = { "rust_analyzer" }
+    },
 })
 
 local lsp = require 'lspconfig'
@@ -52,6 +54,7 @@ local language_servers = {
         executable = 'ansiblels',
         config = default_config,
     },
+
     clangd = {
         executable = 'clangd',
         config = default_config:with {
@@ -61,68 +64,83 @@ local language_servers = {
             }
         }
     },
+
     cmake = {
         executable = 'cmake-language-server',
         config = default_config
     },
+
     eslint = {
         executable = 'eslint',
         config = default_config,
     },
+
     elixirls = {
         executable = 'elixir_ls',
         config = default_config:with {
             root_dir = lsp.util.root_pattern(".git", "mix.exs"),
         }
     },
+
     -- solargraph = {
     --     executable = 'solargraph',
     --     config = default_config
     -- },
+
     html = {
         executable = 'html-languageserver',
         config = default_config
     },
+
     cssls = {
         executable = 'css-languageserver',
         config = default_config
     },
+
     denols = {
         config = default_config
     },
+
     intelephense = {
         executable = 'intelephense',
         config = default_config
     },
+
     sqlls = {
         executable = 'sql-language-server',
         config = default_config:with {
             cmd = { 'sql-language-server', 'up', '--method', 'stdio' }
         }
     },
+
     pylsp = {
         executable = 'pylsp',
         config = default_config
     },
+
     yamlls = {
         executable = 'yaml-language-server',
         config = default_config
     },
+
     vuels = {
         executable = 'vue-language-server',
         config = default_config
     },
+
     solidity = {
         executable = 'solidity-ls',
         config = default_config
     },
+
     terraformls = {
         executable = 'terraform-ls',
         config = default_config
     },
+
     texlab = {
         config = default_config:with {
-            cmd = { vim.fn.stdpath('data') .. '/mason/bin/texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
+            -- cmd = { vim.fn.stdpath('data') .. '/mason/bin/texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
             -- on_new_config = function(new_config, new_root_dir)
             --     new_config.settings.texlab.rootDirectory = new_root_dir
             -- end,
@@ -151,6 +169,10 @@ local language_servers = {
     gopls = {
         config = default_config
     },
+
+    nil_ls = {
+        config = default_config
+    }
 }
 
 
@@ -160,8 +182,11 @@ local function setup_efm()
     local textlint = require('efmls-configs.linters.textlint')
     local write_good = require('efmls-configs.linters.write_good')
 
+    local ansible_lint = require('efmls-configs.linters.ansible_lint')
 
-    local languages = {
+
+    local languages = require('efmls-configs.defaults').languages()
+    languages = vim.tbl_extend('force', languages, {
         text = { proselint, textlint, write_good },
         tex = { proselint, textlint, write_good },
         markdown = { proselint, textlint, write_good },
@@ -169,7 +194,11 @@ local function setup_efm()
         sh = { shellcheck },
         bash = { shellcheck },
         zsh = { shellcheck },
-    }
+
+        yaml = {
+            ansible_lint
+        }
+    })
 
     local efmls_config = {
         filetypes = vim.tbl_keys(languages),

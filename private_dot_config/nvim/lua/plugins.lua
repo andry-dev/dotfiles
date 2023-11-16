@@ -138,6 +138,20 @@ return {
     },
 
     {
+        'David-Kunz/gen.nvim',
+
+        config = function()
+            require('gen').prompts['Complete_Code'] = {
+                prompt = '$text',
+                model = 'codellama:7b-code'
+            },
+
+            vim.keymap.set('v', '<leader>]', ':Gen<CR>')
+            vim.keymap.set('n', '<leader>]', ':Gen Complete_Code<CR>')
+        end
+    },
+
+    {
         "nvim-neorg/neorg",
         build = ":Neorg sync-parsers",
         opts = {
