@@ -6,34 +6,83 @@ require('mason-lspconfig').setup({
     },
 })
 
+require('mason-tool-installer').setup({
+    ensure_installed = {
+        'shellcheck',
+        'proselint',
+        'textlint',
+        'write-good',
+        'hadolint',
+        'codespell',
+    }
+})
+
 local lsp = require 'lspconfig'
 
-function should_format()
-    if globals.autoformat_enabled() then vim.lsp.buf.format({ async = true }) end
-end
 
-vim.lsp.handlers["textDocument/formatting"] =
-    function(err, result, context, _)
-        if err ~= nil or result == nil then return end
-        if not vim.api.nvim_buf_get_option(context.bufnr, "modified") then
-            local view = vim.fn.winsaveview()
-            vim.lsp.util.apply_text_edits(result, context.bufnr, vim.opt.fileencoding:get())
-            vim.fn.winrestview(view)
-            if context.bufnr == vim.api.nvim_get_current_buf() then
-                vim.api.nvim_command("noautocmd :update")
-            end
+vim.g.disable_autoformat = false
+
+require('conform').setup({
+    formatters_by_ft = {
+        lua = { 'stylua' },
+
+        python = { 'isort', 'autopep8' },
+
+        cmake = { 'cmake_format' },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
+
+        javascript = { { 'prettierd', 'prettier' } },
+        html = { { 'prettierd', 'prettier' } },
+        css = { { 'prettierd', 'prettier' } },
+        scss = { { 'prettierd', 'prettier' } },
+
+        sh = { { 'shfmt', 'shellcheck' } },
+        bash = { { 'shfmt', 'shellcheck' } },
+        yaml = { 'yamlfmt' },
+
+        elixir = { 'mix' },
+
+        go = { 'goimports', { 'gofumpt', 'gofmt' } },
+
+        just = { 'just' },
+
+        latex = { 'latexindent' },
+
+        nix = { 'alejandra' },
+
+        -- Use the "*" filetype to run formatters on all filetypes.
+        ["*"] = { "codespell" },
+        -- Use the "_" filetype to run formatters on filetypes that don't
+        -- have other formatters configured.
+        ["_"] = { "trim_whitespace" },
+    },
+
+    format_on_save = function(bufnr)
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+            return
         end
+
+        local bufname = vim.api.nvim_buf_get_name(bufnr)
+        if bufname:match("/node_modules/") then
+            return
+        end
+
+        return { timeout_ms = 500, lsp_fallback = true }
     end
+})
+
+vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 
 local custom_attach = function(client)
     -- require('lsp_signature').on_attach()
     -- require('virtualtypes').on_attach()
-    if client.server_capabilities.documentFormattingProvider then
-        vim.cmd [[augroup Format]]
-        vim.cmd [[autocmd! * <buffer>]]
-        vim.cmd [[autocmd BufWritePost <buffer> lua should_format()]]
-        vim.cmd [[augroup END]]
-    end
+    -- if client.server_capabilities.documentFormattingProvider then
+    --     vim.cmd [[augroup Format]]
+    --     vim.cmd [[autocmd! * <buffer>]]
+    --     vim.cmd [[autocmd BufWritePost <buffer> lua should_format()]]
+    --     vim.cmd [[augroup END]]
+    -- end
 end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -178,22 +227,49 @@ local language_servers = {
 
 local function setup_efm()
     local shellcheck = require('efmls-configs.linters.shellcheck')
+    local codespell = require('efmls-configs.linters.codespell')
     local proselint = require('efmls-configs.linters.proselint')
     local textlint = require('efmls-configs.linters.textlint')
     local write_good = require('efmls-configs.linters.write_good')
 
+    local chktex = require('efmls-configs.linters.chktex')
+
     local ansible_lint = require('efmls-configs.linters.ansible_lint')
+
+    local clang_tidy = require('efmls-configs.linters.clang_tidy')
+    local clazy = require('efmls-configs.linters.clazy')
+    local cppcheck = require('efmls-configs.linters.cppcheck')
+
+    local css_stylelint = require('efmls-configs.linters.stylelint')
+
+    local hadolint = require('efmls-configs.linters.hadolint')
+
+    local luacheck = require('efmls-configs.linters.luacheck')
+
+    local statix = require('efmls-configs.linters.statix')
 
 
     local languages = require('efmls-configs.defaults').languages()
+
     languages = vim.tbl_extend('force', languages, {
         text = { proselint, textlint, write_good },
-        tex = { proselint, textlint, write_good },
+        tex = { chktex, proselint, textlint, write_good },
         markdown = { proselint, textlint, write_good },
 
-        sh = { shellcheck },
-        bash = { shellcheck },
-        zsh = { shellcheck },
+        c = { clang_tidy, cppcheck, codespell },
+        cpp = { clang_tidy, clazy, cppcheck, codespell },
+
+        css = { css_stylelint },
+
+        sh = { shellcheck, codespell },
+        bash = { shellcheck, codespell },
+        zsh = { shellcheck, codespell },
+
+        lua = { luacheck, codespell },
+
+        nix = { statix, codespell },
+
+        docker = { hadolint, codespell },
 
         yaml = {
             ansible_lint

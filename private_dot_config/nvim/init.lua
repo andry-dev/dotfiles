@@ -53,9 +53,6 @@ require("lazy").setup('plugins', {
 require('focus').setup()
 require('config.themes').setup()
 
--- Tecnically, this is called by packer, but it just doesn't for some reason.
-require('config.lsp')
-
 vim.g.netrw_liststype = 3
 vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 1
@@ -66,6 +63,7 @@ vim.g.cmake_generate_options = { '-G Ninja' }
 vim.g.tex_flavor = 'latex'
 vim.g.vimtex_view_method = 'zathura'
 vim.g.cmake_build_dir_location = 'build'
+
 
 local Job = require('plenary.job')
 local globals = require('globals')
@@ -253,9 +251,23 @@ vim.api.nvim_create_user_command('EnableAutoformat', function()
     globals.enable_autoformat(true)
 end, {})
 
-vim.api.nvim_create_user_command('DisableAutoformat', function()
-    globals.enable_autoformat(false)
-end, {})
+vim.api.nvim_create_user_command("FormatDisable", function(args)
+    if args.bang then
+        -- FormatDisable! will disable formatting just for this buffer
+        vim.b.disable_autoformat = true
+    else
+        vim.g.disable_autoformat = true
+    end
+end, {
+    desc = "Disable autoformat-on-save",
+    bang = true,
+})
+vim.api.nvim_create_user_command("FormatEnable", function()
+    vim.b.disable_autoformat = false
+    vim.g.disable_autoformat = false
+end, {
+    desc = "Re-enable autoformat-on-save",
+})
 
 
 local dap = require('dap')

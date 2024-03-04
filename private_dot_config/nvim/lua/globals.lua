@@ -11,16 +11,6 @@ function R(m)
     return require(m)
 end
 
-local autoformat_enabled = true
-
-function M.enable_autoformat(val)
-    autoformat_enabled = val
-end
-
-function M.autoformat_enabled()
-    return autoformat_enabled
-end
-
 local function get_system_name()
     if vim.fn.has("mac") == 1 then
         return "macOS"
@@ -37,7 +27,7 @@ local system_name = get_system_name()
 
 M.elixirls_basepath = lsp_folder_path .. '/elixir-ls'
 M.sumneko_basepath = lsp_folder_path .. '/lua-language-server'
-M.sumneko_binary =  M.sumneko_basepath .. '/bin/lua-language-server'
+M.sumneko_binary = M.sumneko_basepath .. '/bin/lua-language-server'
 M.pyls_ms_binary = lsp_folder_path .. '/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.dll'
 
 return M

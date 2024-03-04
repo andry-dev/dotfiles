@@ -3,7 +3,7 @@ local globals = require 'globals'
 local M = {}
 
 local function format_marker()
-    if globals.autoformat_enabled() then
+    if not vim.g.disable_autoformat then
         return ""
     else
         return "[F-]"
@@ -24,9 +24,9 @@ function M.status_line()
     return table.concat {
         "%<",
         "%f ", -- Current file
-        "%h", -- Help?
-        "%m", -- Modified?
-        "%r", -- RO?
+        "%h",  -- Help?
+        "%m",  -- Modified?
+        "%r",  -- RO?
         format_marker(),
         "%=",
         git_head() .. " ",

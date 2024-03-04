@@ -76,6 +76,7 @@ return {
         dependencies = {
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
+            'WhoIsSethDaniel/mason-tool-installer.nvim',
             'ray-x/lsp_signature.nvim',
             {
                 'mfussenegger/nvim-jdtls',
@@ -109,11 +110,6 @@ return {
         config = function()
             require('rust-tools').setup({})
         end
-    },
-
-    {
-        'stevearc/overseer.nvim',
-        opts = {},
     },
 
     {
@@ -192,11 +188,21 @@ return {
             'theHamsta/nvim-dap-virtual-text',
             'mfussenegger/nvim-dap-python',
             'rcarriga/nvim-dap-ui',
+            'stevearc/conform.nvim',
         },
         config = function()
             require('config.dap')
         end,
     },
+
+    {
+        'stevearc/overseer.nvim',
+        opts = {},
+        dependencies = {
+            'mfussenegger/nvim-dap',
+        },
+    },
+
 
     { 'prabirshrestha/async.vim' },
 
@@ -316,12 +322,16 @@ return {
             'nvim-lua/plenary.nvim',
             'nvim-treesitter/nvim-treesitter',
             'nvim-neotest/neotest-go',
+            'stevearc/overseer.nvim',
         },
         lazy = true,
         cmd = { 'NeotestFileRun', 'NeotestRun', 'NeotestSummary' },
         -- ft = {'go'},
         config = function()
             require('neotest').setup({
+                consumers = {
+                    overseer = require('neotest.consumers.overseer')
+                },
                 adapters = {
                     require('neotest-go'),
                 }
