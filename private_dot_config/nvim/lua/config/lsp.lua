@@ -1,5 +1,3 @@
-local globals = require 'globals'
-
 require('mason-lspconfig').setup({
     automatic_installation = {
         exclude = { "rust_analyzer" }
@@ -52,10 +50,10 @@ require('conform').setup({
         nix = { 'alejandra' },
 
         -- Use the "*" filetype to run formatters on all filetypes.
-        ["*"] = { "codespell" },
+        ["*"] = (not vim.g.prefers_energy_efficiency and { "codespell" }) or {},
         -- Use the "_" filetype to run formatters on filetypes that don't
         -- have other formatters configured.
-        ["_"] = { "trim_whitespace" },
+        ["_"] = (not vim.g.prefers_energy_efficiency and { "trim_whitespace" }) or {},
     },
 
     format_on_save = function(bufnr)

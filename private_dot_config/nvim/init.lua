@@ -1,7 +1,16 @@
 vim.cmd.syntax = 'enable'
 vim.cmd.filetype('plugin indent on')
 
+local function is_device_low_powered()
+    local known_devices = { 'aya', 'shiki' }
+    local hostname = vim.fn.hostname()
+
+    return vim.tbl_contains(known_devices, hostname)
+end
+
 vim.g.mapleader = ','
+
+vim.g.prefers_energy_efficiency = is_device_low_powered()
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -82,6 +91,9 @@ vim.opt.mouse = 'a'
 vim.opt.listchars = 'tab:> ,nbsp:!,trail:.'
 vim.opt.list = true
 vim.opt.colorcolumn = '80,120'
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldenable = false
 vim.opt.foldlevelstart = 99
 vim.opt.cpoptions:append('J')
 vim.opt.formatoptions:append('p')
@@ -262,6 +274,7 @@ end, {
     desc = "Disable autoformat-on-save",
     bang = true,
 })
+
 vim.api.nvim_create_user_command("FormatEnable", function()
     vim.b.disable_autoformat = false
     vim.g.disable_autoformat = false

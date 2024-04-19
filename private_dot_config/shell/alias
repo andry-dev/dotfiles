@@ -13,6 +13,9 @@ alias gps='git push'
 alias mkdir='mkdir -p'
 alias pstop='podman_stop'
 
+alias open='xdg-open'
+alias dnf='dnf5'
+
 # Error correction
 
 alias daos='doas'
