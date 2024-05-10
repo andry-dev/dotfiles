@@ -152,32 +152,32 @@ return {
         end
     },
 
-    {
-        "nvim-neorg/neorg",
-        build = ":Neorg sync-parsers",
-        opts = {
-            load = {
-                ['core.defaults'] = {},  -- Loads default behaviour
-                ['core.concealer'] = {}, -- Adds pretty icons to your documents
-                ['core.dirman'] = {      -- Manages Neorg workspaces
-                    config = {
-                        workspaces = {
-                            concurrent_systems = '~/prj/uni/2022-2023//concurrent_systems',
-                        },
-                    },
-                },
-                ['core.integrations.treesitter'] = {
-                    config = {}
-                },
-                ['core.completion'] = {
-                    config = {
-                        engine = 'nvim-cmp'
-                    }
-                }
-            },
-        },
-        dependencies = { { "nvim-lua/plenary.nvim" } },
-    },
+    -- {
+    --     "nvim-neorg/neorg",
+    --     build = ":Neorg sync-parsers",
+    --     opts = {
+    --         load = {
+    --             ['core.defaults'] = {},  -- Loads default behaviour
+    --             ['core.concealer'] = {}, -- Adds pretty icons to your documents
+    --             ['core.dirman'] = {      -- Manages Neorg workspaces
+    --                 config = {
+    --                     workspaces = {
+    --                         concurrent_systems = '~/prj/uni/2022-2023//concurrent_systems',
+    --                     },
+    --                 },
+    --             },
+    --             ['core.integrations.treesitter'] = {
+    --                 config = {}
+    --             },
+    --             ['core.completion'] = {
+    --                 config = {
+    --                     engine = 'nvim-cmp'
+    --                 }
+    --             }
+    --         },
+    --     },
+    --     dependencies = { { "nvim-lua/plenary.nvim" } },
+    -- },
 
     {
         'mfussenegger/nvim-dap',
@@ -189,6 +189,7 @@ return {
             'mfussenegger/nvim-dap-python',
             'rcarriga/nvim-dap-ui',
             'stevearc/conform.nvim',
+            'nvim-neotest/nvim-nio',
         },
         config = function()
             require('config.dap')
