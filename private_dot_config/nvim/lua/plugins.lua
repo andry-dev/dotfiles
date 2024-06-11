@@ -57,12 +57,12 @@ return {
 
     { 'nvim-lua/plenary.nvim' },
 
-    {
-        'lewis6991/spellsitter.nvim',
-        config = function()
-            require('spellsitter').setup()
-        end
-    },
+    -- {
+    --     'lewis6991/spellsitter.nvim',
+    --     config = function()
+    --         require('spellsitter').setup()
+    --     end
+    -- },
 
     {
         "williamboman/mason.nvim",

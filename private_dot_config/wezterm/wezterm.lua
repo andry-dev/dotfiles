@@ -64,6 +64,7 @@ end
 
 return {
     color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
+    -- color_scheme = 'nofrils_dark',
     color_schemes = {
         ['nofrils_acme'] = acme_colors,
         ['nofrils_dark'] = dark_colors,
