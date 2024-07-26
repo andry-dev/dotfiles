@@ -12,16 +12,25 @@ local events = require("luasnip.util.events")
 ls.config.set_config({
 })
 
-ls.add_snippets('tex', {
-    ls.parser.parse_snippet({ trig = "beg", wordTrig = true }, "\\begin{$1}\n\t$2\n\\end{$1}"),
-    ls.parser.parse_snippet({ trig = 'ls', wordTrig = true }, '\\begin{itemize}\n\t\\item $0\n\\end{itemize}'),
-    ls.parser.parse_snippet({ trig = 'enm', wordTrig = true }, '\\begin{enumerate}\n\t\\item $0\n\\end{enumerate}'),
-    ls.parser.parse_snippet({ trig = 'eq', wordTrig = true }, '\\begin{equation*}\n\t$0\n\\end{equation*}'),
-    -- s('beg', {
-    --     t { '\\begin{' }, i(1), t { '}', '' },
-    --     i(0),
-    --     t { '', '\\end{' }, i(1), t { '}' }
-    -- })
+local function current_year()
+    return os.date("%Y")
+end
+
+ls.add_snippets("all", {
+    s("license", {
+        t("SPDX-License-Identifier: "), i(1),
+        t({"", "SPDX-FileCopyrightText: " .. current_year() .. " "}), i(2, "anri <me@anri.dev>"),
+        t({""})
+    })
+})
+
+ls.add_snippets("all", {
+    s("license_szn", {
+        t("SPDX-License-Identifier: "), i(1, "AGPL-3.0-or-later"),
+        t({"", "SPDX-FileCopyrightText: "}), sn(2, {
+            t(current_year() .. " Suzunaan "), i(1, "<SIG>"), t({" Contributors", ""})
+        })
+    }),
 })
 
 ls.add_snippets('cpp', {

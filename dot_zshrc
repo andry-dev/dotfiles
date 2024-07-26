@@ -57,3 +57,4 @@ eval "$(zoxide init zsh)"
 
 eval "$(direnv hook zsh)"
 alias luamake=/home/andry/.lsp/lua-language-server/3rd/luamake/luamake
+. "/home/andry/.acme.sh/acme.sh.env"

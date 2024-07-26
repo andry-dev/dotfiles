@@ -57,13 +57,6 @@ return {
 
     { 'nvim-lua/plenary.nvim' },
 
-    -- {
-    --     'lewis6991/spellsitter.nvim',
-    --     config = function()
-    --         require('spellsitter').setup()
-    --     end
-    -- },
-
     {
         "williamboman/mason.nvim",
         config = function()
@@ -90,7 +83,7 @@ return {
                 'simrat39/symbols-outline.nvim',
                 cmd = 'SymbolsOutline'
             },
-            'folke/neodev.nvim',
+            'b0o/SchemaStore.nvim',
         },
         config = function()
             require('config.lsp')
@@ -139,47 +132,6 @@ return {
     },
 
     {
-        'David-Kunz/gen.nvim',
-
-        config = function()
-            require('gen').prompts['Complete_Code'] = {
-                    prompt = '$text',
-                    model = 'codellama:7b-code'
-                },
-
-                vim.keymap.set('v', '<leader>]', ':Gen<CR>')
-            vim.keymap.set('n', '<leader>]', ':Gen Complete_Code<CR>')
-        end
-    },
-
-    -- {
-    --     "nvim-neorg/neorg",
-    --     build = ":Neorg sync-parsers",
-    --     opts = {
-    --         load = {
-    --             ['core.defaults'] = {},  -- Loads default behaviour
-    --             ['core.concealer'] = {}, -- Adds pretty icons to your documents
-    --             ['core.dirman'] = {      -- Manages Neorg workspaces
-    --                 config = {
-    --                     workspaces = {
-    --                         concurrent_systems = '~/prj/uni/2022-2023//concurrent_systems',
-    --                     },
-    --                 },
-    --             },
-    --             ['core.integrations.treesitter'] = {
-    --                 config = {}
-    --             },
-    --             ['core.completion'] = {
-    --                 config = {
-    --                     engine = 'nvim-cmp'
-    --                 }
-    --             }
-    --         },
-    --     },
-    --     dependencies = { { "nvim-lua/plenary.nvim" } },
-    -- },
-
-    {
         'mfussenegger/nvim-dap',
         dependencies = {
             'nvim-treesitter/nvim-treesitter',
@@ -209,6 +161,26 @@ return {
 
     {
         'L3MON4D3/LuaSnip',
+
+        build = (function()
+          -- Build Step is needed for regex support in snippets.
+          -- This step is not supported in many windows environments.
+          -- Remove the below condition to re-enable on windows.
+          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
+            return
+          end
+          return 'make install_jsregexp'
+        end)(),
+
+        dependencies = {
+            {
+                'rafamadriz/friendly-snippets',
+                config = function()
+                  require('luasnip.loaders.from_vscode').lazy_load()
+                end,
+            }
+        },
+
         config = function()
             require('config.snippets')
         end,
@@ -225,6 +197,19 @@ return {
             'petertriho/cmp-git',
             'hrsh7th/cmp-path',
             'rcarriga/cmp-dap',
+            'kristijanhusak/vim-dadbod-completion',
+            {
+                "folke/lazydev.nvim",
+                ft = "lua", -- only load on lua files
+                opts = {
+                  library = {
+                    -- See the configuration section for more details
+                    -- Load luvit types when the `vim.uv` word is found
+                    { path = "luvit-meta/library", words = { "vim%.uv" } },
+                  },
+                },
+              },
+            { "Bilal2453/luvit-meta", lazy = true },
         },
         config = function()
             require('config.cmp')
@@ -235,51 +220,11 @@ return {
         'ibhagwan/fzf-lua'
     },
 
-    -- Telescope
-    --
-    -- {
-    --     {
-    --         'nvim-telescope/telescope.nvim',
-    --         dependencies = {
-    --             'nvim-lua/popup.nvim',
-    --             'nvim-lua/plenary.nvim',
-    --             'telescope-frecency.nvim',
-    --             'telescope-fzf-native.nvim',
-    --         },
-    --         config = function()
-    --             require('config.telescope')
-    --         end
-    --     },
-    --     {
-    --         'nvim-telescope/telescope-frecency.nvim',
-    --         -- after = 'telescope.nvim',
-    --         dependencies = 'tami5/sqlite.lua',
-    --         --[[ config = function()
-    --             require('telescope').load_extension('frecency')
-    --         end ]]
-    --     },
-    --     {
-    --         'nvim-telescope/telescope-fzf-native.nvim',
-    --         build = 'make',
-    --     },
-    -- },
-
     {
         'cdelledonne/vim-cmake',
         lazy = true,
         ft = 'cmake'
     },
-
-    -- {'lambdalisue/suda.vim'},
-
-    -- {
-    --     'hkupty/iron.nvim',
-    --     lazy = true,
-    --     cmd = { 'IronRepl', 'IronReplHere' },
-    --     config = function()
-    --         require('config.iron')
-    --     end
-    -- },
 
     {
         'tpope/vim-dispatch',
@@ -310,10 +255,11 @@ return {
         end
     },
 
-    -- {
-    --     'tpope/vim-dadbod',
-    --     { 'kristijanhusak/vim-dadbod-completion', dependencies = 'vim-dadbod' }
-    -- },
+    {
+        'tpope/vim-dadbod',
+        'kristijanhusak/vim-dadbod-completion',
+        'kristijanhusak/vim-dadbod-ui',
+    },
 
     { 'editorconfig/editorconfig-vim' },
 

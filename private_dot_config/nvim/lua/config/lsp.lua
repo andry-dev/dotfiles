@@ -165,9 +165,31 @@ local language_servers = {
         config = default_config
     },
 
+    jsonls = {
+        config = default_config:with {
+            settings = {
+                json = {
+                    schemas = require("schemastore").json.schemas(),
+                    validate = { enable = true },
+                },
+            },
+        }
+    },
+
     yamlls = {
         executable = 'yaml-language-server',
-        config = default_config
+        config = default_config:with {
+            settings = {
+                yaml = {
+                    schemaStore = {
+                        enable = false,
+                        url = '',
+                    },
+
+                    schemas = require('schemastore').yaml.schemas(),
+                }
+            }
+        }
     },
 
     vuels = {
@@ -297,10 +319,7 @@ for name, info in pairs(language_servers) do
     lsp[name].setup(info.config)
 end
 
-require('neodev').setup()
-
 lsp.lua_ls.setup(default_config:with {})
-
 
 require('symbols-outline').setup({
     highlight_hovered_item = true,
