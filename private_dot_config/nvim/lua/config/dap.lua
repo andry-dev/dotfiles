@@ -1,14 +1,11 @@
 -- local dap = require('dap')
 
-require("mason-nvim-dap").setup({
-    ensure_installed = { 'elixir', 'python', 'codelldb' },
-    automatic_setup = true,
-    -- automatic_installation = true,
-})
--- require('mason-nvim-dap').setup_handlers()
-
--- local globals = require('globals')
-
+if vim.g.mason_enabled then
+    require("mason-nvim-dap").setup({
+        ensure_installed = { 'elixir', 'python', 'codelldb' },
+        automatic_installation = false,
+    })
+end
 
 -- dap.adapters.lldb = {
 --     type = "executable",

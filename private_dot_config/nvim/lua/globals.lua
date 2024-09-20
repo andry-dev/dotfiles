@@ -23,7 +23,7 @@ end
 
 local lsp_folder_path = os.getenv("HOME") .. "/.lsp"
 
-local system_name = get_system_name()
+M.system_name = get_system_name()
 
 M.elixirls_basepath = lsp_folder_path .. '/elixir-ls'
 M.sumneko_basepath = lsp_folder_path .. '/lua-language-server'

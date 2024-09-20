@@ -16,30 +16,8 @@ p() {
     cd "$(select-prj)" || return
 }
 
-wlinit() {
-    . "$HOME/.wlprofile"
-
-    exec dbus-run-session -- runsvdir -P "$HOME/runit/wlservice"
-}
-
 maskpath() {
     export PS1='%B%%%b '
-}
-
-vagrant(){
-  podman run -it --rm \
-    -e LIBVIRT_DEFAULT_URI \
-    -v /var/run/libvirt/:/var/run/libvirt/ \
-    -v ~/.vagrant.d/boxes:/vagrant/boxes \
-    -v ~/.vagrant.d/data:/vagrant/data \
-    -v ~/.vagrant.d/data:/vagrant/tmp \
-    -v $(realpath "${PWD}"):${PWD} \
-    -w $(realpath "${PWD}") \
-    --network host \
-    --entrypoint /bin/bash \
-    --security-opt label=disable \
-    docker.io/vagrantlibvirt/vagrant-libvirt:latest \
-      vagrant $@
 }
 
 git_checkout() {
@@ -56,6 +34,6 @@ podman_stop() {
 
 check_ns() {
     for ns in 1.1.1.1 8.8.8.8 9.9.9.9; do
-        dig ${1:-a} +short @${ns} ${2:-suzunaan.org}
+        dig "${1:-a}" +short @${ns} "${2:-suzunaan.org}"
     done
 }

@@ -23,4 +23,6 @@ export mesa_glthread=true
 export GEM_HOME="$HOME/.cache/gems"
 export PATH="$GEM_HOME/bin:$PATH"
 
+export PATH="$HOME/.cargo/bin:$PATH"
+
 [ -f "$HOME/.config/m/$(hostname)/.profile" ] && . "$HOME/.config/m/$(hostname)/.profile"

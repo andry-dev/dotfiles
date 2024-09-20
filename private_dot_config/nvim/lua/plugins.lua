@@ -60,7 +60,9 @@ return {
     {
         "williamboman/mason.nvim",
         config = function()
-            require('mason').setup()
+            if vim.g.mason_enabled then
+                require('mason').setup()
+            end
         end
     },
 
@@ -84,15 +86,21 @@ return {
                 cmd = 'SymbolsOutline'
             },
             'b0o/SchemaStore.nvim',
+            'barreiroleo/ltex-extra.nvim',
         },
         config = function()
             require('config.lsp')
         end,
     },
 
+    -- {
+    --     'creativenull/efmls-configs-nvim',
+    --     version = '^v1',
+    --     dependencies = { 'neovim/nvim-lspconfig' },
+    -- },
+
     {
-        'creativenull/efmls-configs-nvim',
-        version = '^v1',
+        'https://github.com/mfussenegger/nvim-lint',
         dependencies = { 'neovim/nvim-lspconfig' },
     },
 
@@ -163,20 +171,20 @@ return {
         'L3MON4D3/LuaSnip',
 
         build = (function()
-          -- Build Step is needed for regex support in snippets.
-          -- This step is not supported in many windows environments.
-          -- Remove the below condition to re-enable on windows.
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
-          return 'make install_jsregexp'
+            -- Build Step is needed for regex support in snippets.
+            -- This step is not supported in many windows environments.
+            -- Remove the below condition to re-enable on windows.
+            if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
+                return
+            end
+            return 'make install_jsregexp'
         end)(),
 
         dependencies = {
             {
                 'rafamadriz/friendly-snippets',
                 config = function()
-                  require('luasnip.loaders.from_vscode').lazy_load()
+                    require('luasnip.loaders.from_vscode').lazy_load()
                 end,
             }
         },
@@ -187,7 +195,9 @@ return {
     },
 
     {
-        'hrsh7th/nvim-cmp',
+        -- 'hrsh7th/nvim-cmp',
+        'yioneko/nvim-cmp',
+        branch = 'perf-up',
         dependencies = {
             'L3MON4D3/LuaSnip',
             'saadparwaiz1/cmp_luasnip',
@@ -202,13 +212,13 @@ return {
                 "folke/lazydev.nvim",
                 ft = "lua", -- only load on lua files
                 opts = {
-                  library = {
-                    -- See the configuration section for more details
-                    -- Load luvit types when the `vim.uv` word is found
-                    { path = "luvit-meta/library", words = { "vim%.uv" } },
-                  },
+                    library = {
+                        -- See the configuration section for more details
+                        -- Load luvit types when the `vim.uv` word is found
+                        { path = "luvit-meta/library", words = { "vim%.uv" } },
+                    },
                 },
-              },
+            },
             { "Bilal2453/luvit-meta", lazy = true },
         },
         config = function()

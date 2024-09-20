@@ -11,6 +11,7 @@ end
 vim.g.mapleader = ','
 
 vim.g.prefers_energy_efficiency = is_device_low_powered()
+vim.g.mason_enabled = os.getenv("NVIM_USE_NIX") == nil
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

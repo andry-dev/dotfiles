@@ -87,7 +87,7 @@ return {
         top = 0,
         bottom = 0,
     },
-    font_size = 10,
+    font_size = 18,
     front_end = 'WebGpu',
     hide_mouse_cursor_when_typing = false,
 }
