@@ -1,17 +1,28 @@
 -- Normal theme configuration
 
+local LIGHT_SETTINGS = {
+    LIGHT = 1,
+    DARK = 2
+}
+
+local THEME_KIND = {
+    DEFAULT = 1,
+    PRETTY = 2,
+}
+
 local themes = {
-    {
+    [THEME_KIND.DEFAULT] = {
         set_dark_mode = function()
-            vim.api.nvim_set_option("background", "dark")
+            vim.o.background = "dark"
             vim.cmd.colorscheme("nofrils-dark")
         end,
         set_light_mode = function()
-            vim.api.nvim_set_option("background", "light")
+            vim.o.background = "light"
             vim.cmd.colorscheme("nofrils-acme")
         end,
     },
-    {
+
+    [THEME_KIND.PRETTY] = {
         set_dark_mode = function()
             require('onedark').setup {
                 style = 'dark'
@@ -29,12 +40,7 @@ local themes = {
     }
 }
 
-local current_theme = 1
-
-local LIGHT_SETTINGS = {
-    LIGHT = 1,
-    DARK = 2
-}
+local current_theme = THEME_KIND.DEFAULT
 
 -- 1 = light
 -- 2 = dark
@@ -42,6 +48,9 @@ local last_light_setting = LIGHT_SETTINGS.LIGHT
 
 local theme_config_shim = {
     update_interval = 1000,
+
+    fallback = "light",
+
     set_dark_mode = function()
         themes[current_theme].set_dark_mode()
         last_light_setting = LIGHT_SETTINGS.DARK
@@ -82,12 +91,12 @@ function M.disable()
 end
 
 function M.set_default_theme()
-    current_theme = 1
+    current_theme = THEME_KIND.DEFAULT
     reset_theme()
 end
 
 function M.set_pretty_theme()
-    current_theme = 2
+    current_theme = THEME_KIND.PRETTY
     reset_theme()
 end
 

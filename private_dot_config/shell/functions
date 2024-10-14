@@ -17,7 +17,7 @@ p() {
 }
 
 maskpath() {
-    export PS1='%B%%%b '
+    export PS1='%B;%b '
 }
 
 git_checkout() {

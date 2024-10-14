@@ -1,6 +1,7 @@
 #!/bin/sh
 
-alias ll='ls -lah'
+alias ls='ls --color=never'
+alias ll='ls -lah --color=never'
 alias rsync='rsync --progress -r'
 alias htop='htop'
 alias gs='git status'

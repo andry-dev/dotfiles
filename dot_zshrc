@@ -8,10 +8,12 @@ if [ -f "$HOME/.asdf/asdf.sh" ]; then
     fpath=(${ASDF_DIR}/completions $fpath)
 fi
 
+setopt interactivecomments
+
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 
-PS1="%B%~ $(chk_current_sh zsh)%% %b"
+PS1="# %B%~ $(chk_current_sh zsh)%# %b"
 HISTFILE=
 HISTSIZE=1000
 SAVEHIST=

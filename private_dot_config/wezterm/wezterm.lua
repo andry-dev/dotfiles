@@ -1,7 +1,7 @@
 local wezterm = require('wezterm')
 
-local acme_colors = {
-    background = '#ffffd7',
+local light_colors = {
+    background = '#E4E4E4',
     foreground = 'black',
     cursor_fg = 'white',
     cursor_bg = 'black',
@@ -24,6 +24,33 @@ local acme_colors = {
         'fuchsia',
         '#509090',
         'white',
+    },
+}
+
+local acme_colors = {
+    background = '#ffffec',
+    foreground = 'black',
+    cursor_fg = 'white',
+    cursor_bg = 'black',
+    ansi = {
+        '#424242',                  -- Black
+        '#B85C57',                  -- Red
+        '#57864E',                  -- Green
+        '#8F7634',                  -- Yellow
+        'lch(55.07% 40.31 249.58)', -- Blue
+        '#8888C7',                  -- Magenta
+        '#6AA7A8',                  -- Cyan
+        'silver',                   -- White
+    },
+    brights = {
+        'grey',                  -- Black
+        '#F2ACAA',               -- Red
+        '#98CE8F',               -- Green
+        '#B7B19C',               -- Yellow
+        'lch(70% 23.57 236.42)', -- Blue
+        '#D0D0F7',               -- Magenta
+        'lch(70% 20.67 199.73)', -- Cyan
+        'white',                 -- White
     },
 }
 
@@ -64,10 +91,10 @@ end
 
 return {
     color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
-    -- color_scheme = 'nofrils_dark',
     color_schemes = {
         ['nofrils_acme'] = acme_colors,
         ['nofrils_dark'] = dark_colors,
+        ['nofrils_light'] = light_colors,
     },
     font = wezterm.font {
         family = 'Pragmasevka',
@@ -87,7 +114,8 @@ return {
         top = 0,
         bottom = 0,
     },
+    window_background_opacity = 1.0,
     font_size = 18,
-    front_end = 'WebGpu',
+    -- front_end = 'WebGpu',
     hide_mouse_cursor_when_typing = false,
 }

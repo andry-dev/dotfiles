@@ -61,7 +61,6 @@ require("lazy").setup('plugins', {
 
 -- require('plugins')
 require('focus').setup()
-require('config.themes').setup()
 
 vim.g.netrw_liststype = 3
 vim.g.netrw_banner = 0
@@ -157,6 +156,8 @@ vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 vim.keymap.set('n', 'Q', 'q')
 
+vim.keymap.set('i', '<C-u>', '<Nop>')
+
 vim.keymap.set('n', ';', ':')
 vim.keymap.set('n', ':', ';')
 
@@ -250,14 +251,14 @@ end, {})
 
 vim.api.nvim_create_user_command('EditPlugin', function()
     local plugin_path = '~/.local/share/chezmoi/private_dot_config/nvim'
-    vim.cmd.cd(plugin_path)
     fzf.files({ cwd = plugin_path })
+    vim.cmd.lcd(plugin_path)
 end, {})
 
 vim.api.nvim_create_user_command('EditDotfiles', function()
     local plugin_path = '~/.local/share/chezmoi'
-    vim.cmd.cd(plugin_path)
     fzf.files({ cwd = plugin_path })
+    vim.cmd.lcd(plugin_path)
 end, {})
 
 vim.api.nvim_create_user_command('EnableAutoformat', function()

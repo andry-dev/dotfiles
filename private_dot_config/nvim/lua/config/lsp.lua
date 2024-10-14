@@ -84,7 +84,8 @@ local custom_attach = function(_client)
     -- end
 end
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_deep_extend('force', capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 local default_config = {
     on_attach = custom_attach,
@@ -101,6 +102,10 @@ local language_servers = {
     ansiblels = {
         executable = "ansiblels",
         config = default_config,
+    },
+
+    emmet_language_server = {
+        config = default_config
     },
 
     clangd = {
@@ -143,7 +148,7 @@ local language_servers = {
         config = default_config,
     },
 
-    tsserver = {
+    ts_ls = {
         config = default_config,
     },
 
