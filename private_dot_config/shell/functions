@@ -37,3 +37,10 @@ check_ns() {
         dig "${1:-a}" +short @${ns} "${2:-suzunaan.org}"
     done
 }
+
+mpv-yt() {
+    local base='https://youtube.com/watch?v='
+    local url="${base}${1}"
+    echo "Streaming ${url}"
+    mpv "${url}"
+}

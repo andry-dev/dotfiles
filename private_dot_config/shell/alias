@@ -14,6 +14,9 @@ alias gps='git push'
 alias mkdir='mkdir -p'
 alias pstop='podman_stop'
 
+alias t='task'
+alias ta='task add'
+
 alias open='xdg-open'
 alias dnf='dnf5'
 

@@ -81,6 +81,10 @@ local dark_colors = {
     },
 }
 
+local function get_hostname()
+    return wezterm.hostname()
+end
+
 local function scheme_for_appearance(appearance)
     if appearance:find 'Dark' then
         return 'nofrils_dark'
@@ -88,6 +92,19 @@ local function scheme_for_appearance(appearance)
         return 'nofrils_acme'
     end
 end
+
+local function select_default_font_size()
+    local hn = get_hostname()
+    if hn == 'kosuzu' then
+        return 18
+    elseif hn == 'aya' or hn == 'shiki' then
+        return 24
+    end
+end
+
+local device_settings = {
+    font_size = select_default_font_size()
+}
 
 return {
     color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
@@ -115,7 +132,11 @@ return {
         bottom = 0,
     },
     window_background_opacity = 1.0,
-    font_size = 18,
+    font_size = device_settings.font_size,
+    -- animation_fps = 10,
+    max_fps = 144,
     -- front_end = 'WebGpu',
+    -- window_decorations = "INTEGRATED_BUTTONS|RESIZE",
+    integrated_title_button_style = 'Gnome',
     hide_mouse_cursor_when_typing = false,
 }

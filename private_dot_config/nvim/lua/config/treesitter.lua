@@ -2,8 +2,8 @@ local treesitter = require 'nvim-treesitter.configs'
 
 treesitter.setup {
     ensure_installed = { "vimdoc", "markdown", "bash", "c", "cpp", "cmake", "css", "cuda", "dockerfile", "html", "elixir", "erlang", "fennel",
-    "glsl", "go", "html", "http", "java", "javascript", "jsdoc", "json", "json5", "latex", "kotlin", "lua", "llvm",
-    "ninja", "nix", "php", "python", "rust", "scala", "solidity", "scss", "toml", "typescript", "vim", "vue", "yaml" },
+        "glsl", "go", "html", "http", "java", "javascript", "jsdoc", "json", "json5", "latex", "kotlin", "lua", "llvm",
+        "ninja", "nix", "php", "python", "rust", "scala", "solidity", "scss", "toml", "typescript", "vim", "vue", "yaml" },
 
     highlight = {
         enable = false,
@@ -83,12 +83,16 @@ treesitter.setup {
     refactor = {
         enable = true,
 
+        highlight_definitions = {
+            enable = true,
+        },
+
         smart_rename = {
             enable = true,
             keymaps = {
                 smart_rename = "<Leader>tr"
             }
-        }
+        },
     },
 
     playground = {

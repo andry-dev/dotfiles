@@ -1,7 +1,7 @@
 if vim.g.mason_enabled then
     require("mason-lspconfig").setup({
         automatic_installation = {
-            exclude = { "rust_analyzer" },
+            exclude = { "rust_analyzer", "beancount", "ansible-lint" },
         },
     })
 
@@ -18,6 +18,8 @@ if vim.g.mason_enabled then
         },
     })
 end
+
+local globals = require('globals')
 
 local lsp = require("lspconfig")
 
@@ -84,19 +86,29 @@ local custom_attach = function(_client)
     -- end
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_deep_extend('force', capabilities, require("cmp_nvim_lsp").default_capabilities())
+---@param completion_framework andry.CompletionFramework
+local make_default_capabilities = function(completion_framework)
+    local def_caps = vim.lsp.protocol.make_client_capabilities()
+
+    if completion_framework == globals.CompletionFramework.NvimCmp then
+        return vim.tbl_deep_extend('force', def_caps, require("cmp_nvim_lsp").default_capabilities())
+    elseif completion_framework == globals.CompletionFramework.Blink then
+        return require("blink.cmp").get_lsp_capabilities(def_caps)
+    end
+
+    return def_caps
+end
 
 local default_config = {
     on_attach = custom_attach,
-    capabilities = capabilities,
+    capabilities = make_default_capabilities(vim.g.completion_framework),
 }
 
 function default_config:with(new_options)
     return vim.tbl_extend("force", self, new_options)
 end
 
--- I specify all language serviers here and they will be conditionally enabled if the executable exists
+-- I specify all language servers here and they will be conditionally enabled if the executable exists
 -- This prevents annoying issues in new machines when a language server is not configured
 local language_servers = {
     ansiblels = {
@@ -106,6 +118,14 @@ local language_servers = {
 
     emmet_language_server = {
         config = default_config
+    },
+
+    beancount = {
+        config = default_config:with({
+            init_options = {
+                journalFile = "~/Sync/beancount/main.beancount",
+            }
+        }),
     },
 
     clangd = {
@@ -215,16 +235,18 @@ local language_servers = {
         config = default_config:with({
             on_attach = function(client)
                 custom_attach(client)
-                require("ltex_extra").setup({
-
-                })
+                -- require("ltex_extra").setup({
+                --     load_langs = { "en-US", "it" }
+                -- })
             end,
 
             settings = {
                 ltex = {
+                    completionEnabled = true,
                     additionalRules = {
                         enablePickyRules = true,
                         motherTongue = "it",
+                        languageModel = vim.g.ltex_ngrams or "~/.local/share/ngrams"
                     }
                 }
             }
@@ -274,6 +296,11 @@ end
 
 lsp.lua_ls.setup(default_config:with({}))
 
+require("ltex_extra").setup({
+    load_langs = { 'it', 'en-US' },
+    path = ".ltex",
+})
+
 local lint = require("lint")
 lint.linters_by_ft = {
     -- markdown = { "vale" },
@@ -309,8 +336,10 @@ require("trouble").setup({
 
 -- require 'lspinstall'.setup()
 
+---@class andry.LspConfig
 local M = {
     on_attach = custom_attach,
+    capabilities = default_config.capabilities,
 }
 
 function M.start_jdtls()

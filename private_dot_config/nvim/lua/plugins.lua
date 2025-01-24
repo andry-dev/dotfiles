@@ -17,6 +17,8 @@ local function dev_plugin(path)
     return nil
 end
 
+local globals = require('globals')
+
 return {
     {
         'andry-dev/kyouko.nvim',
@@ -74,6 +76,32 @@ return {
             end
         end
     },
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy",
+        priority = 1000, -- needs to be loaded in first
+        config = function()
+            vim.diagnostic.config({ virtual_text = false })
+            require('tiny-inline-diagnostic').setup({
+                preset = "simple",
+
+                options = {
+                    multiple_diag_under_cursor = true,
+                    show_all_diags_on_cursorline = true,
+
+                    multilines = {
+                        enabled = true,
+                        always_show = true,
+                    },
+                },
+
+
+                signs = {
+                    diag = "●",
+                },
+            })
+        end
+    },
 
     {
         'neovim/nvim-lspconfig',
@@ -95,12 +123,16 @@ return {
                 cmd = 'SymbolsOutline'
             },
             'b0o/SchemaStore.nvim',
-            'barreiroleo/ltex-extra.nvim',
+            {
+                "barreiroleo/ltex_extra.nvim",
+                branch = "dev",
+            },
         },
         config = function()
             require('config.lsp')
         end,
     },
+
 
     -- {
     --     'creativenull/efmls-configs-nvim',
@@ -204,12 +236,24 @@ return {
     },
 
     {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+
+    {
         -- 'hrsh7th/nvim-cmp',
         -- 'yioneko/nvim-cmp',
         -- branch = 'perf-up',
         'iguanacucumber/magazine.nvim',
         name = 'nvim-cmp',
-        enabled = true,
+        enabled = (vim.g.completion_framework == globals.CompletionFramework.NvimCmp),
         dependencies = {
             'L3MON4D3/LuaSnip',
             'saadparwaiz1/cmp_luasnip',
@@ -220,18 +264,7 @@ return {
             'hrsh7th/cmp-path',
             'rcarriga/cmp-dap',
             'kristijanhusak/vim-dadbod-completion',
-            {
-                "folke/lazydev.nvim",
-                ft = "lua", -- only load on lua files
-                opts = {
-                    library = {
-                        -- See the configuration section for more details
-                        -- Load luvit types when the `vim.uv` word is found
-                        { path = "luvit-meta/library", words = { "vim%.uv" } },
-                    },
-                },
-            },
-            { "Bilal2453/luvit-meta", lazy = true },
+            'folke/lazydev.nvim',
         },
         config = function()
             require('config.cmp')
@@ -240,54 +273,55 @@ return {
 
     {
         'saghen/blink.cmp',
-        enabled = false,
+        enabled = (vim.g.completion_framework == globals.CompletionFramework.Blink),
         lazy = false, -- lazy loading handled internally
         -- optional: provides snippets for the snippet source
-        dependencies = 'rafamadriz/friendly-snippets',
+        dependencies = {
+            'rafamadriz/friendly-snippets',
+            'folke/lazydev.nvim',
+        },
 
         -- use a release tag to download pre-built binaries
-        version = 'v0.*',
+        version = '*',
         -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
         -- build = 'cargo build --release',
 
         opts = {
-            highlight = {
-                -- sets the fallback highlight groups to nvim-cmp's highlight groups
-                -- useful for when your theme doesn't support blink.cmp
-                -- will be removed in a future release, assuming themes add support
-                use_nvim_cmp_as_default = true,
+            signature = { enabled = true },
+
+            completion = {
+                documentation = {
+                    auto_show = true,
+                },
+
+                -- menu = {
+                --     auto_show = function(ctx) return ctx.mode ~= 'cmdline' end
+                -- },
             },
 
-            -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-            -- adjusts spacing to ensure icons are aligned
-            -- nerd_font_variant = 'normal',
 
-            -- experimental auto-brackets support
-            -- accept = { auto_brackets = { enabled = true } }
+            keymap = { preset = "default" },
 
-            -- experimental signature help support
-            trigger = { signature_help = { enabled = true } },
-
-            keymap = {
-                select_prev = '<C-p>',
-                select_next = '<C-n>',
-                accept = '<C-y>',
-                snippet_forward = '<C-l>',
-                snippet_backward = '<C-h>',
+            snippets = {
+                preset = "luasnip",
             },
 
             sources = {
-                -- similar to nvim-cmp's sources, but we point directly to the source's lua module
-                -- multiple groups can be provided, where it'll fallback to the next group if the previous
-                -- returns no completion items
-                -- WARN: This API will have breaking changes during the beta
+                default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+
+                cmdline = {},
+
                 providers = {
-                    {
-                        { 'blink.cmp.sources.lsp' },
-                        { 'blink.cmp.sources.path' },
-                        -- { 'blink.cmp.sources.snippets', score_offset = -10 },
+                    -- dont show LuaLS require statements when lazydev has items
+                    lazydev = {
+                        name = "LazyDev",
+                        module = "lazydev.integrations.blink",
+                        score_offset = 100,
                     },
-                    { { 'blink.cmp.sources.buffer' } },
+
+                    buffer = {
+                        score_offset = -100,
+                    },
                 },
             },
         },
@@ -337,8 +371,6 @@ return {
         'kristijanhusak/vim-dadbod-completion',
         'kristijanhusak/vim-dadbod-ui',
     },
-
-    { 'editorconfig/editorconfig-vim' },
 
     {
         'nvim-neotest/neotest',

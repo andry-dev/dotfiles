@@ -1,4 +1,3 @@
-vim.cmd.syntax = 'enable'
 vim.cmd.filetype('plugin indent on')
 
 local function is_device_low_powered()
@@ -10,8 +9,29 @@ end
 
 vim.g.mapleader = ','
 
+local globals = require('globals')
+
 vim.g.prefers_energy_efficiency = is_device_low_powered()
 vim.g.mason_enabled = os.getenv("NVIM_USE_NIX") == nil
+
+---@type andry.CompletionFramework
+vim.g.completion_framework = globals.CompletionFramework.Blink
+
+if vim.g.neovide then
+    vim.g.neovide_position_animation_length = 0
+    vim.g.neovide_cursor_animation_length = 0.00
+    vim.g.neovide_cursor_trail_size = 0
+    vim.g.neovide_cursor_animate_in_insert_mode = false
+    vim.g.neovide_cursor_animate_command_line = false
+    vim.g.neovide_scroll_animation_far_lines = 0
+    vim.g.neovide_scroll_animation_length = 0.00
+
+    vim.opt.guifont = "Pragmasevka:h16"
+    if not vim.g.prefers_energy_efficiency then
+        vim.g.neovide_refresh_rate = 144
+    end
+end
+
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
