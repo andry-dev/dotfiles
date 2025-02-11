@@ -131,12 +131,14 @@ return {
         top = 0,
         bottom = 0,
     },
+    enable_wayland = true,
     window_background_opacity = 1.0,
     font_size = device_settings.font_size,
     -- animation_fps = 10,
     max_fps = 144,
-    -- front_end = 'WebGpu',
-    -- window_decorations = "INTEGRATED_BUTTONS|RESIZE",
+    front_end = 'WebGpu',
+    -- Don't enable this or the window sizing breaks.
+    -- window_decorations = "RESIZE",
     integrated_title_button_style = 'Gnome',
     hide_mouse_cursor_when_typing = false,
 }

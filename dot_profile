@@ -25,4 +25,6 @@ export PATH="$GEM_HOME/bin:$PATH"
 
 export PATH="$HOME/.cargo/bin:$PATH"
 
+export ZK_NOTEBOOK_DIR="$HOME/Sync/Notes"
+
 [ -f "$HOME/.config/m/$(hostname)/.profile" ] && . "$HOME/.config/m/$(hostname)/.profile"

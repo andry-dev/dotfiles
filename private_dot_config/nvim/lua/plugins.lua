@@ -76,6 +76,20 @@ return {
             end
         end
     },
+
+    {
+        "zk-org/zk-nvim",
+        config = function()
+            require("zk").setup({
+                picker = "fzf_lua",
+            })
+        end,
+
+        dependencies = {
+            'ibhagwan/fzf-lua',
+        }
+    },
+
     {
         "rachartier/tiny-inline-diagnostic.nvim",
         event = "VeryLazy",
@@ -275,60 +289,25 @@ return {
         'saghen/blink.cmp',
         enabled = (vim.g.completion_framework == globals.CompletionFramework.Blink),
         lazy = false, -- lazy loading handled internally
-        -- optional: provides snippets for the snippet source
         dependencies = {
             'rafamadriz/friendly-snippets',
             'folke/lazydev.nvim',
+            'nvim-lua/plenary.nvim',
         },
 
-        -- use a release tag to download pre-built binaries
         version = '*',
-        -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-        -- build = 'cargo build --release',
 
-        opts = {
-            signature = { enabled = true },
-
-            completion = {
-                documentation = {
-                    auto_show = true,
-                },
-
-                -- menu = {
-                --     auto_show = function(ctx) return ctx.mode ~= 'cmdline' end
-                -- },
-            },
-
-
-            keymap = { preset = "default" },
-
-            snippets = {
-                preset = "luasnip",
-            },
-
-            sources = {
-                default = { "lazydev", "lsp", "path", "snippets", "buffer" },
-
-                cmdline = {},
-
-                providers = {
-                    -- dont show LuaLS require statements when lazydev has items
-                    lazydev = {
-                        name = "LazyDev",
-                        module = "lazydev.integrations.blink",
-                        score_offset = 100,
-                    },
-
-                    buffer = {
-                        score_offset = -100,
-                    },
-                },
-            },
-        },
+        config = function()
+            require('config.blink')
+        end,
     },
 
     {
-        'ibhagwan/fzf-lua'
+        'ibhagwan/fzf-lua',
+        opts = {
+            winopts = { treesitter = { enabled = false }, },
+            previewers = { builtin = { syntax = false, treesitter = false, } },
+        }
     },
 
     {
