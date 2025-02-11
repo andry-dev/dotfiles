@@ -50,8 +50,11 @@ local base_plugin_path = vim.fn.stdpath('config') .. '/pack/andry/start/'
 
 require("lazy").setup('plugins', {
     dev = {
-        path = '~/prj'
+        path = '~/prj/anri',
+        patterns = { 'andry-dev' },
+        fallback = true,
     },
+
     performance = {
         rtp = {
             paths = {
@@ -61,6 +64,7 @@ require("lazy").setup('plugins', {
             }
         }
     },
+
     ui = {
         icons = {
             cmd = "⌘",

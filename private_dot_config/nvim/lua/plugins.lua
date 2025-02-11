@@ -32,7 +32,7 @@ return {
     {
         'andry-dev/nofrils',
         -- dir = '~/prj/nofrils',
-        dev = true,
+        -- dev = true,
         lazy = false,
         priority = 10000,
     },

@@ -1,0 +1,15 @@
+[rerere]
+    enabled = true
+    autoUpdate = true
+
+[branch]
+    sort = -committerdate
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = true
+
+[alias]
+    fpush = push --force-with-lease
