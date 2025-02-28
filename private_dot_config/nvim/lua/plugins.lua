@@ -125,6 +125,12 @@ return {
             'WhoIsSethDaniel/mason-tool-installer.nvim',
             'ray-x/lsp_signature.nvim',
             {
+                "elixir-tools/elixir-tools.nvim",
+                version = "*",
+                event = { "BufReadPre", "BufNewFile" },
+                dependencies = { 'nvim-lua/plenary.nvim' },
+            },
+            {
                 'mfussenegger/nvim-jdtls',
                 ft = 'java'
             },
@@ -180,6 +186,12 @@ return {
         config = function()
             require('config.treesitter')
         end
+    },
+
+    {
+        'echasnovski/mini.ai',
+        version = false,
+        opts = {}
     },
 
     {
@@ -383,11 +395,11 @@ return {
         cmd = { 'TestifyFile' }
     },
 
-    {
-        'elixir-editors/vim-elixir',
-        lazy = true,
-        ft = { 'elixir' }
-    },
+    -- {
+    --     'elixir-editors/vim-elixir',
+    --     lazy = true,
+    --     ft = { 'elixir' }
+    -- },
 
     {
         'numToStr/Comment.nvim',

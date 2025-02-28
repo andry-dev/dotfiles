@@ -172,12 +172,12 @@ local language_servers = {
         config = default_config,
     },
 
-    elixirls = {
-        executable = "elixir_ls",
-        config = default_config:with({
-            root_dir = lsp.util.root_pattern(".git", "mix.exs"),
-        }),
-    },
+    -- elixirls = {
+    --     executable = "elixir_ls",
+    --     config = default_config:with({
+    --         root_dir = lsp.util.root_pattern(".git", "mix.exs"),
+    --     }),
+    -- },
 
     html = {
         executable = "html-languageserver",
@@ -316,6 +316,17 @@ for name, info in pairs(language_servers) do
 end
 
 lsp.lua_ls.setup(default_config:with({}))
+
+require('elixir').setup({
+    elixirls = {
+        settings = require('elixir.elixirls').settings {
+            dialyzerEnabled = true,
+            fetchDeps = true,
+            enableTestLenses = true,
+            suggestSpecs = true,
+        }
+    },
+})
 
 require("ltex_extra").setup({
     load_langs = { 'it', 'en-US' },
