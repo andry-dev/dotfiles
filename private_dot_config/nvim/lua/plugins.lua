@@ -91,6 +91,36 @@ return {
     },
 
     {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+
+        opts = {
+            bigfile = { enabled = true },
+            image = {
+                enabled = true,
+
+                math = {
+                    latex = {
+                        packages = { "amsmath", "amssymb", "amsfonts", "amscd", "mathtools" },
+
+                        tpl = [[
+                            \documentclass[preview,border=0pt,varwidth,12pt]{standalone}
+                            \usepackage{${packages}}
+                            \usepackage[lambda]{cryptocode}
+                            \begin{document}
+                            ${header}
+                            { \${font_size} \selectfont
+                              \color[HTML]{${color}}
+                            ${content}}
+                            \end{document}]],
+                    }
+                }
+            }
+        },
+    },
+
+    {
         "rachartier/tiny-inline-diagnostic.nvim",
         event = "VeryLazy",
         priority = 1000, -- needs to be loaded in first
