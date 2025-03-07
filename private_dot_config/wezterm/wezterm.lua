@@ -95,9 +95,9 @@ end
 
 local function select_default_font_size()
     local hn = get_hostname()
-    if hn == 'kosuzu' then
+    if hn == 'kosuzu' or hn == 'aya' then
         return 18
-    elseif hn == 'aya' or hn == 'shiki' then
+    elseif hn == 'shiki' then
         return 24
     end
 end

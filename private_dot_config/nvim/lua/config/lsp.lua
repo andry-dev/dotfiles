@@ -252,27 +252,6 @@ local language_servers = {
         config = default_config,
     },
 
-    ltex = {
-        config = default_config:with({
-            on_attach = function(client)
-                custom_attach(client)
-                -- require("ltex_extra").setup({
-                --     load_langs = { "en-US", "it" }
-                -- })
-            end,
-
-            settings = {
-                ltex = {
-                    completionEnabled = true,
-                    additionalRules = {
-                        enablePickyRules = true,
-                        motherTongue = "it",
-                        languageModel = vim.g.ltex_ngrams or "~/.local/share/ngrams"
-                    }
-                }
-            }
-        })
-    },
 
     texlab = {
         config = default_config:with({
@@ -311,6 +290,30 @@ local language_servers = {
     },
 }
 
+if not vim.g.prefers_energy_efficiency then
+    lsp["ltex"] = {
+        config = default_config:with({
+            on_attach = function(client)
+                custom_attach(client)
+                -- require("ltex_extra").setup({
+                --     load_langs = { "en-US", "it" }
+                -- })
+            end,
+
+            settings = {
+                ltex = {
+                    completionEnabled = true,
+                    additionalRules = {
+                        enablePickyRules = true,
+                        motherTongue = "it",
+                        languageModel = vim.g.ltex_ngrams or "~/.local/share/ngrams"
+                    }
+                }
+            }
+        })
+    }
+end
+
 for name, info in pairs(language_servers) do
     lsp[name].setup(info.config)
 end
@@ -328,10 +331,12 @@ require('elixir').setup({
     },
 })
 
-require("ltex_extra").setup({
-    load_langs = { 'it', 'en-US' },
-    path = ".ltex",
-})
+if not vim.g.prefers_energy_efficiency then
+    require("ltex_extra").setup({
+        load_langs = { 'it', 'en-US' },
+        path = ".ltex",
+    })
+end
 
 local lint = require("lint")
 lint.linters_by_ft = {
@@ -347,24 +352,24 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     end,
 })
 
-require("symbols-outline").setup({
-    highlight_hovered_item = true,
-    show_guides = true,
-})
+-- require("symbols-outline").setup({
+--     highlight_hovered_item = true,
+--     show_guides = true,
+-- })
 
-require("trouble").setup({
-    fold_open = "*",
-    fold_closed = "-",
-    indent_lines = true,
-    use_diagnostic_signs = true,
-    signs = {
-        error = "[E]",
-        warning = "[W]",
-        hint = "?",
-        information = "!",
-        other = "`,:(",
-    },
-})
+-- require("trouble").setup({
+--     fold_open = "*",
+--     fold_closed = "-",
+--     indent_lines = true,
+--     use_diagnostic_signs = true,
+--     signs = {
+--         error = "[E]",
+--         warning = "[W]",
+--         hint = "?",
+--         information = "!",
+--         other = "`,:(",
+--     },
+-- })
 
 -- require 'lspinstall'.setup()
 
