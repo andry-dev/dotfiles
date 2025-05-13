@@ -1,13 +1,32 @@
 local treesitter = require 'nvim-treesitter.configs'
 
+local allowed_languages = {
+    "markdown",
+    "markdown_inline",
+    "html",
+    "latex",
+}
+
 treesitter.setup {
-    ensure_installed = { "vimdoc", "markdown", "bash", "c", "cpp", "cmake", "css", "cuda", "dockerfile", "html", "elixir", "erlang", "fennel",
-        "glsl", "go", "html", "http", "java", "javascript", "jsdoc", "json", "json5", "latex", "kotlin", "lua", "llvm",
-        "ninja", "nix", "php", "python", "rust", "scala", "solidity", "scss", "toml", "typescript", "vim", "vue", "yaml" },
+    auto_install = true,
+    -- ensure_installed = { "vimdoc", "markdown", "bash", "c", "cpp", "cmake", "css", "cuda", "dockerfile", "html", "elixir", "erlang", "fennel",
+    --     "glsl", "go", "html", "http", "java", "javascript", "jsdoc", "json", "json5", "latex", "kotlin", "lua", "llvm",
+    --     "ninja", "nix", "php", "python", "rust", "scala", "solidity", "scss", "toml", "typescript", "vim", "vue", "yaml" },
 
     highlight = {
-        enable = false,
-        use_languagetree = true,
+        enable = true,
+
+        disable = function(lang, bufnr)
+            if vim.api.nvim_buf_line_count(bufnr) >= 10000 then
+                return true
+            end
+
+            if vim.tbl_contains(allowed_languages, lang) then
+                return false
+            end
+
+            return true
+        end,
     },
 
     incremental_selection = {
@@ -21,7 +40,7 @@ treesitter.setup {
     },
 
     indent = {
-        enable = false
+        enable = true
     },
 
     --[[

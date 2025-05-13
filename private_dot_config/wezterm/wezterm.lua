@@ -1,5 +1,7 @@
 local wezterm = require('wezterm')
 
+local PADDING = 5
+
 local light_colors = {
     background = '#E4E4E4',
     foreground = 'black',
@@ -95,8 +97,10 @@ end
 
 local function select_default_font_size()
     local hn = get_hostname()
-    if hn == 'kosuzu' or hn == 'aya' then
+    if hn == 'kosuzu' then
         return 18
+    elseif hn == 'aya' then
+        return 14
     elseif hn == 'shiki' then
         return 24
     end
@@ -126,17 +130,17 @@ return {
         },
     },
     window_padding = {
-        left = 0,
-        right = 0,
+        left = PADDING,
+        right = PADDING,
         top = 0,
         bottom = 0,
     },
     enable_wayland = true,
-    window_background_opacity = 1.0,
+    window_background_opacity = 1,
     font_size = device_settings.font_size,
-    -- animation_fps = 10,
+    -- animation_fps = 144,
     max_fps = 144,
-    front_end = 'WebGpu',
+    -- front_end = 'WebGpu',
     -- Don't enable this or the window sizing breaks.
     -- window_decorations = "RESIZE",
     integrated_title_button_style = 'Gnome',

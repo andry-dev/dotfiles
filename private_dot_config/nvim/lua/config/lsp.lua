@@ -29,26 +29,217 @@ if vim.g.mason_enabled then
     require("mason-tool-installer").setup({
         ensure_installed = {
             "shellcheck",
-            "proselint",
-            "textlint",
-            "write-good",
-            "vale",
+            -- "proselint",
+            -- "textlint",
+            -- "write-good",
+            -- "vale",
             "hadolint",
             "codespell",
             "luacheck",
+            "systemdlint",
+            "shellcheck",
+            "ruff",
+            "sqruff",
+            "shfmt",
         },
     })
 end
 
 local globals = require('globals')
 
-local lsp = require("lspconfig")
+-- local lsp = require("lspconfig")
+-- lsp.util.default_config.on_init = function(client, _)
+--     client.server_capabilities.semanticTokensProvider = nil
+-- end
 
 vim.g.disable_autoformat = false
 
+
+local custom_attach = function(client)
+    -- client.server_capabilities.semanticTokensProvider = nil
+end
+
+---@param completion_framework andry.CompletionFramework
+local make_default_capabilities = function(completion_framework)
+    local def_caps = vim.lsp.protocol.make_client_capabilities()
+
+    if completion_framework == globals.CompletionFramework.Blink then
+        return require("blink.cmp").get_lsp_capabilities(def_caps)
+    end
+
+    return def_caps
+end
+
+local default_config = {
+    on_attach = custom_attach,
+    capabilities = make_default_capabilities(vim.g.completion_framework),
+}
+
+function default_config:with(new_options)
+    return vim.tbl_extend("force", self, new_options)
+end
+
+vim.lsp.config('*', {
+    capabilities = default_config.capabilities,
+})
+
+vim.lsp.config('beancount', {
+    root_markers = {},
+    settings = {
+        journal_file = vim.fn.expand('~/Sync/beancount/main.beancount')
+    }
+})
+
+vim.lsp.config('clangd', {
+    config = {
+        cmd = {
+            "clangd",
+            "--background-index",
+            "--cross-file-rename",
+            "--clang-tidy",
+            "--recovery-ast",
+        },
+    }
+})
+
+vim.lsp.config('jsonls', {
+    settings = {
+        json = {
+            schemas = require("schemastore").json.schemas(),
+            validate = { enable = true },
+        },
+    },
+})
+
+vim.lsp.config('yamlls', {
+    settings = {
+        yaml = {
+            schemaStore = {
+                enable = false,
+                url = "",
+            },
+
+            schemas = require("schemastore").yaml.schemas(),
+        },
+    },
+})
+
+vim.lsp.config('texlab', {
+    settings = {
+        texlab = {
+            build = {
+                executable = "latexmk",
+                args = { "-verbose", "-synctex=1", "-interaction=nonstopmode", "-pv" },
+                -- forwardSearchAfter = true,
+                onSave = true,
+            },
+            -- forwardSearch = {
+            --     executable = 'evince-synctex',
+            --     args = {
+            --         '-f',
+            --         '%l',
+            --         '%p',
+            --         '/usr/bin/true'
+            --     },
+            -- },
+        },
+    }
+})
+
+vim.lsp.config('ltex_plus', {
+    on_attach = function(client)
+        custom_attach(client)
+        require("ltex_extra").setup({
+            load_langs = { 'it', 'en-US' },
+            path = ".ltex",
+        })
+    end,
+
+    settings = {
+        ltex = {
+            completionEnabled = true,
+
+            additionalRules = {
+                enablePickyRules = true,
+                motherTongue = "it",
+                languageModel = vim.g.ltex_ngrams or "~/.local/share/ngrams"
+            },
+
+            enabledRules = {
+                en = {
+                    "IT_IS_OBVIOUS",
+                    "E_PRIME_STRICT",
+                    "HOPEFULLY",
+                    "CHILDISH_LANGUAGE",
+                    "USED_FOR_VBG",
+                    "USELESS_THAT",
+                },
+
+                it = {
+                    "GR_01_001",
+                    "GR_02_001",
+                    "GR_03",
+                    "GR_04_002",
+                    "GR_05",
+                    "GR_05_002",
+                    "GR_09",
+                    "GR_10_001",
+                    "ST_02",
+                    "ST_02_001",
+                    "ST_03",
+                    "ST_03_002",
+                    "ST_04",
+                    "ST_04_001",
+                    "ST_04_002",
+                    "ER_01",
+                    "ER_01_004",
+                    "ER_02",
+                    "ER_02_002",
+                    "ER_02_003",
+                    "NUMBER_DAYS_MONTH",
+                },
+            },
+        }
+    }
+})
+
+vim.lsp.enable({
+    'ansiblels',
+    'basedpyright',
+    'bashls',
+    'beancount',
+    'clangd',
+    'cmake',
+    'cssls',
+    'emmet_language_server',
+    'eslint',
+    'gopls',
+    'html',
+    'intelephense',
+    'jsonls',
+    'ltex_plus',
+    'nil_ls',
+    'sqlls',
+    'systemd_ls',
+    'texlab',
+    'ts_ls',
+    'yamlls',
+})
+
+require('elixir').setup({
+    elixirls = {
+        settings = require('elixir.elixirls').settings {
+            dialyzerEnabled = true,
+            fetchDeps = true,
+            enableTestLenses = true,
+            suggestSpecs = true,
+        }
+    },
+})
+
 require("conform").setup({
     formatters_by_ft = {
-        python = { "isort", "autopep8" },
+        python = { "ruff" },
 
         cmake = { "cmake_format" },
         c = { "clang_format" },
@@ -96,254 +287,17 @@ require("conform").setup({
 
 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 
-local custom_attach = function(_client)
-    -- require('lsp_signature').on_attach()
-    -- require('virtualtypes').on_attach()
-    -- if client.server_capabilities.documentFormattingProvider then
-    --     vim.cmd [[augroup Format]]
-    --     vim.cmd [[autocmd! * <buffer>]]
-    --     vim.cmd [[autocmd BufWritePost <buffer> lua should_format()]]
-    --     vim.cmd [[augroup END]]
-    -- end
-end
-
----@param completion_framework andry.CompletionFramework
-local make_default_capabilities = function(completion_framework)
-    local def_caps = vim.lsp.protocol.make_client_capabilities()
-
-    if completion_framework == globals.CompletionFramework.NvimCmp then
-        return vim.tbl_deep_extend('force', def_caps, require("cmp_nvim_lsp").default_capabilities())
-    elseif completion_framework == globals.CompletionFramework.Blink then
-        return require("blink.cmp").get_lsp_capabilities(def_caps)
-    end
-
-    return def_caps
-end
-
-local default_config = {
-    on_attach = custom_attach,
-    capabilities = make_default_capabilities(vim.g.completion_framework),
-}
-
-function default_config:with(new_options)
-    return vim.tbl_extend("force", self, new_options)
-end
-
--- I specify all language servers here and they will be conditionally enabled if the executable exists
--- This prevents annoying issues in new machines when a language server is not configured
-local language_servers = {
-    ansiblels = {
-        executable = "ansiblels",
-        config = default_config,
-    },
-
-    emmet_language_server = {
-        config = default_config
-    },
-
-    beancount = {
-        config = default_config:with({
-            init_options = {
-                journalFile = "~/Sync/beancount/main.beancount",
-            }
-        }),
-    },
-
-    clangd = {
-        executable = "clangd",
-        config = default_config:with({
-            cmd = {
-                "clangd",
-                "--background-index",
-                "--cross-file-rename",
-                "--clang-tidy",
-                "--recovery-ast",
-            },
-        }),
-    },
-
-    cmake = {
-        executable = "cmake-language-server",
-        config = default_config,
-    },
-
-    eslint = {
-        executable = "eslint",
-        config = default_config,
-    },
-
-    -- elixirls = {
-    --     executable = "elixir_ls",
-    --     config = default_config:with({
-    --         root_dir = lsp.util.root_pattern(".git", "mix.exs"),
-    --     }),
-    -- },
-
-    html = {
-        executable = "html-languageserver",
-        config = default_config,
-    },
-
-    cssls = {
-        executable = "css-languageserver",
-        config = default_config,
-    },
-
-    ts_ls = {
-        config = default_config,
-    },
-
-    intelephense = {
-        executable = "intelephense",
-        config = default_config,
-    },
-
-    sqlls = {
-        executable = "sql-language-server",
-        config = default_config:with({
-            cmd = { "sql-language-server", "up", "--method", "stdio" },
-        }),
-    },
-
-    pylsp = {
-        executable = "pylsp",
-        config = default_config,
-    },
-
-    jsonls = {
-        config = default_config:with({
-            settings = {
-                json = {
-                    schemas = require("schemastore").json.schemas(),
-                    validate = { enable = true },
-                },
-            },
-        }),
-    },
-
-    yamlls = {
-        executable = "yaml-language-server",
-        config = default_config:with({
-            settings = {
-                yaml = {
-                    schemaStore = {
-                        enable = false,
-                        url = "",
-                    },
-
-                    schemas = require("schemastore").yaml.schemas(),
-                },
-            },
-        }),
-    },
-
-    vuels = {
-        executable = "vue-language-server",
-        config = default_config,
-    },
-
-    solidity = {
-        executable = "solidity-ls",
-        config = default_config,
-    },
-
-    terraformls = {
-        executable = "terraform-ls",
-        config = default_config,
-    },
-
-
-    texlab = {
-        config = default_config:with({
-            -- cmd = { vim.fn.stdpath('data') .. '/mason/bin/texlab', '-vvvv', '--log-file', '/tmp/texlab.log' },
-            -- on_new_config = function(new_config, new_root_dir)
-            --     new_config.settings.texlab.rootDirectory = new_root_dir
-            -- end,
-            settings = {
-                texlab = {
-                    build = {
-                        executable = "latexmk",
-                        args = { "-verbose", "-synctex=1", "-interaction=nonstopmode", "-pv" },
-                        -- forwardSearchAfter = true,
-                        onSave = true,
-                    },
-                    -- forwardSearch = {
-                    --     executable = 'evince-synctex',
-                    --     args = {
-                    --         '-f',
-                    --         '%l',
-                    --         '%p',
-                    --         '/usr/bin/true'
-                    --     },
-                    -- },
-                },
-            },
-        }),
-    },
-
-    gopls = {
-        config = default_config,
-    },
-
-    nil_ls = {
-        config = default_config,
-    },
-}
-
-if not vim.g.prefers_energy_efficiency then
-    lsp["ltex"] = {
-        config = default_config:with({
-            on_attach = function(client)
-                custom_attach(client)
-                -- require("ltex_extra").setup({
-                --     load_langs = { "en-US", "it" }
-                -- })
-            end,
-
-            settings = {
-                ltex = {
-                    completionEnabled = true,
-                    additionalRules = {
-                        enablePickyRules = true,
-                        motherTongue = "it",
-                        languageModel = vim.g.ltex_ngrams or "~/.local/share/ngrams"
-                    }
-                }
-            }
-        })
-    }
-end
-
-for name, info in pairs(language_servers) do
-    lsp[name].setup(info.config)
-end
-
-lsp.lua_ls.setup(default_config:with({}))
-
-require('elixir').setup({
-    elixirls = {
-        settings = require('elixir.elixirls').settings {
-            dialyzerEnabled = true,
-            fetchDeps = true,
-            enableTestLenses = true,
-            suggestSpecs = true,
-        }
-    },
-})
-
-if not vim.g.prefers_energy_efficiency then
-    require("ltex_extra").setup({
-        load_langs = { 'it', 'en-US' },
-        path = ".ltex",
-    })
-end
-
 local lint = require("lint")
 lint.linters_by_ft = {
     -- markdown = { "vale" },
+    sh = { "shellcheck" },
+    bash = { "shellcheck" },
+    zsh = { "shellcheck" },
+    python = { "ruff" },
+    sql = { "sqruff" },
     tex = { "chktex" },
     elixir = { "credo" },
-    lua = { "luacheck" },
+    systemd = { "systemdlint", "systemd-analyze" },
 }
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
@@ -352,26 +306,15 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     end,
 })
 
--- require("symbols-outline").setup({
---     highlight_hovered_item = true,
---     show_guides = true,
--- })
+-- Try to disable LSP semantic tokens.
+vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+    callback = function()
+        for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+            vim.api.nvim_set_hl(0, group, {})
+        end
+    end
+})
 
--- require("trouble").setup({
---     fold_open = "*",
---     fold_closed = "-",
---     indent_lines = true,
---     use_diagnostic_signs = true,
---     signs = {
---         error = "[E]",
---         warning = "[W]",
---         hint = "?",
---         information = "!",
---         other = "`,:(",
---     },
--- })
-
--- require 'lspinstall'.setup()
 
 ---@class andry.LspConfig
 local M = {
@@ -397,7 +340,7 @@ function M.start_jdtls()
     local config = {
         cmd = { "java-jdtls.sh" },
         on_attach = custom_attach,
-        capabilities = capabilities,
+        capabilities = default_config.capabilities,
         --[[
         init_options = {
             bundles = bundles,

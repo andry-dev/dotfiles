@@ -49,7 +49,7 @@ local last_light_setting = LIGHT_SETTINGS.LIGHT
 local theme_config_shim = {
     update_interval = 1000,
 
-    fallback = "light",
+    -- fallback = "light",
 
     set_dark_mode = function()
         themes[current_theme].set_dark_mode()
@@ -102,7 +102,16 @@ end
 
 function M.setup()
     setup_theming()
+
+    local current_hour = tonumber(os.date '%H')
+    if current_hour >= 6 and current_hour <= 20 then
+        themes[current_theme].set_light_mode()
+    else
+        themes[current_theme].set_dark_mode()
+    end
+
     auto_dark_mode.setup(theme_config_shim)
+    -- reset_theme()
 end
 
 return M

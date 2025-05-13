@@ -7,31 +7,14 @@ local function is_device_low_powered()
     return vim.tbl_contains(known_devices, hostname)
 end
 
-vim.g.mapleader = ','
-
-local globals = require('globals')
-
 vim.g.prefers_energy_efficiency = is_device_low_powered()
 vim.g.mason_enabled = os.getenv("NVIM_USE_NIX") == nil
 
+local globals = require('globals')
 ---@type andry.CompletionFramework
 vim.g.completion_framework = globals.CompletionFramework.Blink
 
-if vim.g.neovide then
-    vim.g.neovide_position_animation_length = 0
-    vim.g.neovide_cursor_animation_length = 0.00
-    vim.g.neovide_cursor_trail_size = 0
-    vim.g.neovide_cursor_animate_in_insert_mode = false
-    vim.g.neovide_cursor_animate_command_line = false
-    vim.g.neovide_scroll_animation_far_lines = 0
-    vim.g.neovide_scroll_animation_length = 0.00
-
-    vim.opt.guifont = "Pragmasevka:h16"
-    if not vim.g.prefers_energy_efficiency then
-        vim.g.neovide_refresh_rate = 144
-    end
-end
-
+vim.g.mapleader = ','
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -46,6 +29,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+
 local base_plugin_path = vim.fn.stdpath('config') .. '/pack/andry/start/'
 
 require("lazy").setup('plugins', {
@@ -58,9 +42,7 @@ require("lazy").setup('plugins', {
     performance = {
         rtp = {
             paths = {
-                base_plugin_path .. 'focus',
                 base_plugin_path .. 'lua-utils',
-                base_plugin_path .. 'auto-themes'
             }
         }
     },
@@ -83,8 +65,37 @@ require("lazy").setup('plugins', {
     },
 })
 
--- require('plugins')
-require('focus').setup()
+
+vim.g.anri = {
+    keymaps = {
+        CodeAction = '<leader>la',
+        Definition = '<leader>ld',
+        Declaration = '<leader>lD',
+        Rename = '<leader>lr',
+        Hover = '<leader>lh',
+        Diagnostic = '<leader>lH',
+        Implementation = '<leader>li',
+        References = '<leader>lx',
+        DocumentSymbol = '<leader>lS',
+        WorkspaceSymbol = '<leader>lw',
+    }
+}
+
+
+if vim.g.neovide then
+    vim.g.neovide_position_animation_length = 0
+    vim.g.neovide_cursor_animation_length = 0.00
+    vim.g.neovide_cursor_trail_size = 0
+    vim.g.neovide_cursor_animate_in_insert_mode = false
+    vim.g.neovide_cursor_animate_command_line = false
+    vim.g.neovide_scroll_animation_far_lines = 0
+    vim.g.neovide_scroll_animation_length = 0.00
+
+    vim.opt.guifont = "Pragmasevka:h16"
+    if not vim.g.prefers_energy_efficiency then
+        vim.g.neovide_refresh_rate = 144
+    end
+end
 
 vim.g.netrw_liststype = 3
 vim.g.netrw_banner = 0
@@ -99,7 +110,6 @@ vim.g.cmake_build_dir_location = 'build'
 
 
 local Job = require('plenary.job')
-local globals = require('globals')
 local fzf = require('fzf-lua')
 
 vim.opt.wildmenu = true
@@ -111,7 +121,6 @@ vim.opt.gdefault = true
 vim.opt.undofile = true
 vim.opt.hidden = true
 vim.opt.spelllang = 'en,it,cjk'
-vim.opt.mouse = 'a'
 vim.opt.listchars = 'tab:> ,nbsp:!,trail:.'
 vim.opt.list = true
 vim.opt.colorcolumn = '80,120'
@@ -127,8 +136,13 @@ vim.opt.sts = 4
 vim.opt.sw = 4
 vim.opt.expandtab = true
 vim.opt.updatetime = 1000
-vim.opt.dictionary:append('/usr/share/hunspell/en_GB.dic')
-vim.opt.dictionary:append('/usr/share/hunspell/it_IT.dic')
+vim.go.mouse = 'a'
+
+if vim.fn.has('unix') == 1 then
+    vim.opt.dictionary:append('/usr/share/hunspell/en_GB.dic')
+    vim.opt.dictionary:append('/usr/share/hunspell/it_IT.dic')
+end
+
 vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
 vim.opt.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
 vim.opt.formatoptions:append('cro')
@@ -197,9 +211,9 @@ vim.keymap.set('n', 'l', '<Nop>')
 
 vim.keymap.set('n', 'cw', 'ciw')
 
-vim.keymap.set('i', '(<CR>', '(<CR>)<Esc>O')
-vim.keymap.set('i', '[<CR>', '[<CR>]<Esc>O')
-vim.keymap.set('i', '{<CR>', '{<CR>}<Esc>O')
+-- vim.keymap.set('i', '(<CR>', '(<CR>)<Esc>O')
+-- vim.keymap.set('i', '[<CR>', '[<CR>]<Esc>O')
+-- vim.keymap.set('i', '{<CR>', '{<CR>}<Esc>O')
 
 vim.keymap.set('n', '<CR>', function()
     vim.cmd [[nohlsearch]]
@@ -229,27 +243,38 @@ vim.keymap.set('n', '<F3>', ':noautocmd vim /<FIND>/ **/* <Bar> cfdo %s//<REPLAC
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
 -- LSP
-vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action)
-vim.keymap.set('n', '<leader>lD', vim.lsp.buf.declaration)
-vim.keymap.set('n', '<leader>ld', vim.lsp.buf.definition)
-vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename)
-vim.keymap.set('n', '<leader>lh', vim.lsp.buf.hover)
-vim.keymap.set('n', '<leader>lH', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>li', vim.lsp.buf.implementation)
-vim.keymap.set('n', '<leader>ls', vim.lsp.buf.signature_help)
-vim.keymap.set('n', '<leader>lt', vim.lsp.buf.type_definition)
-vim.keymap.set('n', '<leader>lx', vim.lsp.buf.references)
-vim.keymap.set('n', '<leader>lS', vim.lsp.buf.document_symbol)
-vim.keymap.set('n', '<leader>lw', vim.lsp.buf.workspace_symbol)
-vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help)
+
+
+vim.keymap.set('n', vim.g.anri.keymaps.Diagnostic, vim.diagnostic.open_float, { buffer = true })
+
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        local kmaps = vim.g.anri.keymaps
+
+        vim.keymap.set({ 'v', 'n' }, kmaps.CodeAction, vim.lsp.buf.code_action, { buffer = true })
+        vim.keymap.set('n', kmaps.Declaration, vim.lsp.buf.declaration, { buffer = true })
+        vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.definition, { buffer = true })
+        vim.keymap.set('n', kmaps.Rename, vim.lsp.buf.rename, { buffer = true })
+        vim.keymap.set('n', kmaps.Hover, vim.lsp.buf.hover, { buffer = true })
+        vim.keymap.set('n', kmaps.Implementation, vim.lsp.buf.implementation, { buffer = true })
+        vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.type_definition, { buffer = true })
+        vim.keymap.set('n', kmaps.References, vim.lsp.buf.references, { buffer = true })
+        vim.keymap.set('n', kmaps.DocumentSymbol, vim.lsp.buf.document_symbol, { buffer = true })
+        vim.keymap.set('n', kmaps.WorkspaceSymbol, vim.lsp.buf.workspace_symbol, { buffer = true })
+        -- vim.keymap.set('n', kmaps.Declaration, vim.lsp.buf.signature_help)
+        vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, { buffer = true })
+    end
+})
 
 -- vim-test
 vim.keymap.set('n', '<leader>tt', function()
     require('neotest').run.run()
 end, { silent = true })
+
 vim.keymap.set('n', '<leader>tf', function()
     require('neotest').run.run(vim.fn.expand('%'))
 end, { silent = true })
+
 vim.keymap.set('n', '<leader>ts', function()
     require('neotest').summary.toggle()
 end, { silent = true })
@@ -259,8 +284,8 @@ vim.keymap.set('x', '<Leader>is', '<Plug>(iron-visual-send)')
 vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
 
 -- MPD
-vim.keymap.set('n', '<Leader>mm', function() require('mpd'):status() end)
-vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)
+-- vim.keymap.set('n', '<Leader>mm', function() require('mpd'):status() end)
+-- vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)
 
 -- Commands
 vim.api.nvim_create_user_command('DefaultTheme', function()
@@ -373,22 +398,30 @@ end, {})
 --     end
 -- })
 
+vim.api.nvim_create_user_command('Internet', function(o)
+    local escaped = vim.uri_encode(o.args)
+    vim.ui.open(('https://duckduckgo.com/?q=%s'):format(escaped))
+end, { nargs = 1, desc = 'Search on the internet.' })
+
 vim.api.nvim_create_user_command('SetExecutableFlag', function()
     local file = vim.fn.expand('%')
-    Job:new({
-        command = 'git',
-        args = { 'add', '-f', file }
-    }):sync()
 
-    Job:new({
-        command = 'git',
-        args = { 'update-index', '--chmod=+x', file }
-    }):sync()
+    Job.chain(
+        Job:new({
+            command = 'git',
+            args = { 'add', '-f', file }
+        }),
 
-    Job:new({
-        command = 'chmod',
-        args = { '+x', file }
-    }):sync()
+        Job:new({
+            command = 'git',
+            args = { 'update-index', '--chmod=+x', file },
+        }),
+
+        Job:new({
+            command = 'chmod',
+            args = { '+x', file }
+        })
+    )
 end, {})
 
 vim.api.nvim_create_user_command('SetupForScreens', function()

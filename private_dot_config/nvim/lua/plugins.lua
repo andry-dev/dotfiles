@@ -28,21 +28,25 @@ return {
         cmd = 'Kyouko',
     },
 
-    -- My colorscheme
-    {
-        'andry-dev/nofrils',
-        -- dir = '~/prj/nofrils',
-        -- dev = true,
-        lazy = false,
-        priority = 10000,
-    },
+    -- -- My colorscheme
+    -- {
+    --     'andry-dev/nofrils',
+    --     -- dir = '~/prj/nofrils',
+    --     -- dev = true,
+    --     lazy = false,
+    -- },
 
     {
         "f-person/auto-dark-mode.nvim",
         lazy = false,
+        priority = 10000,
 
         dependencies = {
-            'andry-dev/nofrils'
+            'andry-dev/nofrils',
+
+            -- These color schemes are used for :SetupForScreens and :PrettyTheme
+            -- I don't personally use them
+            'navarasu/onedark.nvim',
         },
 
         config = function()
@@ -50,21 +54,6 @@ return {
         end
     },
 
-    -- These color schemes are used for :SetupForScreens and :PrettyTheme
-    -- I don't personally use them
-    -- 'catppuccin/nvim',
-    -- 'EdenEast/nightfox.nvim',
-    -- 'savq/melange-nvim',
-    -- 'bluz71/vim-moonfly-colors',
-    -- 'gruvbox-community/gruvbox',
-    -- 'sainnhe/everforest',
-    -- 'shaunsingh/nord.nvim',
-    -- 'JaySandhu/xcode-vim',
-    -- 'daschw/leaf.nvim',
-    {
-        'navarasu/onedark.nvim',
-        lazy = true
-    },
 
     { 'nvim-lua/plenary.nvim' },
 
@@ -98,24 +87,7 @@ return {
         opts = {
             bigfile = { enabled = true },
             image = {
-                enabled = true,
-
-                math = {
-                    latex = {
-                        packages = { "amsmath", "amssymb", "amsfonts", "amscd", "mathtools" },
-
-                        tpl = [[
-                            \documentclass[preview,border=0pt,varwidth,12pt]{standalone}
-                            \usepackage{${packages}}
-                            \usepackage[lambda]{cryptocode}
-                            \begin{document}
-                            ${header}
-                            { \${font_size} \selectfont
-                              \color[HTML]{${color}}
-                            ${content}}
-                            \end{document}]],
-                    }
-                }
+                enabled = false,
             }
         },
     },
@@ -125,13 +97,16 @@ return {
         event = "VeryLazy",
         priority = 1000, -- needs to be loaded in first
         config = function()
-            vim.diagnostic.config({ virtual_text = false })
             require('tiny-inline-diagnostic').setup({
                 preset = "simple",
 
                 options = {
                     multiple_diag_under_cursor = true,
                     show_all_diags_on_cursorline = true,
+
+                    -- NOTE: Hack to allow diagnostics to fire
+                    --       for nvim-lint and similar.
+                    overwrite_events = { 'DiagnosticChanged' },
 
                     multilines = {
                         enabled = true,
@@ -144,6 +119,7 @@ return {
                     diag = "●",
                 },
             })
+            -- vim.diagnostic.config({ virtual_text = false })
         end
     },
 
@@ -164,18 +140,18 @@ return {
                 'mfussenegger/nvim-jdtls',
                 ft = 'java'
             },
-            {
-                'folke/trouble.nvim',
-                cmd = 'Trouble'
-            },
-            {
-                'simrat39/symbols-outline.nvim',
-                cmd = 'SymbolsOutline'
-            },
+            -- {
+            --     'folke/trouble.nvim',
+            --     cmd = 'Trouble'
+            -- },
+            -- {
+            --     'simrat39/symbols-outline.nvim',
+            --     cmd = 'SymbolsOutline'
+            -- },
             'b0o/SchemaStore.nvim',
             {
                 "barreiroleo/ltex_extra.nvim",
-                branch = "dev",
+                -- branch = "dev",
             },
         },
         config = function()
@@ -196,12 +172,9 @@ return {
     },
 
     {
-        'simrat39/rust-tools.nvim',
-        lazy = true,
-        ft = 'rust',
-        config = function()
-            require('rust-tools').setup({})
-        end
+        'mrcjkb/rustaceanvim',
+        lazy = false,
+        version = '^6',
     },
 
     {
@@ -253,14 +226,6 @@ return {
         end,
     },
 
-    {
-        'stevearc/overseer.nvim',
-        opts = {},
-        dependencies = {
-            'mfussenegger/nvim-dap',
-        },
-    },
-
 
     { 'prabirshrestha/async.vim' },
 
@@ -303,29 +268,29 @@ return {
         },
     },
 
-    {
-        -- 'hrsh7th/nvim-cmp',
-        -- 'yioneko/nvim-cmp',
-        -- branch = 'perf-up',
-        'iguanacucumber/magazine.nvim',
-        name = 'nvim-cmp',
-        enabled = (vim.g.completion_framework == globals.CompletionFramework.NvimCmp),
-        dependencies = {
-            'L3MON4D3/LuaSnip',
-            'saadparwaiz1/cmp_luasnip',
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-nvim-lsp-signature-help',
-            'petertriho/cmp-git',
-            'hrsh7th/cmp-path',
-            'rcarriga/cmp-dap',
-            'kristijanhusak/vim-dadbod-completion',
-            'folke/lazydev.nvim',
-        },
-        config = function()
-            require('config.cmp')
-        end
-    },
+    -- {
+    --     -- 'hrsh7th/nvim-cmp',
+    --     -- 'yioneko/nvim-cmp',
+    --     -- branch = 'perf-up',
+    --     'iguanacucumber/magazine.nvim',
+    --     name = 'nvim-cmp',
+    --     enabled = (vim.g.completion_framework == globals.CompletionFramework.NvimCmp),
+    --     dependencies = {
+    --         'L3MON4D3/LuaSnip',
+    --         'saadparwaiz1/cmp_luasnip',
+    --         'hrsh7th/cmp-buffer',
+    --         'hrsh7th/cmp-nvim-lsp',
+    --         'hrsh7th/cmp-nvim-lsp-signature-help',
+    --         'petertriho/cmp-git',
+    --         'hrsh7th/cmp-path',
+    --         'rcarriga/cmp-dap',
+    --         'kristijanhusak/vim-dadbod-completion',
+    --         'folke/lazydev.nvim',
+    --     },
+    --     config = function()
+    --         require('config.cmp')
+    --     end
+    -- },
 
     {
         'saghen/blink.cmp',
@@ -352,11 +317,11 @@ return {
         }
     },
 
-    {
-        'cdelledonne/vim-cmake',
-        lazy = true,
-        ft = 'cmake'
-    },
+    -- {
+    --     'cdelledonne/vim-cmake',
+    --     lazy = true,
+    --     ft = 'cmake'
+    -- },
 
     {
         'tpope/vim-dispatch',
@@ -389,46 +354,54 @@ return {
 
     {
         'tpope/vim-dadbod',
-        'kristijanhusak/vim-dadbod-completion',
-        'kristijanhusak/vim-dadbod-ui',
+        dependencies = {
+            'kristijanhusak/vim-dadbod-completion',
+            'kristijanhusak/vim-dadbod-ui',
+        },
+    },
+
+    {
+        "m4xshen/hardtime.nvim",
+        -- dependencies = { "MunifTanjim/nui.nvim" },
+        opts = {},
+        event = "BufEnter"
     },
 
     {
         'nvim-neotest/neotest',
         dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-treesitter/nvim-treesitter',
+            "nvim-neotest/nvim-nio",
+            "nvim-lua/plenary.nvim",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "jfpedroza/neotest-elixir",
             'nvim-neotest/neotest-go',
-            'stevearc/overseer.nvim',
+            'nvim-neotest/neotest-python',
         },
         lazy = true,
         cmd = { 'NeotestFileRun', 'NeotestRun', 'NeotestSummary' },
         -- ft = {'go'},
         config = function()
             require('neotest').setup({
-                consumers = {
-                    overseer = require('neotest.consumers.overseer')
-                },
                 adapters = {
                     require('neotest-go'),
+                    require('neotest-elixir'),
+                    require('neotest-python')({
+                        dap = { justMyCode = true },
+                    }),
+                    require('rustaceanvim.neotest'),
                 }
             })
         end
     },
 
-    { 'vim-test/vim-test' },
-
-    {
-        'dhruvasagar/vim-testify',
-        lazy = true,
-        ft = { 'vim' },
-        cmd = { 'TestifyFile' }
-    },
-
+    -- { 'vim-test/vim-test' },
+    --
     -- {
-    --     'elixir-editors/vim-elixir',
+    --     'dhruvasagar/vim-testify',
     --     lazy = true,
-    --     ft = { 'elixir' }
+    --     ft = { 'vim' },
+    --     cmd = { 'TestifyFile' }
     -- },
 
     {

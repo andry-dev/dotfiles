@@ -13,7 +13,7 @@ setopt interactivecomments
 # initialise completions with ZSH's compinit
 autoload -Uz compinit && compinit
 
-PS1="# %B%~ $(chk_current_sh zsh)%# %b"
+PS1="%B%~ $(chk_current_sh zsh)%# %b"
 HISTFILE=
 HISTSIZE=1000
 SAVEHIST=
@@ -61,4 +61,5 @@ eval "$(direnv hook zsh)"
 [ -f "$HOME/.acme.sh/acme.sh.env" ] && . "$HOME/.acme.sh/acme.sh.env"
 
 
-(echo "Tasks to work on: "; task);
+. "$HOME/.local/share/../bin/env"
+eval "$(mise activate zsh)"

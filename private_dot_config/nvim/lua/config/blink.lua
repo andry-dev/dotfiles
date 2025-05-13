@@ -10,6 +10,12 @@ require('blink-cmp').setup {
 
     keymap = {
         preset = "default",
+
+        ['<Tab>'] = { 'fallback' },
+        ['<S-Tab>'] = { 'fallback' },
+
+        ['<C-l>'] = { 'snippet_forward', 'fallback' },
+        ['<C-h>'] = { 'snippet_backward', 'fallback' },
     },
 
     snippets = {
