@@ -1,20 +1,47 @@
 vim.cmd.filetype('plugin indent on')
 
-local function is_device_low_powered()
-    local known_devices = { 'aya', 'shiki' }
-    local hostname = vim.fn.hostname()
+local globals = require('globals')
 
-    return vim.tbl_contains(known_devices, hostname)
-end
-
-vim.g.prefers_energy_efficiency = is_device_low_powered()
+vim.g.prefers_energy_efficiency = globals.is_device_low_powered()
+vim.g.is_discharging = false
 vim.g.mason_enabled = os.getenv("NVIM_USE_NIX") == nil
 
-local globals = require('globals')
 ---@type andry.CompletionFramework
 vim.g.completion_framework = globals.CompletionFramework.Blink
 
+
 vim.g.mapleader = ','
+
+(function()
+    ---@type system_events.Config
+    vim.g.system_events = {
+        sleep_delay = 1,
+        listeners = {
+            power = true,
+        }
+    }
+
+    local group = vim.api.nvim_create_augroup('MyPowerStateChanged', { clear = true })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'PowersaveStateChanged',
+        group = group,
+        callback = function(powersave_enabled)
+            vim.g.prefers_energy_efficiency = powersave_enabled.data
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'ACStatusChanged',
+        group = group,
+        callback = function(data)
+            local event = data.data
+            local types = require('system_events.types')
+            vim.g.is_discharging = (event.device_type == types.ACDevice.Battery) and
+                (event.status == types.BatteryStatus.Discharging)
+        end,
+    })
+end)()
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -112,30 +139,31 @@ vim.g.cmake_build_dir_location = 'build'
 local Job = require('plenary.job')
 local fzf = require('fzf-lua')
 
-vim.opt.wildmenu = true
-vim.opt.hlsearch = true
-vim.opt.smartcase = true
-vim.opt.incsearch = true
-vim.opt.inccommand = 'split'
-vim.opt.gdefault = true
-vim.opt.undofile = true
-vim.opt.hidden = true
-vim.opt.spelllang = 'en,it,cjk'
-vim.opt.listchars = 'tab:> ,nbsp:!,trail:.'
-vim.opt.list = true
-vim.opt.colorcolumn = '80,120'
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
-vim.opt.foldenable = false
-vim.opt.foldlevelstart = 99
-vim.opt.cpoptions:append('J')
-vim.opt.formatoptions:append('p')
-vim.opt.completeopt = 'menu,menuone,noselect'
-vim.opt.ts = 4
-vim.opt.sts = 4
-vim.opt.sw = 4
-vim.opt.expandtab = true
-vim.opt.updatetime = 1000
+vim.o.wildmenu = true
+vim.o.hlsearch = true
+vim.o.smartcase = true
+vim.o.incsearch = true
+vim.o.inccommand = 'split'
+vim.o.gdefault = true
+vim.o.undofile = true
+vim.o.hidden = true
+vim.o.spelllang = 'en,it,cjk'
+vim.o.listchars = 'tab:> ,nbsp:!,trail:.'
+vim.o.list = true
+vim.o.colorcolumn = '80,120'
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.o.foldenable = false
+vim.o.foldlevelstart = 99
+vim.o.cpoptions = table.concat({ vim.o.cpoptions, 'J' })
+vim.o.formatoptions = table.concat({ vim.o.formatoptions, 'p' })
+vim.o.completeopt = 'menu,menuone,noselect'
+vim.o.ts = 4
+vim.o.sts = 4
+vim.o.sw = 4
+vim.o.expandtab = true
+vim.o.updatetime = 1000
+vim.o.mouse = 'a'
 vim.go.mouse = 'a'
 
 if vim.fn.has('unix') == 1 then
@@ -143,13 +171,12 @@ if vim.fn.has('unix') == 1 then
     vim.opt.dictionary:append('/usr/share/hunspell/it_IT.dic')
 end
 
-vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
-vim.opt.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
+vim.o.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
 vim.opt.formatoptions:append('cro')
 
 if vim.fn.executable('rg') then
-    vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case --no-ignore-vcs --ignore-file ~/.config/.ignore"
-    vim.opt.grepformat = '%f:%l:%c:%m,%f:%l:%m'
+    vim.o.grepprg = "rg --vimgrep --no-heading --smart-case --no-ignore-vcs --ignore-file ~/.config/.ignore"
+    vim.o.grepformat = '%f:%l:%c:%m,%f:%l:%m'
 end
 
 -- Misc functions
@@ -244,8 +271,7 @@ vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
 -- LSP
 
-
-vim.keymap.set('n', vim.g.anri.keymaps.Diagnostic, vim.diagnostic.open_float, { buffer = true })
+vim.keymap.set('n', vim.g.anri.keymaps.Diagnostic, vim.diagnostic.open_float)
 
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
@@ -257,7 +283,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', kmaps.Rename, vim.lsp.buf.rename, { buffer = true })
         vim.keymap.set('n', kmaps.Hover, vim.lsp.buf.hover, { buffer = true })
         vim.keymap.set('n', kmaps.Implementation, vim.lsp.buf.implementation, { buffer = true })
-        vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.type_definition, { buffer = true })
+        -- vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.type_definition, { buffer = true })
         vim.keymap.set('n', kmaps.References, vim.lsp.buf.references, { buffer = true })
         vim.keymap.set('n', kmaps.DocumentSymbol, vim.lsp.buf.document_symbol, { buffer = true })
         vim.keymap.set('n', kmaps.WorkspaceSymbol, vim.lsp.buf.workspace_symbol, { buffer = true })
@@ -288,6 +314,16 @@ vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
 -- vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)
 
 -- Commands
+
+-- vim.api.nvim_create_user_command('LTeX', function(args)
+--     vim.lsp.enable()
+-- end, {
+--     complete = {
+--         'start',
+--         'stop',
+--     }
+-- })
+
 vim.api.nvim_create_user_command('DefaultTheme', function()
     require('config.themes').set_default_theme()
     disableTSHighlight()
@@ -397,6 +433,16 @@ end, {})
 --         vim.cmd 'botright 5split | terminal chezmoi apply'
 --     end
 -- })
+
+vim.api.nvim_create_autocmd('TermOpen', {
+    group = vim.api.nvim_create_augroup('anri/TermOptions', { clear = true }),
+
+    callback = function()
+        local win = vim.api.nvim_get_current_win()
+        vim.wo[win][0].spell = false
+        vim.wo[win][0].colorcolumn = ''
+    end
+})
 
 vim.api.nvim_create_user_command('Internet', function(o)
     local escaped = vim.uri_encode(o.args)

@@ -105,8 +105,10 @@ function M.setup()
 
     local current_hour = tonumber(os.date '%H')
     if current_hour >= 6 and current_hour <= 20 then
+        theme_config_shim.fallback = 'light'
         themes[current_theme].set_light_mode()
     else
+        theme_config_shim.fallback = 'dark'
         themes[current_theme].set_dark_mode()
     end
 

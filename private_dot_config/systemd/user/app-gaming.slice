@@ -1,0 +1,5 @@
+[Slice]
+MemorySwapMax=0M
+
+[Service]
+OOMScoreAdjust=1000

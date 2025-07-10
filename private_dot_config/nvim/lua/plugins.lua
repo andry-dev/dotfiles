@@ -28,13 +28,19 @@ return {
         cmd = 'Kyouko',
     },
 
-    -- -- My colorscheme
+    -- My colorscheme
     -- {
     --     'andry-dev/nofrils',
-    --     -- dir = '~/prj/nofrils',
-    --     -- dev = true,
+    --     dir = '~/prjs/anri/nofrils',
+    --     dev = true,
     --     lazy = false,
     -- },
+
+    {
+        'andry-dev/nvim-power-states',
+        dir = '~/prjs/anri/nvim-power-states',
+        dev = true,
+    },
 
     {
         "f-person/auto-dark-mode.nvim",
@@ -42,7 +48,12 @@ return {
         priority = 10000,
 
         dependencies = {
-            'andry-dev/nofrils',
+            {
+                'andry-dev/nofrils',
+                dir = '~/prjs/anri/nofrils',
+                dev = true,
+                -- lazy = false,
+            },
 
             -- These color schemes are used for :SetupForScreens and :PrettyTheme
             -- I don't personally use them
@@ -363,7 +374,9 @@ return {
     {
         "m4xshen/hardtime.nvim",
         -- dependencies = { "MunifTanjim/nui.nvim" },
-        opts = {},
+        opts = {
+            disable_mouse = false,
+        },
         event = "BufEnter"
     },
 

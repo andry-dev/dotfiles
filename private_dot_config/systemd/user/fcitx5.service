@@ -1,0 +1,9 @@
+[Unit]
+Description=Fcitx5 for Niri
+
+[Service]
+Type=simple
+ExecStart=fcitx5 -r
+
+[Install]
+WantedBy=niri.service

@@ -64,7 +64,7 @@ local make_default_capabilities = function(completion_framework)
     local def_caps = vim.lsp.protocol.make_client_capabilities()
 
     if completion_framework == globals.CompletionFramework.Blink then
-        return require("blink.cmp").get_lsp_capabilities(def_caps)
+        return require("blink.cmp").get_lsp_capabilities()
     end
 
     return def_caps
@@ -78,6 +78,8 @@ local default_config = {
 function default_config:with(new_options)
     return vim.tbl_extend("force", self, new_options)
 end
+
+vim.lsp.inlay_hint.enable()
 
 vim.lsp.config('*', {
     capabilities = default_config.capabilities,
@@ -129,19 +131,20 @@ vim.lsp.config('texlab', {
         texlab = {
             build = {
                 executable = "latexmk",
-                args = { "-verbose", "-synctex=1", "-interaction=nonstopmode", "-pv" },
-                -- forwardSearchAfter = true,
+                -- args = { "-verbose", "-synctex=1", "-interaction=nonstopmode", "-pv" },
+                forwardSearchAfter = true,
                 onSave = true,
             },
-            -- forwardSearch = {
-            --     executable = 'evince-synctex',
-            --     args = {
-            --         '-f',
-            --         '%l',
-            --         '%p',
-            --         '/usr/bin/true'
-            --     },
-            -- },
+
+            chktex = {
+                onEdit = false,
+                onOpenAndSave = true,
+            },
+
+            forwardSearch = {
+                executable = 'zathura',
+                args = { '--synctex-forward', '%l:1:%f', '%p', },
+            },
         },
     }
 })
@@ -153,6 +156,12 @@ vim.lsp.config('ltex_plus', {
             load_langs = { 'it', 'en-US' },
             path = ".ltex",
         })
+    end,
+
+    root_dir = function(_, on_dir)
+        if not (vim.g.is_discharging or vim.g.prefers_energy_efficiency) then
+            on_dir(vim.fn.getcwd())
+        end
     end,
 
     settings = {
@@ -203,9 +212,107 @@ vim.lsp.config('ltex_plus', {
     }
 })
 
+local function setup_stop_ltex_on_power_save()
+    local group = vim.api.nvim_create_augroup('StopLTeXOnBattery', { clear = true })
+
+    local enable_client = function(c)
+        local timer = assert(vim.uv.new_timer())
+        timer:start(100, 0, vim.schedule_wrap(function()
+            vim.notify(("Trying to enable client %s."):format(c), vim.log.levels.DEBUG)
+            vim.lsp.enable(c)
+        end))
+    end
+
+    -- local stop_ltex = function()
+    --     local clients = vim.lsp.get_clients({ name = ")
+    -- end
+
+    local power_hungry_clients = { 'ltex_plus' }
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'PowersaveStateChanged',
+        group = group,
+        callback = function(args)
+            -- Event already handled by the ACStatusChanged below.
+            -- NOTE: Maybe races if neovim's scheduler is unfavorable?
+            if vim.g.is_discharging then
+                return
+            end
+
+
+            for _, c in ipairs(power_hungry_clients) do
+                if args.data then
+                    vim.notify(("PsSC: Disabling %s"):format(c), vim.log.levels.INFO)
+                    -- local clients = vim.lsp.get_clients({ name = c })
+                    -- vim.lsp.stop_client(clients)
+                    vim.lsp.enable(c, false)
+                else
+                    vim.notify(("PsSC: Enabling %s"):format(c), vim.log.levels.INFO)
+
+                    enable_client(c)
+                end
+            end
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'ACStatusChanged',
+        group = group,
+        callback = function(args)
+            -- Event already handled by the PowersaveStateChanged above.
+            -- NOTE: Maybe races if neovim's scheduler is unfavorable?
+            if vim.g.prefers_energy_efficiency then
+                return
+            end
+
+            local event = args.data
+            local types = require('system_events.types')
+
+            if event.device_type ~= types.ACDevice.Battery then
+                return
+            end
+
+
+            for _, c in ipairs(power_hungry_clients) do
+                if event.status == types.BatteryStatus.Discharging then
+                    vim.notify(("ACSC: Disabling %s"):format(c), vim.log.levels.INFO)
+                    -- local clients = vim.lsp.get_clients({ name = c })
+                    -- vim.lsp.stop_client(clients)
+                    vim.lsp.enable(c, false)
+                elseif event.status ~= types.BatteryStatus.Discharging and
+                    event.status ~= types.BatteryStatus.Empty and
+                    event.status ~= types.BatteryStatus.Unknown then
+                    vim.notify(("ACSC: Enabling %s"):format(c), vim.log.levels.INFO)
+                    enable_client(c)
+                end
+            end
+        end,
+    })
+
+    -- vim.api.nvim_create_autocmd('LspAttach', {
+    --     group    = group,
+    --     callback = function(args)
+    --         local client = vim.lsp.get_client_by_id(args.data.client_id)
+    --         if client == nil then
+    --             return
+    --         end
+    --
+    --         for _, c in ipairs(power_hungry_clients) do
+    --             if client.name == c and (vim.g.prefers_energy_efficiency or vim.g.is_discharging) then
+    --                 client:stop()
+    --                 vim.lsp.enable(c, false)
+    --             end
+    --         end
+    --     end
+    -- })
+end
+
+if globals.is_device_low_powered() then
+    setup_stop_ltex_on_power_save()
+end
+
 vim.lsp.enable({
     'ansiblels',
-    'basedpyright',
     'bashls',
     'beancount',
     'clangd',
@@ -215,9 +322,7 @@ vim.lsp.enable({
     'eslint',
     'gopls',
     'html',
-    'intelephense',
     'jsonls',
-    'ltex_plus',
     'nil_ls',
     'sqlls',
     'systemd_ls',
@@ -260,7 +365,7 @@ require("conform").setup({
 
         just = { "just" },
 
-        latex = { "latexindent" },
+        -- latex = { "latexindent" },
 
         nix = { "alejandra" },
 
@@ -295,7 +400,7 @@ lint.linters_by_ft = {
     zsh = { "shellcheck" },
     python = { "ruff" },
     sql = { "sqruff" },
-    tex = { "chktex" },
+    -- tex = { "chktex" },
     elixir = { "credo" },
     systemd = { "systemdlint", "systemd-analyze" },
 }

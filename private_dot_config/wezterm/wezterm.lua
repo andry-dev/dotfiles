@@ -17,6 +17,7 @@ local light_colors = {
         'teal',
         'silver',
     },
+
     brights = {
         'grey',
         'red',
@@ -35,24 +36,25 @@ local acme_colors = {
     cursor_fg = 'white',
     cursor_bg = 'black',
     ansi = {
-        '#424242',                  -- Black
-        '#B85C57',                  -- Red
-        '#57864E',                  -- Green
-        '#8F7634',                  -- Yellow
-        'lch(55.07% 40.31 249.58)', -- Blue
-        '#8888C7',                  -- Magenta
-        '#6AA7A8',                  -- Cyan
-        'silver',                   -- White
+        'lch(0% 0 0)',     -- Black
+        'lch(13.33% 0 0)', -- Red
+        'lch(26.66% 0 0)', -- Green
+        'lch(40.00% 0 0)', -- Yellow
+        'lch(53.33% 0 0)', -- Blue
+        'lch(66.67% 0 0)', -- Magenta
+        'lch(90.00% 0 0)', -- Cyan
+        'lch(93.33% 0 0)', -- White
     },
+
     brights = {
-        'grey',                  -- Black
-        '#F2ACAA',               -- Red
-        '#98CE8F',               -- Green
-        '#B7B19C',               -- Yellow
-        'lch(70% 23.57 236.42)', -- Blue
-        '#D0D0F7',               -- Magenta
-        'lch(70% 20.67 199.73)', -- Cyan
-        'white',                 -- White
+        'lch(6.66% 0 0)',  -- Black
+        'lch(20% 0 0)',    -- Red
+        'lch(33.33% 0 0)', -- Green
+        'lch(46.66% 0 0)', -- Yellow
+        'lch(60.00% 0 0)', -- Blue
+        'lch(73.33% 0 0)', -- Magenta
+        'lch(86.67% 0 0)', -- Cyan
+        '#ffffec',         -- White
     },
 }
 
@@ -62,24 +64,24 @@ local dark_colors = {
     cursor_fg = 'black',
     cursor_bg = 'lch(90% 0% 0)',
     ansi = {
-        'black',            -- Black
-        'lch(80% 150% 20)', -- Red
-        'lch(80% 10% 140)', -- Green
-        'lch(80% 10% 90)',  -- Yellow
-        'lch(80% 10% -90)', -- Blue
-        'lch(80% 20% 0)',   -- Purple
-        'lch(80% 10% 200)', -- Teal
-        'lch(80% 0% 0)',    -- Silver
+        '#262626',         -- Black
+        'lch(93.33% 0 0)', -- White
+        'lch(90.00% 0 0)', -- Cyan
+        'lch(66.67% 0 0)', -- Magenta
+        'lch(53.33% 0 0)', -- Blue
+        'lch(40.00% 0 0)', -- Yellow
+        'lch(26.66% 0 0)', -- Green
+        'lch(13.33% 0 0)', -- Red
     },
     brights = {
-        'lch(50% 0% 0)',
-        'lch(100% 200% 20)', -- Red
-        'lch(80% 20% 140)',
-        'lch(80% 20% 90)',
-        'lch(80% 20% -90)', -- Blue
-        'lch(100% 20% 0)',  -- Purple
-        'lch(80% 20% 200)', -- Teal
-        'white',
+        'lch(6.66% 0 0)',  -- Black
+        'lch(86.67% 0 0)', -- Cyan
+        'lch(73.33% 0 0)', -- Magenta
+        'lch(60.00% 0 0)', -- Blue
+        'lch(46.66% 0 0)', -- Yellow
+        'lch(33.33% 0 0)', -- Green
+        'lch(20% 0 0)',    -- Red
+        '#eeeeee',         -- White
     },
 }
 
@@ -112,11 +114,13 @@ local device_settings = {
 
 return {
     color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
+
     color_schemes = {
         ['nofrils_acme'] = acme_colors,
         ['nofrils_dark'] = dark_colors,
         ['nofrils_light'] = light_colors,
     },
+
     font = wezterm.font {
         family = 'Pragmasevka',
         weight = 'Regular',
@@ -129,20 +133,27 @@ return {
             -- 'liga=0'
         },
     },
+
+    use_resize_increments = true,
+
     window_padding = {
         left = PADDING,
         right = PADDING,
         top = 0,
         bottom = 0,
     },
+
     enable_wayland = true,
+
     window_background_opacity = 1,
+
     font_size = device_settings.font_size,
-    -- animation_fps = 144,
+
     max_fps = 144,
-    -- front_end = 'WebGpu',
-    -- Don't enable this or the window sizing breaks.
-    -- window_decorations = "RESIZE",
+
+    front_end = 'WebGpu',
+
     integrated_title_button_style = 'Gnome',
+
     hide_mouse_cursor_when_typing = false,
 }

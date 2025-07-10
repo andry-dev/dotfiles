@@ -29,6 +29,10 @@ require('blink-cmp').setup {
     sources = {
         default = { "lazydev", "lsp", "path", "snippets", "buffer" },
 
+        -- per_filetype = {
+        --     lua = { "lazydev", "snippets" },
+        -- },
+
         providers = {
             -- dont show LuaLS require statements when lazydev has items
             lazydev = {
