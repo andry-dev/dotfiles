@@ -15,10 +15,13 @@ vim.g.mapleader = ','
 (function()
     ---@type system_events.Config
     vim.g.system_events = {
-        sleep_delay = 1,
         listeners = {
             power = true,
-        }
+        },
+
+        sleep_delay = 1,
+
+        multi_threaded = true,
     }
 
     local group = vim.api.nvim_create_augroup('MyPowerStateChanged', { clear = true })
@@ -35,6 +38,7 @@ vim.g.mapleader = ','
         pattern = 'ACStatusChanged',
         group = group,
         callback = function(data)
+            ---@type system_events.ACEvent.StatusChanged
             local event = data.data
             local types = require('system_events.types')
             vim.g.is_discharging = (event.device_type == types.ACDevice.Battery) and
@@ -103,7 +107,7 @@ vim.g.anri = {
         Diagnostic = '<leader>lH',
         Implementation = '<leader>li',
         References = '<leader>lx',
-        DocumentSymbol = '<leader>lS',
+        DocumentSymbol = '<leader>ls',
         WorkspaceSymbol = '<leader>lw',
     }
 }
@@ -116,9 +120,11 @@ if vim.g.neovide then
     vim.g.neovide_cursor_animate_in_insert_mode = false
     vim.g.neovide_cursor_animate_command_line = false
     vim.g.neovide_scroll_animation_far_lines = 0
-    vim.g.neovide_scroll_animation_length = 0.00
+    vim.g.neovide_scroll_animation_length = 0
 
-    vim.opt.guifont = "Pragmasevka:h16"
+    vim.g.neovide_refresh_rate_idle = 5
+
+    vim.o.guifont = "Pragmasevka Nerd Font:h14"
     if not vim.g.prefers_energy_efficiency then
         vim.g.neovide_refresh_rate = 144
     end
@@ -136,8 +142,6 @@ vim.g.vimtex_view_method = 'zathura'
 vim.g.cmake_build_dir_location = 'build'
 
 
-local Job = require('plenary.job')
-local fzf = require('fzf-lua')
 
 vim.o.wildmenu = true
 vim.o.hlsearch = true
@@ -152,7 +156,6 @@ vim.o.listchars = 'tab:> ,nbsp:!,trail:.'
 vim.o.list = true
 vim.o.colorcolumn = '80,120'
 vim.o.foldmethod = 'expr'
-vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldenable = false
 vim.o.foldlevelstart = 99
 vim.o.cpoptions = table.concat({ vim.o.cpoptions, 'J' })
@@ -182,11 +185,11 @@ end
 -- Misc functions
 
 local function enableTSHighlight()
-    require('nvim-treesitter.configs').commands.TSEnable.run('highlight')
+    -- require('nvim-treesitter.configs').commands.TSEnable.run('highlight')
 end
 
 local function disableTSHighlight()
-    require('nvim-treesitter.configs').commands.TSDisable.run('highlight')
+    -- require('nvim-treesitter.configs').commands.TSDisable.run('highlight')
 end
 
 local function set_pretty_theme()
@@ -203,16 +206,27 @@ end
 -- Mappings
 
 vim.keymap.set('n', '<C-f>', function()
-    fzf.git_files()
+    require('fzf-lua').git_files()
 end)
+
 vim.keymap.set('n', '<M-f>', function()
-    fzf.files()
+    require('fzf-lua').files()
 end)
+
 vim.keymap.set('n', '<C-s>', function()
-    fzf.live_grep_native()
+    require('fzf-lua').live_grep_native()
 end)
+
 vim.keymap.set('n', '<C-b>', function()
-    fzf.buffers()
+    require('fzf-lua').buffers()
+end)
+
+vim.keymap.set('n', '<C-p>', function()
+    require('fzf-lua').files({
+        fd_opts = '-t d --exact-depth 2',
+        cwd = '~/prjs',
+        actions = { enter = require('fzf-lua.actions').cd },
+    })
 end)
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -251,6 +265,7 @@ vim.keymap.set('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
 vim.keymap.set('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
 vim.keymap.set('n', '<Leader>se', ':silent! SetExecutableFlag<CR>')
 vim.keymap.set('n', '<Leader>fm', function()
+    local Job = require('plenary.job')
     Job:new {
         command = 'dbus-send',
         args = {
@@ -277,16 +292,31 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local kmaps = vim.g.anri.keymaps
 
-        vim.keymap.set({ 'v', 'n' }, kmaps.CodeAction, vim.lsp.buf.code_action, { buffer = true })
+        vim.keymap.set('n', '<leader>qa', vim.diagnostic.setqflist, { buffer = true })
+
+        vim.keymap.set({ 'v', 'n' }, kmaps.CodeAction, function()
+            require('fzf-lua').lsp_code_actions()
+        end, { buffer = true })
+
         vim.keymap.set('n', kmaps.Declaration, vim.lsp.buf.declaration, { buffer = true })
         vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.definition, { buffer = true })
         vim.keymap.set('n', kmaps.Rename, vim.lsp.buf.rename, { buffer = true })
         vim.keymap.set('n', kmaps.Hover, vim.lsp.buf.hover, { buffer = true })
         vim.keymap.set('n', kmaps.Implementation, vim.lsp.buf.implementation, { buffer = true })
         -- vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.type_definition, { buffer = true })
-        vim.keymap.set('n', kmaps.References, vim.lsp.buf.references, { buffer = true })
-        vim.keymap.set('n', kmaps.DocumentSymbol, vim.lsp.buf.document_symbol, { buffer = true })
-        vim.keymap.set('n', kmaps.WorkspaceSymbol, vim.lsp.buf.workspace_symbol, { buffer = true })
+
+        vim.keymap.set('n', kmaps.References, function()
+            require('fzf-lua').lsp_references()
+        end, { buffer = true })
+
+        vim.keymap.set('n', kmaps.DocumentSymbol, function()
+            require('fzf-lua').lsp_document_symbols()
+        end, { buffer = true })
+
+        vim.keymap.set('n', kmaps.WorkspaceSymbol, function()
+            require('fzf-lua').lsp_workspace_symbols()
+        end, { buffer = true })
+
         -- vim.keymap.set('n', kmaps.Declaration, vim.lsp.buf.signature_help)
         vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, { buffer = true })
     end
@@ -326,23 +356,27 @@ vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
 
 vim.api.nvim_create_user_command('DefaultTheme', function()
     require('config.themes').set_default_theme()
-    disableTSHighlight()
+    -- disableTSHighlight()
 end, {})
 
 vim.api.nvim_create_user_command('PrettyTheme', function()
     require('config.themes').set_pretty_theme()
-    enableTSHighlight()
+    -- enableTSHighlight()
+end, {})
+
+vim.api.nvim_create_user_command('Projects', function()
+    require('fzf-lua').zoxide()
 end, {})
 
 vim.api.nvim_create_user_command('EditPlugin', function()
     local plugin_path = '~/.local/share/chezmoi/private_dot_config/nvim'
-    fzf.files({ cwd = plugin_path })
+    require('fzf-lua').files({ cwd = plugin_path })
     vim.cmd.lcd(plugin_path)
 end, {})
 
 vim.api.nvim_create_user_command('EditDotfiles', function()
     local plugin_path = '~/.local/share/chezmoi'
-    fzf.files({ cwd = plugin_path })
+    require('fzf-lua').files({ cwd = plugin_path })
     vim.cmd.lcd(plugin_path)
 end, {})
 
@@ -370,39 +404,36 @@ end, {
 })
 
 
-local dap = require('dap')
-local dapui = require('dapui')
-
 vim.keymap.set('n', '<F4>', function()
-    dap.continue()
+    require('dap').continue()
 end)
 
 vim.keymap.set('n', '<F5>', function()
-    dap.step_over()
+    require('dap').step_over()
 end)
 
 vim.keymap.set('n', '<F6>', function()
-    dap.step_into()
+    require('dap').step_into()
 end)
 
 vim.keymap.set('n', '<F7>', function()
-    dap.step_out()
+    require('dap').step_out()
 end)
 
 vim.keymap.set('n', '<Leader>db', function()
-    dap.toggle_breakpoint()
+    require('dap').toggle_breakpoint()
 end)
 
 vim.keymap.set('n', '<Leader>dB', function()
-    dap.set_breakpoint(vim.fn.input('When? '))
+    require('dap').set_breakpoint(vim.fn.input('When? '))
 end)
 
 vim.keymap.set('n', '<Leader>dr', function()
-    dap.repl_open()
+    require('dap').repl_open()
 end)
 
 vim.api.nvim_create_user_command('ToggleDebug', function()
-    dapui.toggle()
+    require('dapui').toggle()
 end, {})
 
 vim.api.nvim_create_user_command('NeotestRun', function()
@@ -451,6 +482,7 @@ end, { nargs = 1, desc = 'Search on the internet.' })
 
 vim.api.nvim_create_user_command('SetExecutableFlag', function()
     local file = vim.fn.expand('%')
+    local Job = require('plenary.job')
 
     Job.chain(
         Job:new({

@@ -2,87 +2,86 @@ local wezterm = require('wezterm')
 
 local PADDING = 5
 
-local light_colors = {
-    background = '#E4E4E4',
-    foreground = 'black',
-    cursor_fg = 'white',
-    cursor_bg = 'black',
-    ansi = {
-        'black',
-        'maroon',
-        '#50AA50', -- green
-        'olive',
-        'navy',
-        'purple',
-        'teal',
-        'silver',
-    },
-
-    brights = {
-        'grey',
-        'red',
-        'lch(20% 200% 140)', -- Light Green
-        'lch(20% 50% 90)',   -- Light Yellow
-        '#5050AA',
-        'fuchsia',
-        '#509090',
-        'white',
-    },
-}
-
 local acme_colors = {
     background = '#ffffec',
     foreground = 'black',
     cursor_fg = 'white',
     cursor_bg = 'black',
+
     ansi = {
-        'lch(0% 0 0)',     -- Black
-        'lch(13.33% 0 0)', -- Red
-        'lch(26.66% 0 0)', -- Green
-        'lch(40.00% 0 0)', -- Yellow
-        'lch(53.33% 0 0)', -- Blue
-        'lch(66.67% 0 0)', -- Magenta
-        'lch(90.00% 0 0)', -- Cyan
-        'lch(93.33% 0 0)', -- White
+        'lch(0.0% 20 25)',
+        'lch(6.25% 20 25)',
+        'lch(12.5% 20 25)',
+        'lch(18.75% 20 25)',
+        'lch(25.0% 20 25)',
+        'lch(31.25% 20 25)',
+        'lch(37.5% 20 25)',
+        'lch(43.75% 20 25)',
     },
 
     brights = {
-        'lch(6.66% 0 0)',  -- Black
-        'lch(20% 0 0)',    -- Red
-        'lch(33.33% 0 0)', -- Green
-        'lch(46.66% 0 0)', -- Yellow
-        'lch(60.00% 0 0)', -- Blue
-        'lch(73.33% 0 0)', -- Magenta
-        'lch(86.67% 0 0)', -- Cyan
-        '#ffffec',         -- White
+        'lch(3.125% 20 25)',
+        'lch(9.375% 20 25)',
+        'lch(15.625% 20 25)',
+        'lch(21.875% 20 25)',
+        'lch(28.125% 20 25)',
+        'lch(34.375% 20 25)',
+        'lch(40.625% 20 25)',
+        'lch(46.875% 20 25)',
     },
+
 }
 
 local dark_colors = {
     background = '#262626',
     foreground = '#eeeeee',
     cursor_fg = 'black',
-    cursor_bg = 'lch(90% 0% 0)',
+    cursor_bg = 'lch(98% 0% 0)',
+
     ansi = {
-        '#262626',         -- Black
-        'lch(93.33% 0 0)', -- White
-        'lch(90.00% 0 0)', -- Cyan
-        'lch(66.67% 0 0)', -- Magenta
-        'lch(53.33% 0 0)', -- Blue
-        'lch(40.00% 0 0)', -- Yellow
-        'lch(26.66% 0 0)', -- Green
-        'lch(13.33% 0 0)', -- Red
+        'lch(60.0% 20 25)',
+        'lch(65.0% 20 25)',
+        'lch(70.0% 20 25)',
+        'lch(75.0% 20 25)',
+        'lch(80.0% 20 25)',
+        'lch(85.0% 20 25)',
+        'lch(90.0% 20 25)',
+        'lch(95.0% 20 25)',
     },
+
     brights = {
-        'lch(6.66% 0 0)',  -- Black
-        'lch(86.67% 0 0)', -- Cyan
-        'lch(73.33% 0 0)', -- Magenta
-        'lch(60.00% 0 0)', -- Blue
-        'lch(46.66% 0 0)', -- Yellow
-        'lch(33.33% 0 0)', -- Green
-        'lch(20% 0 0)',    -- Red
-        '#eeeeee',         -- White
+        'lch(62.5% 20 25)',
+        'lch(67.5% 20 25)',
+        'lch(72.5% 20 25)',
+        'lch(77.5% 20 25)',
+        'lch(82.5% 20 25)',
+        'lch(87.5% 20 25)',
+        'lch(92.5% 20 25)',
+        'lch(97.5% 20 25)',
     },
+
+    -- ansi = {
+    --     'lch(60.0% 0 0)', -- Black
+    --     'lch(65.0% 0 0)', -- Red
+    --     'lch(70.0% 0 0)',
+    --     'lch(75.0% 0 0)',
+    --     'lch(80.0% 0 0)',
+    --     'lch(85.0% 0 0)',
+    --     'lch(90.0% 0 0)',
+    --     'lch(95.0% 0 0)', -- White
+    -- },
+    --
+    -- brights = {
+    --     'lch(62.5% 0 0)', -- Black
+    --     'lch(67.5% 0 0)', -- Red
+    --     'lch(72.5% 0 0)',
+    --     'lch(77.5% 0 0)',
+    --     'lch(82.5% 0 0)',
+    --     'lch(87.5% 0 0)',
+    --     'lch(92.5% 0 0)',
+    --     'lch(97.5% 0 0)', -- White
+    -- },
+
 }
 
 local function get_hostname()
@@ -90,6 +89,10 @@ local function get_hostname()
 end
 
 local function scheme_for_appearance(appearance)
+    -- if true then
+    --     return 'nofrils_acme'
+    -- end
+
     if appearance:find 'Dark' then
         return 'nofrils_dark'
     else
@@ -118,7 +121,7 @@ return {
     color_schemes = {
         ['nofrils_acme'] = acme_colors,
         ['nofrils_dark'] = dark_colors,
-        ['nofrils_light'] = light_colors,
+        -- ['nofrils_light'] = light_colors,
     },
 
     font = wezterm.font {

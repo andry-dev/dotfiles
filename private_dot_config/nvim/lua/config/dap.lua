@@ -2,7 +2,7 @@
 
 if vim.g.mason_enabled then
     require("mason-nvim-dap").setup({
-        ensure_installed = { 'elixir', 'python', 'codelldb' },
+        ensure_installed = { 'python', 'codelldb' },
         automatic_installation = false,
     })
 end

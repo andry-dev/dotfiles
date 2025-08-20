@@ -101,9 +101,16 @@ output "eDP-1" {
     position x=0 y=0
 }
 
+output "HP Inc. HP 727pk CN4421237X" {
+    mode "3840x2160@60.000"
+    position x=-2560 y=0
+    variable-refresh-rate
+}
+
 output "GIGA-BYTE TECHNOLOGY CO., LTD. Gigabyte M32U 0x01010101" {
     mode "3840x2160@120.00"
     position x=-1152 y=-1728
+    variable-refresh-rate
 }
 
 // Settings that influence how windows are positioned and sized.
@@ -187,7 +194,7 @@ layout {
         // of the workspace, rather than relative to just the window itself.
         // To do that, set relative-to="workspace-view".
         //
-        // inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+        inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
     }
 
     // You can also add a border. It's similar to the focus ring, but always visible.
@@ -263,7 +270,7 @@ layout {
 // See the binds section below for more spawn examples.
 
 // spawn-at-startup "waybar"
-spawn-at-startup "xwayland-satellite"
+spawn-at-startup "~/prjs/other/xwayland-satellite/target/release/xwayland-satellite"
 
 environment {
     DISPLAY ":0"
@@ -293,7 +300,7 @@ animations {
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
-    slowdown 1
+    slowdown 0.5
 }
 
 // Window rules let you adjust behavior for individual windows.

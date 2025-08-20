@@ -190,10 +190,11 @@ return {
 
     {
         'nvim-treesitter/nvim-treesitter',
+        branch = 'main',
         build = ':TSUpdate',
         dependencies = {
             -- 'nvim-treesitter/nvim-treesitter-textobjects',
-            'nvim-treesitter/nvim-treesitter-refactor',
+            -- 'nvim-treesitter/nvim-treesitter-refactor',
             -- 'romgrk/nvim-treesitter-context',
             'windwp/nvim-ts-autotag',
         },
@@ -304,6 +305,24 @@ return {
     -- },
 
     {
+        'saghen/blink.pairs',
+        dependencies = {
+            'saghen/blink.download',
+        },
+
+        version = '*',
+
+        opts = {
+            highlights = {
+                enabled = false,
+                matchparen = {
+                    enabled = true,
+                },
+            }
+        },
+    },
+
+    {
         'saghen/blink.cmp',
         enabled = (vim.g.completion_framework == globals.CompletionFramework.Blink),
         lazy = false, -- lazy loading handled internally
@@ -322,10 +341,14 @@ return {
 
     {
         'ibhagwan/fzf-lua',
-        opts = {
-            winopts = { treesitter = { enabled = false }, },
-            previewers = { builtin = { syntax = false, treesitter = false, } },
-        }
+        config = function()
+            require('fzf-lua').setup({
+                winopts = { treesitter = { enabled = false }, },
+                previewers = { builtin = { syntax = false, treesitter = false, } },
+            })
+
+            require('fzf-lua').register_ui_select()
+        end
     },
 
     -- {

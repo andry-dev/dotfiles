@@ -22,7 +22,7 @@ if vim.g.mason_enabled then
         ensure_installed = { "zk", },
         automatic_installation = {
             -- exclude = exclude_existing(),
-            exclude = { "rust_analyzer", "beancount", "ansible-lint" }
+            exclude = { "rust_analyzer", "beancount", "ansible-lint", "elixir-ls" }
         },
     })
 
