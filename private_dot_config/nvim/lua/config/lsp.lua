@@ -47,12 +47,9 @@ end
 
 local globals = require('globals')
 
--- local lsp = require("lspconfig")
--- lsp.util.default_config.on_init = function(client, _)
---     client.server_capabilities.semanticTokensProvider = nil
--- end
 
-vim.g.disable_autoformat = false
+-- nvim-java/nvim-java
+require('java').setup()
 
 
 local custom_attach = function(client)
@@ -329,8 +326,10 @@ vim.lsp.enable({
     'texlab',
     'ts_ls',
     'yamlls',
+    'jdtls',
 })
 
+-- elixir-tools.nvim
 require('elixir').setup({
     elixirls = {
         settings = require('elixir.elixirls').settings {
@@ -342,119 +341,20 @@ require('elixir').setup({
     },
 })
 
-require("conform").setup({
-    formatters_by_ft = {
-        python = { "ruff" },
-
-        cmake = { "cmake_format" },
-        c = { "clang_format" },
-        cpp = { "clang_format" },
-
-        rust = { "rustfmt" },
-
-        javascript = { "prettierd", "prettier", stop_after_first = true },
-        html = { "prettierd", "prettier", stop_after_first = true },
-        css = { "prettierd", "prettier", stop_after_first = true },
-        scss = { "prettierd", "prettier", stop_after_first = true },
-
-        sh = { "shfmt", "shellcheck", stop_after_first = true },
-        bash = { "shfmt", "shellcheck", stop_after_first = true },
-        yaml = { "yamlfmt" },
-
-        go = { "goimports", "gofumpt", "gofmt" },
-
-        just = { "just" },
-
-        -- latex = { "latexindent" },
-
-        nix = { "alejandra" },
-
-        -- Use the "*" filetype to run formatters on all filetypes.
-        ["*"] = (not vim.g.prefers_energy_efficiency and { "codespell" }) or {},
-        -- Use the "_" filetype to run formatters on filetypes that don't
-        -- have other formatters configured.
-        ["_"] = (not vim.g.prefers_energy_efficiency and { "trim_whitespace" }) or {},
-    },
-
-    format_on_save = function(bufnr)
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-            return
-        end
-
-        local bufname = vim.api.nvim_buf_get_name(bufnr)
-        if bufname:match("/node_modules/") then
-            return
-        end
-
-        return { timeout_ms = 500, lsp_fallback = true }
-    end,
-})
-
-vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-
-local lint = require("lint")
-lint.linters_by_ft = {
-    -- markdown = { "vale" },
-    sh = { "shellcheck" },
-    bash = { "shellcheck" },
-    zsh = { "shellcheck" },
-    python = { "ruff" },
-    sql = { "sqruff" },
-    -- tex = { "chktex" },
-    elixir = { "credo" },
-    systemd = { "systemdlint", "systemd-analyze" },
-}
-
-vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-    callback = function()
-        lint.try_lint()
-    end,
-})
-
--- Try to disable LSP semantic tokens.
-vim.api.nvim_create_autocmd({ "ColorScheme" }, {
-    callback = function()
-        for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
-            vim.api.nvim_set_hl(0, group, {})
-        end
-    end
-})
-
+-- -- Try to disable LSP semantic tokens.
+-- vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+--     callback = function()
+--         for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+--             vim.api.nvim_set_hl(0, group, {})
+--         end
+--     end
+-- })
 
 ---@class andry.LspConfig
 local M = {
     on_attach = custom_attach,
     capabilities = default_config.capabilities,
 }
-
-function M.start_jdtls()
-    --[[
-    local home = os.getenv('HOME')
-    local jar_patterns = {
-        '/.lsp/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar',
-    }
-
-    local bundles = {}
-
-    for _, jar_pattern in ipairs(jar_patterns) do
-        for _, bundle in ipairs(vim.split(vim.fn.glob(home .. jar_pattern), '\n')) do
-            table.insert(bundles, bundle)
-        end
-    end
-    --]]
-    local config = {
-        cmd = { "java-jdtls.sh" },
-        on_attach = custom_attach,
-        capabilities = default_config.capabilities,
-        --[[
-        init_options = {
-            bundles = bundles,
-        }
-        --]]
-    }
-
-    require("jdtls").start_or_attach(config)
-end
 
 -- Export my configuration to other modules just in case I need it elsewhere.
 return M

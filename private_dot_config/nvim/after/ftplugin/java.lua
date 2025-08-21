@@ -1,1 +1,1 @@
-require('config.lsp').start_jdtls()
+-- require('config.lsp').start_jdtls()

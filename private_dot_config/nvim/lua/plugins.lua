@@ -20,6 +20,7 @@ end
 local globals = require('globals')
 
 return {
+    -- Personal plugin for lecture-recording
     {
         'andry-dev/kyouko.nvim',
         -- dir = '~/prj/kyouko.nvim',
@@ -28,18 +29,20 @@ return {
         cmd = 'Kyouko',
     },
 
-    -- My colorscheme
-    -- {
-    --     'andry-dev/nofrils',
-    --     dir = '~/prjs/anri/nofrils',
-    --     dev = true,
-    --     lazy = false,
-    -- },
-
+    -- Personal plugin for reacting to system events
     {
-        'andry-dev/nvim-power-states',
+        'https://git.sr.ht/~anri/system_events.nvim',
         dir = '~/prjs/anri/nvim-power-states',
         dev = true,
+        build = 'cargo build --release',
+    },
+
+    -- Experimental plugin for exposing a 9P interface
+    {
+        'https://git.sr.ht/~anri/9.nvim',
+        dir = '~/prjs/anri/9.nvim',
+        dev = true,
+        build = 'cargo build --release',
     },
 
     {
@@ -48,6 +51,7 @@ return {
         priority = 10000,
 
         dependencies = {
+            -- My colorschemes
             {
                 'andry-dev/nofrils',
                 dir = '~/prjs/anri/nofrils',
@@ -70,6 +74,7 @@ return {
 
     {
         "williamboman/mason.nvim",
+        enabled = vim.g.mason_enabled,
         config = function()
             if vim.g.mason_enabled then
                 require('mason').setup()
@@ -88,19 +93,6 @@ return {
         dependencies = {
             'ibhagwan/fzf-lua',
         }
-    },
-
-    {
-        "folke/snacks.nvim",
-        priority = 1000,
-        lazy = false,
-
-        opts = {
-            bigfile = { enabled = true },
-            image = {
-                enabled = false,
-            }
-        },
     },
 
     {
@@ -147,18 +139,7 @@ return {
                 event = { "BufReadPre", "BufNewFile" },
                 dependencies = { 'nvim-lua/plenary.nvim' },
             },
-            {
-                'mfussenegger/nvim-jdtls',
-                ft = 'java'
-            },
-            -- {
-            --     'folke/trouble.nvim',
-            --     cmd = 'Trouble'
-            -- },
-            -- {
-            --     'simrat39/symbols-outline.nvim',
-            --     cmd = 'SymbolsOutline'
-            -- },
+            'nvim-java/nvim-java',
             'b0o/SchemaStore.nvim',
             {
                 "barreiroleo/ltex_extra.nvim",
@@ -170,22 +151,24 @@ return {
         end,
     },
 
-
-    -- {
-    --     'creativenull/efmls-configs-nvim',
-    --     version = '^v1',
-    --     dependencies = { 'neovim/nvim-lspconfig' },
-    -- },
+    {
+        'stevearc/conform.nvim',
+        config = function()
+            require('config.format')
+        end,
+    },
 
     {
         'https://github.com/mfussenegger/nvim-lint',
-        dependencies = { 'neovim/nvim-lspconfig' },
+        config = function()
+            require('config.linters')
+        end,
     },
 
     {
         'mrcjkb/rustaceanvim',
         lazy = false,
-        version = '^6',
+        version = '*',
     },
 
     {
@@ -204,12 +187,6 @@ return {
     },
 
     {
-        'echasnovski/mini.ai',
-        version = false,
-        opts = {}
-    },
-
-    {
         'danymat/neogen',
         config = function()
             require('neogen').setup {
@@ -218,8 +195,20 @@ return {
         end,
         lazy = true,
         cmd = 'Neogen',
-        dependencies = 'nvim-treesitter'
+        dependencies = 'nvim-treesitter/nvim-treesitter'
     },
+
+    {
+        'RRethy/vim-illuminate',
+        dependencies = 'nvim-treesitter/nvim-treesitter',
+    },
+
+    {
+        'echasnovski/mini.ai',
+        version = false,
+        opts = {}
+    },
+
 
     {
         'mfussenegger/nvim-dap',
@@ -230,7 +219,6 @@ return {
             'theHamsta/nvim-dap-virtual-text',
             'mfussenegger/nvim-dap-python',
             'rcarriga/nvim-dap-ui',
-            'stevearc/conform.nvim',
             'nvim-neotest/nvim-nio',
         },
         config = function()
@@ -268,68 +256,24 @@ return {
         end,
     },
 
-    {
-        "folke/lazydev.nvim",
-        ft = "lua", -- only load on lua files
-        opts = {
-            library = {
-                -- See the configuration section for more details
-                -- Load luvit types when the `vim.uv` word is found
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-            },
-        },
-    },
-
-    -- {
-    --     -- 'hrsh7th/nvim-cmp',
-    --     -- 'yioneko/nvim-cmp',
-    --     -- branch = 'perf-up',
-    --     'iguanacucumber/magazine.nvim',
-    --     name = 'nvim-cmp',
-    --     enabled = (vim.g.completion_framework == globals.CompletionFramework.NvimCmp),
-    --     dependencies = {
-    --         'L3MON4D3/LuaSnip',
-    --         'saadparwaiz1/cmp_luasnip',
-    --         'hrsh7th/cmp-buffer',
-    --         'hrsh7th/cmp-nvim-lsp',
-    --         'hrsh7th/cmp-nvim-lsp-signature-help',
-    --         'petertriho/cmp-git',
-    --         'hrsh7th/cmp-path',
-    --         'rcarriga/cmp-dap',
-    --         'kristijanhusak/vim-dadbod-completion',
-    --         'folke/lazydev.nvim',
-    --     },
-    --     config = function()
-    --         require('config.cmp')
-    --     end
-    -- },
-
-    {
-        'saghen/blink.pairs',
-        dependencies = {
-            'saghen/blink.download',
-        },
-
-        version = '*',
-
-        opts = {
-            highlights = {
-                enabled = false,
-                matchparen = {
-                    enabled = true,
-                },
-            }
-        },
-    },
 
     {
         'saghen/blink.cmp',
-        enabled = (vim.g.completion_framework == globals.CompletionFramework.Blink),
         lazy = false, -- lazy loading handled internally
         dependencies = {
             'rafamadriz/friendly-snippets',
-            'folke/lazydev.nvim',
             'nvim-lua/plenary.nvim',
+            {
+                "folke/lazydev.nvim",
+                ft = "lua", -- only load on lua files
+                opts = {
+                    library = {
+                        -- See the configuration section for more details
+                        -- Load luvit types when the `vim.uv` word is found
+                        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                    },
+                },
+            },
         },
 
         version = '*',
@@ -351,12 +295,6 @@ return {
         end
     },
 
-    -- {
-    --     'cdelledonne/vim-cmake',
-    --     lazy = true,
-    --     ft = 'cmake'
-    -- },
-
     {
         'tpope/vim-dispatch',
         lazy = true,
@@ -365,18 +303,6 @@ return {
 
     {
         'tpope/vim-fugitive',
-    },
-
-    {
-        'tpope/vim-rhubarb',
-        lazy = true,
-        cmd = 'GBrowse'
-    },
-
-    {
-        'junegunn/gv.vim',
-        lazy = true,
-        cmd = 'GV'
     },
 
     {
@@ -396,7 +322,6 @@ return {
 
     {
         "m4xshen/hardtime.nvim",
-        -- dependencies = { "MunifTanjim/nui.nvim" },
         opts = {
             disable_mouse = false,
         },
@@ -431,15 +356,6 @@ return {
         end
     },
 
-    -- { 'vim-test/vim-test' },
-    --
-    -- {
-    --     'dhruvasagar/vim-testify',
-    --     lazy = true,
-    --     ft = { 'vim' },
-    --     cmd = { 'TestifyFile' }
-    -- },
-
     {
         'numToStr/Comment.nvim',
         config = function()
@@ -452,10 +368,5 @@ return {
         config = function()
             require('oil').setup()
         end
-    },
-
-    {
-        'tami5/sqlite.lua',
-        lazy = true
     },
 }
