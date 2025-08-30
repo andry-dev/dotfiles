@@ -146,6 +146,16 @@ vim.lsp.config('texlab', {
     }
 })
 
+vim.lsp.config('tinymist', {
+    settings = {
+        formatterMode = 'typstyle',
+        lint = {
+            enabled = true,
+        }
+
+    }
+})
+
 vim.lsp.config('ltex_plus', {
     on_attach = function(client)
         custom_attach(client)
@@ -327,19 +337,28 @@ vim.lsp.enable({
     'ts_ls',
     'yamlls',
     'jdtls',
+    'tinymist',
 })
 
--- elixir-tools.nvim
-require('elixir').setup({
-    elixirls = {
-        settings = require('elixir.elixirls').settings {
-            dialyzerEnabled = true,
-            fetchDeps = true,
-            enableTestLenses = true,
-            suggestSpecs = true,
-        }
-    },
+vim.lsp.config('expert', {
+    cmd = { 'expert' },
+    root_markers = { 'mix.exs', '.git' },
+    filetypes = { 'elixir', 'eelixir', 'heex' },
 })
+
+vim.lsp.enable('expert')
+
+-- elixir-tools.nvim
+-- require('elixir').setup({
+--     elixirls = {
+--         settings = require('elixir.elixirls').settings {
+--             dialyzerEnabled = true,
+--             fetchDeps = true,
+--             enableTestLenses = true,
+--             suggestSpecs = true,
+--         }
+--     },
+-- })
 
 -- -- Try to disable LSP semantic tokens.
 -- vim.api.nvim_create_autocmd({ "ColorScheme" }, {

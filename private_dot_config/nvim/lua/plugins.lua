@@ -32,14 +32,15 @@ return {
     -- Personal plugin for reacting to system events
     {
         'https://git.sr.ht/~anri/system_events.nvim',
-        dir = '~/prjs/anri/nvim-power-states',
-        dev = true,
+        -- dir = '~/prjs/anri/nvim-power-states',
+        -- dev = true,
         build = 'cargo build --release',
     },
 
     -- Experimental plugin for exposing a 9P interface
     {
         'https://git.sr.ht/~anri/9.nvim',
+        enabled = false,
         dir = '~/prjs/anri/9.nvim',
         dev = true,
         build = 'cargo build --release',
@@ -54,8 +55,8 @@ return {
             -- My colorschemes
             {
                 'andry-dev/nofrils',
-                dir = '~/prjs/anri/nofrils',
-                dev = true,
+                -- dir = '~/prjs/anri/nofrils',
+                -- dev = true,
                 -- lazy = false,
             },
 
@@ -135,6 +136,7 @@ return {
             'ray-x/lsp_signature.nvim',
             {
                 "elixir-tools/elixir-tools.nvim",
+                enabled = false,
                 version = "*",
                 event = { "BufReadPre", "BufNewFile" },
                 dependencies = { 'nvim-lua/plenary.nvim' },
@@ -149,6 +151,15 @@ return {
         config = function()
             require('config.lsp')
         end,
+    },
+
+    {
+        'chomosuke/typst-preview.nvim',
+        ft = 'typst',
+        version = '1.*',
+        config = function()
+            require('typst-preview').setup({})
+        end
     },
 
     {
@@ -204,7 +215,7 @@ return {
     },
 
     {
-        'echasnovski/mini.ai',
+        'nvim-mini/mini.ai',
         version = false,
         opts = {}
     },

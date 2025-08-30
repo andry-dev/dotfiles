@@ -183,45 +183,49 @@ if vim.fn.executable('rg') then
 end
 
 -- Misc functions
-
-local function enableTSHighlight()
-    -- require('nvim-treesitter.configs').commands.TSEnable.run('highlight')
-end
-
-local function disableTSHighlight()
-    -- require('nvim-treesitter.configs').commands.TSDisable.run('highlight')
-end
-
 local function set_pretty_theme()
     require('config.themes').set_pretty_theme()
-    enableTSHighlight()
+    -- vim.treesitter.start()
 end
 
 local function set_default_theme()
     require('config.themes').set_default_theme()
-    disableTSHighlight()
+    -- vim.treesitter.stop()
 end
 
 
 -- Mappings
 
-vim.keymap.set('n', '<C-f>', function()
+---
+---@param mode string|string[]
+---@param key string
+---@param func string|function
+---@param opts? vim.keymap.set.Opts
+local function map(mode, key, func, opts)
+    ---@type vim.keymap.set.Opts
+    local opts = opts or {}
+    local opts = vim.tbl_extend('force', { noremap = true }, opts)
+
+    vim.keymap.set(mode, key, func, opts)
+end
+
+map('n', '<C-f>', function()
     require('fzf-lua').git_files()
 end)
 
-vim.keymap.set('n', '<M-f>', function()
+map('n', '<M-f>', function()
     require('fzf-lua').files()
 end)
 
-vim.keymap.set('n', '<C-s>', function()
+map('n', '<C-s>', function()
     require('fzf-lua').live_grep_native()
 end)
 
-vim.keymap.set('n', '<C-b>', function()
+map('n', '<C-b>', function()
     require('fzf-lua').buffers()
 end)
 
-vim.keymap.set('n', '<C-p>', function()
+map('n', '<C-p>', function()
     require('fzf-lua').files({
         fd_opts = '-t d --exact-depth 2',
         cwd = '~/prjs',
@@ -229,42 +233,41 @@ vim.keymap.set('n', '<C-p>', function()
     })
 end)
 
-vim.keymap.set('n', '<C-h>', '<C-w>h')
-vim.keymap.set('n', '<C-j>', '<C-w>j')
-vim.keymap.set('n', '<C-k>', '<C-w>k')
-vim.keymap.set('n', '<C-l>', '<C-w>l')
-vim.keymap.set('n', 'Q', 'q')
+map('n', '<C-h>', '<C-w>h')
+map('n', '<C-j>', '<C-w>j')
+map('n', '<C-k>', '<C-w>k')
+map('n', '<C-l>', '<C-w>l')
 
-vim.keymap.set('i', '<C-u>', '<Nop>')
+map('i', '<C-u>', '<Nop>')
 
-vim.keymap.set('n', ';', ':')
-vim.keymap.set('n', ':', ';')
+map('n', ';', ':')
+map('n', ':', ';')
 
-vim.keymap.set('n', 'j', 'gj')
-vim.keymap.set('n', 'k', 'gk')
+map('n', 'j', 'gj')
+map('n', 'k', 'gk')
 
-vim.keymap.set('n', '<Left>', ':cprev<CR>')
-vim.keymap.set('n', '<Right>', ':cnext<CR>')
-vim.keymap.set('n', '<Up>', '<Nop>')
-vim.keymap.set('n', '<Down>', '<Nop>')
-vim.keymap.set('n', 'h', '<Nop>')
-vim.keymap.set('n', 'l', '<Nop>')
+map('n', '<Left>', ':cprev<CR>')
+map('n', '<Right>', ':cnext<CR>')
+map('n', '<Up>', '<Nop>')
+map('n', '<Down>', '<Nop>')
+map('n', 'h', '<Nop>')
+map('n', 'l', '<Nop>')
 
-vim.keymap.set('n', 'cw', 'ciw')
+map('n', 'cw', 'ciw')
 
--- vim.keymap.set('i', '(<CR>', '(<CR>)<Esc>O')
--- vim.keymap.set('i', '[<CR>', '[<CR>]<Esc>O')
--- vim.keymap.set('i', '{<CR>', '{<CR>}<Esc>O')
+-- map('i', '(<CR>', '(<CR>)<Esc>O')
+-- map('i', '[<CR>', '[<CR>]<Esc>O')
+-- map('i', '{<CR>', '{<CR>}<Esc>O')
 
-vim.keymap.set('n', '<CR>', function()
+map('n', '<CR>', function()
     vim.cmd [[nohlsearch]]
     return "<CR>"
 end, { expr = true, silent = true })
 
-vim.keymap.set('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
-vim.keymap.set('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
-vim.keymap.set('n', '<Leader>se', ':silent! SetExecutableFlag<CR>')
-vim.keymap.set('n', '<Leader>fm', function()
+map('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
+map('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
+map('n', '<Leader>se', ':silent! SetExecutableFlag<CR>')
+map('n', '<Leader>fm', function()
     local Job = require('plenary.job')
     Job:new {
         command = 'dbus-send',
@@ -279,89 +282,72 @@ vim.keymap.set('n', '<Leader>fm', function()
         }
     }:start()
 end)
-vim.keymap.set('n', '<F2>', ':Make<CR>')
-vim.keymap.set('n', '<F3>', ':noautocmd vim /<FIND>/ **/* <Bar> cfdo %s//<REPLACE>/ce <Bar> wa')
+map('n', '<F2>', ':Make<CR>')
+map('n', '<F3>', ':noautocmd vim /<FIND>/ **/* <Bar> cfdo %s//<REPLACE>/ce <Bar> wa')
 
-vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
+map('t', '<Esc>', [[<C-\><C-n>]])
 
 -- LSP
 
-vim.keymap.set('n', vim.g.anri.keymaps.Diagnostic, vim.diagnostic.open_float)
+map('n', vim.g.anri.keymaps.Diagnostic, vim.diagnostic.open_float)
 
 vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local kmaps = vim.g.anri.keymaps
 
-        vim.keymap.set('n', '<leader>qa', vim.diagnostic.setqflist, { buffer = true })
+        map('n', '<leader>qa', vim.diagnostic.setqflist, { buffer = true })
 
-        vim.keymap.set({ 'v', 'n' }, kmaps.CodeAction, function()
+        map({ 'v', 'n' }, kmaps.CodeAction, function()
             require('fzf-lua').lsp_code_actions()
         end, { buffer = true })
 
-        vim.keymap.set('n', kmaps.Declaration, vim.lsp.buf.declaration, { buffer = true })
-        vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.definition, { buffer = true })
-        vim.keymap.set('n', kmaps.Rename, vim.lsp.buf.rename, { buffer = true })
-        vim.keymap.set('n', kmaps.Hover, vim.lsp.buf.hover, { buffer = true })
-        vim.keymap.set('n', kmaps.Implementation, vim.lsp.buf.implementation, { buffer = true })
-        -- vim.keymap.set('n', kmaps.Definition, vim.lsp.buf.type_definition, { buffer = true })
+        map('n', kmaps.Declaration, vim.lsp.buf.declaration, { buffer = true })
+        map('n', kmaps.Definition, vim.lsp.buf.definition, { buffer = true })
+        map('n', kmaps.Rename, vim.lsp.buf.rename, { buffer = true })
+        map('n', kmaps.Hover, vim.lsp.buf.hover, { buffer = true })
+        map('n', kmaps.Implementation, vim.lsp.buf.implementation, { buffer = true })
+        -- map('n', kmaps.Definition, vim.lsp.buf.type_definition, { buffer = true })
 
-        vim.keymap.set('n', kmaps.References, function()
+        map('n', kmaps.References, function()
             require('fzf-lua').lsp_references()
         end, { buffer = true })
 
-        vim.keymap.set('n', kmaps.DocumentSymbol, function()
+        map('n', kmaps.DocumentSymbol, function()
             require('fzf-lua').lsp_document_symbols()
         end, { buffer = true })
 
-        vim.keymap.set('n', kmaps.WorkspaceSymbol, function()
+        map('n', kmaps.WorkspaceSymbol, function()
             require('fzf-lua').lsp_workspace_symbols()
         end, { buffer = true })
 
-        -- vim.keymap.set('n', kmaps.Declaration, vim.lsp.buf.signature_help)
-        vim.keymap.set('i', '<C-s>', vim.lsp.buf.signature_help, { buffer = true })
+        -- map('n', kmaps.Declaration, vim.lsp.buf.signature_help)
+        map('i', '<C-s>', vim.lsp.buf.signature_help, { buffer = true })
+
+        vim.api.nvim_create_user_command('InlayHintToggle', function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        end, { desc = 'Toggle inlay hints' })
     end
 })
 
 -- vim-test
-vim.keymap.set('n', '<leader>tt', function()
+map('n', '<leader>tt', function()
     require('neotest').run.run()
 end, { silent = true })
 
-vim.keymap.set('n', '<leader>tf', function()
+map('n', '<leader>tf', function()
     require('neotest').run.run(vim.fn.expand('%'))
 end, { silent = true })
 
-vim.keymap.set('n', '<leader>ts', function()
+map('n', '<leader>ts', function()
     require('neotest').summary.toggle()
 end, { silent = true })
 
--- Iron
-vim.keymap.set('x', '<Leader>is', '<Plug>(iron-visual-send)')
-vim.keymap.set('n', '<Leader>is', '<Plug>(iron-send-line)')
-
--- MPD
--- vim.keymap.set('n', '<Leader>mm', function() require('mpd'):status() end)
--- vim.keymap.set('n', '<Leader>mp', function() require('mpd'):toggle() end)
-
--- Commands
-
--- vim.api.nvim_create_user_command('LTeX', function(args)
---     vim.lsp.enable()
--- end, {
---     complete = {
---         'start',
---         'stop',
---     }
--- })
-
 vim.api.nvim_create_user_command('DefaultTheme', function()
-    require('config.themes').set_default_theme()
-    -- disableTSHighlight()
+    set_default_theme()
 end, {})
 
 vim.api.nvim_create_user_command('PrettyTheme', function()
-    require('config.themes').set_pretty_theme()
-    -- enableTSHighlight()
+    set_pretty_theme()
 end, {})
 
 vim.api.nvim_create_user_command('Projects', function()
@@ -370,8 +356,8 @@ end, {})
 
 vim.api.nvim_create_user_command('EditPlugin', function()
     local plugin_path = '~/.local/share/chezmoi/private_dot_config/nvim'
-    require('fzf-lua').files({ cwd = plugin_path })
     vim.cmd.lcd(plugin_path)
+    require('fzf-lua').files({ cwd = plugin_path })
 end, {})
 
 vim.api.nvim_create_user_command('EditDotfiles', function()
@@ -384,24 +370,59 @@ vim.api.nvim_create_user_command('EnableAutoformat', function()
     globals.enable_autoformat(true)
 end, {})
 
-vim.api.nvim_create_user_command("FormatDisable", function(args)
-    if args.bang then
-        -- FormatDisable! will disable formatting just for this buffer
-        vim.b.disable_autoformat = true
-    else
-        vim.g.disable_autoformat = true
-    end
-end, {
-    desc = "Disable autoformat-on-save",
-    bang = true,
-})
+vim.api.nvim_create_user_command('Format',
+    ---@param args vim.api.keyset.create_user_command.command_args
+    function(args)
+        if args.fargs[1] == 'enable' and not args.bang then
+            vim.b.disable_autoformat = false
+        elseif args.fargs[1] == 'enable' and args.bang then
+            vim.g.disable_autoformat = false
+        elseif args.fargs[1] == 'disable' and not args.bang then
+            vim.b.disable_autoformat = true
+        elseif args.fargs[1] == 'disable' and args.bang then
+            vim.g.disable_autoformat = true
+        end
+    end, {
+        nargs = 1,
+        bang = true,
+        desc = 'Controls autoformat on save',
 
-vim.api.nvim_create_user_command("FormatEnable", function()
-    vim.b.disable_autoformat = false
-    vim.g.disable_autoformat = false
-end, {
-    desc = "Re-enable autoformat-on-save",
-})
+        ---@param arglead string
+        ---@param cmdline string
+        ---@param cursorpos number
+        complete = function(arglead, cmdline, cursorpos)
+            local n_params = vim.split(cmdline, ' ')
+
+            if #n_params < 3 then
+                return { "enable", "disable" }
+            else
+                return {}
+            end
+        end
+    })
+
+-- vim.api.nvim_create_user_command("FormatDisable", function(args)
+--     if args.bang then
+--         -- FormatDisable! will disable formatting just for this buffer
+--         vim.b.disable_autoformat = true
+--     else
+--         vim.g.disable_autoformat = true
+--     end
+-- end, {
+--     desc = "Disable autoformat-on-save",
+--     bang = true,
+-- })
+--
+-- vim.api.nvim_create_user_command("FormatEnable", function(args)
+--     if args.bang then
+--         vim.b.disable_autoformat = false
+--     else
+--         vim.g.disable_autoformat = false
+--     end
+-- end, {
+--     desc = "Re-enable autoformat-on-save",
+--     bang = true,
+-- })
 
 
 vim.keymap.set('n', '<F4>', function()

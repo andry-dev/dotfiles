@@ -2,12 +2,20 @@ local globals = require 'globals'
 
 local M = {}
 
-local function format_marker()
-    if not vim.g.disable_autoformat then
-        return ""
-    else
+local function global_format_marker()
+    if vim.g.disable_autoformat then
         return "[F-]"
     end
+
+    return ""
+end
+
+local function local_format_marker()
+    if vim.b.disable_autoformat then
+        return "[f-]"
+    end
+
+    return ""
 end
 
 local function git_head()
@@ -27,7 +35,8 @@ function M.status_line()
         "%h",  -- Help?
         "%m",  -- Modified?
         "%r",  -- RO?
-        format_marker(),
+        global_format_marker(),
+        local_format_marker(),
         "%=",
         git_head() .. " ",
         "%l,%c ", -- Line, Column
