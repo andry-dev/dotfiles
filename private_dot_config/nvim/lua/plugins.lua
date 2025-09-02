@@ -21,13 +21,13 @@ local globals = require('globals')
 
 return {
     -- Personal plugin for lecture-recording
-    {
-        'andry-dev/kyouko.nvim',
-        -- dir = '~/prj/kyouko.nvim',
-        -- dev = true,
-        lazy = true,
-        cmd = 'Kyouko',
-    },
+    -- {
+    --     'andry-dev/kyouko.nvim',
+    --     -- dir = '~/prj/kyouko.nvim',
+    --     -- dev = true,
+    --     lazy = true,
+    --     cmd = 'Kyouko',
+    -- },
 
     -- Personal plugin for reacting to system events
     {
@@ -170,7 +170,7 @@ return {
     },
 
     {
-        'https://github.com/mfussenegger/nvim-lint',
+        'mfussenegger/nvim-lint',
         config = function()
             require('config.linters')
         end,
@@ -209,10 +209,10 @@ return {
         dependencies = 'nvim-treesitter/nvim-treesitter'
     },
 
-    {
-        'RRethy/vim-illuminate',
-        dependencies = 'nvim-treesitter/nvim-treesitter',
-    },
+    -- {
+    --     'RRethy/vim-illuminate',
+    --     dependencies = 'nvim-treesitter/nvim-treesitter',
+    -- },
 
     {
         'nvim-mini/mini.ai',
@@ -238,7 +238,7 @@ return {
     },
 
 
-    { 'prabirshrestha/async.vim' },
+    -- { 'prabirshrestha/async.vim' },
 
     {
         'L3MON4D3/LuaSnip',
@@ -335,6 +335,7 @@ return {
         "m4xshen/hardtime.nvim",
         opts = {
             disable_mouse = false,
+            max_time = 5000,
         },
         event = "BufEnter"
     },
@@ -344,15 +345,12 @@ return {
         dependencies = {
             "nvim-neotest/nvim-nio",
             "nvim-lua/plenary.nvim",
-            "antoinemadec/FixCursorHold.nvim",
             "nvim-treesitter/nvim-treesitter",
             "jfpedroza/neotest-elixir",
             'nvim-neotest/neotest-go',
             'nvim-neotest/neotest-python',
+            'mrcjkb/rustaceanvim',
         },
-        lazy = true,
-        cmd = { 'NeotestFileRun', 'NeotestRun', 'NeotestSummary' },
-        -- ft = {'go'},
         config = function()
             require('neotest').setup({
                 adapters = {
@@ -367,12 +365,12 @@ return {
         end
     },
 
-    {
-        'numToStr/Comment.nvim',
-        config = function()
-            require('config.comment')
-        end
-    },
+    -- {
+    --     'numToStr/Comment.nvim',
+    --     config = function()
+    --         require('config.comment')
+    --     end
+    -- },
 
     {
         'stevearc/oil.nvim',

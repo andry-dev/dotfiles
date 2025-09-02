@@ -74,6 +74,7 @@ require("lazy").setup('plugins', {
         rtp = {
             paths = {
                 base_plugin_path .. 'lua-utils',
+                base_plugin_path .. 'more-highlights',
             }
         }
     },
@@ -152,12 +153,16 @@ vim.o.gdefault = true
 vim.o.undofile = true
 vim.o.hidden = true
 vim.o.spelllang = 'en,it,cjk'
+
 vim.o.listchars = 'tab:> ,nbsp:!,trail:.'
 vim.o.list = true
+
 vim.o.colorcolumn = '80,120'
-vim.o.foldmethod = 'expr'
+vim.o.smartindent = true
+vim.o.foldmethod = 'indent'
 vim.o.foldenable = false
 vim.o.foldlevelstart = 99
+vim.o.foldopen = 'hor,mark,percent,quickfix,search,tag,undo'
 vim.o.cpoptions = table.concat({ vim.o.cpoptions, 'J' })
 vim.o.formatoptions = table.concat({ vim.o.formatoptions, 'p' })
 vim.o.completeopt = 'menu,menuone,noselect'
@@ -175,6 +180,8 @@ if vim.fn.has('unix') == 1 then
 end
 
 vim.o.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
+
+
 vim.opt.formatoptions:append('cro')
 
 if vim.fn.executable('rg') then
@@ -185,12 +192,10 @@ end
 -- Misc functions
 local function set_pretty_theme()
     require('config.themes').set_pretty_theme()
-    -- vim.treesitter.start()
 end
 
 local function set_default_theme()
     require('config.themes').set_default_theme()
-    -- vim.treesitter.stop()
 end
 
 
@@ -203,11 +208,13 @@ end
 ---@param opts? vim.keymap.set.Opts
 local function map(mode, key, func, opts)
     ---@type vim.keymap.set.Opts
-    local opts = opts or {}
-    local opts = vim.tbl_extend('force', { noremap = true }, opts)
+    opts = opts or {}
+    opts = vim.tbl_extend('force', { noremap = true }, opts)
 
     vim.keymap.set(mode, key, func, opts)
 end
+
+-- Io senza questi tre mapping sotto non vivo
 
 map('n', '<C-f>', function()
     require('fzf-lua').git_files()
@@ -240,7 +247,7 @@ map('n', '<C-l>', '<C-w>l')
 
 map('i', '<C-u>', '<Nop>')
 
-map('n', ';', ':')
+map({ 'n', 'v' }, ';', ':')
 map('n', ':', ';')
 
 map('n', 'j', 'gj')
@@ -264,8 +271,8 @@ map('n', '<CR>', function()
     return "<CR>"
 end, { expr = true, silent = true })
 
-map('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
-map('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
+-- map('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
+-- map('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
 map('n', '<Leader>se', ':silent! SetExecutableFlag<CR>')
 map('n', '<Leader>fm', function()
     local Job = require('plenary.job')
@@ -329,7 +336,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 })
 
--- vim-test
 map('n', '<leader>tt', function()
     require('neotest').run.run()
 end, { silent = true })
@@ -424,32 +430,31 @@ vim.api.nvim_create_user_command('Format',
 --     bang = true,
 -- })
 
-
-vim.keymap.set('n', '<F4>', function()
+map('n', '<F4>', function()
     require('dap').continue()
 end)
 
-vim.keymap.set('n', '<F5>', function()
+map('n', '<F5>', function()
     require('dap').step_over()
 end)
 
-vim.keymap.set('n', '<F6>', function()
+map('n', '<F6>', function()
     require('dap').step_into()
 end)
 
-vim.keymap.set('n', '<F7>', function()
+map('n', '<F7>', function()
     require('dap').step_out()
 end)
 
-vim.keymap.set('n', '<Leader>db', function()
+map('n', '<Leader>db', function()
     require('dap').toggle_breakpoint()
 end)
 
-vim.keymap.set('n', '<Leader>dB', function()
+map('n', '<Leader>dB', function()
     require('dap').set_breakpoint(vim.fn.input('When? '))
 end)
 
-vim.keymap.set('n', '<Leader>dr', function()
+map('n', '<Leader>dr', function()
     require('dap').repl_open()
 end)
 

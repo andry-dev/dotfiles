@@ -76,7 +76,9 @@ function default_config:with(new_options)
     return vim.tbl_extend("force", self, new_options)
 end
 
-vim.lsp.inlay_hint.enable()
+vim.lsp.set_log_level("OFF")
+
+-- vim.lsp.inlay_hint.enable()
 
 vim.lsp.config('*', {
     capabilities = default_config.capabilities,
