@@ -74,7 +74,7 @@ require("lazy").setup('plugins', {
         rtp = {
             paths = {
                 base_plugin_path .. 'lua-utils',
-                base_plugin_path .. 'more-highlights',
+                base_plugin_path .. 'focus',
             }
         }
     },
@@ -262,18 +262,12 @@ map('n', 'l', '<Nop>')
 
 map('n', 'cw', 'ciw')
 
--- map('i', '(<CR>', '(<CR>)<Esc>O')
--- map('i', '[<CR>', '[<CR>]<Esc>O')
--- map('i', '{<CR>', '{<CR>}<Esc>O')
-
 map('n', '<CR>', function()
     vim.cmd [[nohlsearch]]
     return "<CR>"
 end, { expr = true, silent = true })
 
--- map('n', '<F1>', ':ExecUnderLine<CR>', { silent = true })
--- map('x', '<F1>', 'normal! :ExecSelection<CR>', { silent = true })
-map('n', '<Leader>se', ':silent! SetExecutableFlag<CR>')
+map('n', '<Leader>se', ':SetExecutableFlag<CR>', { silent = true })
 map('n', '<Leader>fm', function()
     local Job = require('plenary.job')
     Job:new {
@@ -313,7 +307,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         map('n', kmaps.Rename, vim.lsp.buf.rename, { buffer = true })
         map('n', kmaps.Hover, vim.lsp.buf.hover, { buffer = true })
         map('n', kmaps.Implementation, vim.lsp.buf.implementation, { buffer = true })
-        -- map('n', kmaps.Definition, vim.lsp.buf.type_definition, { buffer = true })
 
         map('n', kmaps.References, function()
             require('fzf-lua').lsp_references()
@@ -327,7 +320,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
             require('fzf-lua').lsp_workspace_symbols()
         end, { buffer = true })
 
-        -- map('n', kmaps.Declaration, vim.lsp.buf.signature_help)
         map('i', '<C-s>', vim.lsp.buf.signature_help, { buffer = true })
 
         vim.api.nvim_create_user_command('InlayHintToggle', function()
@@ -347,6 +339,11 @@ end, { silent = true })
 map('n', '<leader>ts', function()
     require('neotest').summary.toggle()
 end, { silent = true })
+
+map('v', '<leader>hr', '<Plug>FocusHL_red')
+map('v', '<leader>hg', '<Plug>FocusHL_green')
+map('v', '<leader>hb', '<Plug>FocusHL_blue')
+map('v', '<leader>hc', '<Plug>FocusHLClear')
 
 vim.api.nvim_create_user_command('DefaultTheme', function()
     set_default_theme()

@@ -62,7 +62,7 @@ return {
 
             -- These color schemes are used for :SetupForScreens and :PrettyTheme
             -- I don't personally use them
-            'navarasu/onedark.nvim',
+            { "EdenEast/nightfox.nvim" }
         },
 
         config = function()
@@ -136,7 +136,7 @@ return {
             'ray-x/lsp_signature.nvim',
             {
                 "elixir-tools/elixir-tools.nvim",
-                enabled = false,
+                enabled = true,
                 version = "*",
                 event = { "BufReadPre", "BufNewFile" },
                 dependencies = { 'nvim-lua/plenary.nvim' },

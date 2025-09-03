@@ -187,14 +187,14 @@ layout {
         // defaulting to 180 (top-to-bottom gradient).
         // You can use any CSS linear-gradient tool on the web to set these up.
         // Changing the color space is also supported, check the wiki for more info.
-        //
+
         active-gradient from="#F7B7F7 " to="#FF6969" angle=45
 
         // You can also color the gradient relative to the entire view
         // of the workspace, rather than relative to just the window itself.
         // To do that, set relative-to="workspace-view".
         //
-        inactive-gradient from="#505050" to="#808080" angle=45 relative-to="workspace-view"
+        inactive-gradient from="#505050" to="#808080" angle=45 // relative-to="workspace-view"
     }
 
     // You can also add a border. It's similar to the focus ring, but always visible.
@@ -251,6 +251,10 @@ layout {
         color "#0007"
     }
 
+    tab-indicator {
+        place-within-column
+    }
+
     // Struts shrink the area occupied by windows, similarly to layer-shell panels.
     // You can think of them as a kind of outer gaps. They are set in logical pixels.
     // Left and right struts will cause the next window to the side to always be visible.
@@ -269,11 +273,11 @@ layout {
 // which may be more convenient to use.
 // See the binds section below for more spawn examples.
 
+spawn-at-startup "fcitx5"
 // spawn-at-startup "waybar"
-spawn-at-startup "~/prjs/other/xwayland-satellite/target/release/xwayland-satellite"
+// spawn-at-startup "~/prjs/other/xwayland-satellite/target/release/xwayland-satellite"
 
 environment {
-    DISPLAY ":0"
     ELECTRON_OZONE_PLATFORM_HINT "auto"
 }
 

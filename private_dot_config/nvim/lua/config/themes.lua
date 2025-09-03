@@ -24,18 +24,31 @@ local themes = {
 
     [THEME_KIND.PRETTY] = {
         set_dark_mode = function()
-            require('onedark').setup {
-                style = 'dark'
-            }
+            vim.cmd.colorscheme("duskfox")
 
-            vim.cmd.colorscheme("onedark")
+            vim.api.nvim_set_hl(0, 'FocusHL_red', {
+                bg = '#602020'
+            })
+            vim.api.nvim_set_hl(0, 'FocusHL_green', {
+                bg = '#206020'
+            })
+            vim.api.nvim_set_hl(0, 'FocusHL_blue', {
+                bg = '#202060'
+            })
         end,
-        set_light_mode = function()
-            require('onedark').setup {
-                style = 'light'
-            }
 
-            vim.cmd.colorscheme("onedark")
+        set_light_mode = function()
+            vim.cmd.colorscheme("dawnfox")
+
+            vim.api.nvim_set_hl(0, 'FocusHL_red', {
+                bg = '#FEE0E0'
+            })
+            vim.api.nvim_set_hl(0, 'FocusHL_green', {
+                bg = '#E0FEE0'
+            })
+            vim.api.nvim_set_hl(0, 'FocusHL_blue', {
+                bg = '#E0E0FE'
+            })
         end,
     }
 }
