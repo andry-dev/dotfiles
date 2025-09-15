@@ -122,10 +122,15 @@ if vim.g.neovide then
     vim.g.neovide_cursor_animate_command_line = false
     vim.g.neovide_scroll_animation_far_lines = 0
     vim.g.neovide_scroll_animation_length = 0
+    vim.g.neovide_floating_shadow = false
+    vim.g.neovide_floating_blur_amount_x = 0.0
+    vim.g.neovide_floating_blur_amount_y = 0.0
+
 
     vim.g.neovide_refresh_rate_idle = 5
 
-    vim.o.guifont = "Pragmasevka Nerd Font:h14"
+    vim.o.guifont = "Pragmasevka Nerd Font:h14:#e-subpixelantialias"
+    -- vim.o.guifont = "Terminess Nerd Font:h14"
     if not vim.g.prefers_energy_efficiency then
         vim.g.neovide_refresh_rate = 144
     end

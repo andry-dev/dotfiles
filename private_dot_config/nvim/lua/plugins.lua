@@ -136,7 +136,7 @@ return {
             'ray-x/lsp_signature.nvim',
             {
                 "elixir-tools/elixir-tools.nvim",
-                enabled = true,
+                enabled = false,
                 version = "*",
                 event = { "BufReadPre", "BufNewFile" },
                 dependencies = { 'nvim-lua/plenary.nvim' },
@@ -152,6 +152,8 @@ return {
             require('config.lsp')
         end,
     },
+
+    { "eraserhd/parinfer-rust", build = "cargo build --release" },
 
     {
         'chomosuke/typst-preview.nvim',

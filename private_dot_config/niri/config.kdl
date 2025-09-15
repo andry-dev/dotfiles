@@ -56,11 +56,11 @@ input {
     }
 
     // Uncomment this to make the mouse warp to the center of newly focused windows.
-    // warp-mouse-to-focus
+    warp-mouse-to-focus
 
     // Focus windows and outputs automatically when moving the mouse into them.
     // Setting max-scroll-amount="0%" makes it work only on windows already fully on screen.
-    // focus-follows-mouse max-scroll-amount="0%"
+    focus-follows-mouse max-scroll-amount="5%"
 }
 
 // You can configure outputs by their name, which you can find
@@ -311,7 +311,6 @@ animations {
 // Find more information on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
 
-
 window-rule {
     geometry-corner-radius 4
     clip-to-geometry true
@@ -363,11 +362,38 @@ window-rule {
     block-out-from "screencast"
 }
 
+window-rule {
+    match app-id=r#"^net\.thunderbird\.Thunderbird$"#
+    match app-id=r#"^org\.telegram\.desktop$"#
+
+    default-column-display "tabbed"
+}
+
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
 window-rule {
     match is-floating=false
     tiled-state true
+}
+
+window-rule {
+    match is-floating=true
+
+    shadow {
+        on
+    }
+}
+
+// Scratch workspace hack
+workspace "scratch" { }
+
+window-rule {
+    match app-id="dog.unix.cantata.Cantata"
+
+    open-floating true
+    default-floating-position x=200 y=0 relative-to="left"
+    default-column-width  { proportion 0.5; }
+    default-window-height { proportion 0.5; }
 }
 
 binds {
@@ -389,6 +415,8 @@ binds {
     Mod+T hotkey-overlay-title="Open a Terminal" { spawn "wezterm"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+
+    Mod+Shift+M { spawn "niri-scratch" "-i" "dog.unix.cantata.Cantata" "-s" "scratch" "flatpak run dog.unix.cantata.Cantata"; }
 
     // You can also use a shell. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument in the end.
@@ -627,4 +655,5 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+
 }

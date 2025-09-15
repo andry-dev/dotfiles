@@ -4,7 +4,7 @@ After=graphical-session.target
 Requisite=graphical-session.target
 
 [Service]
-ExecStart=/usr/bin/swaybg -m fill -i "%h/Pictures/Wallpapers/ca4937201e3186856086689349d830c4.jpg"
+ExecStart=/usr/bin/swaybg -m fill -i "%h/Pictures/Wallpapers/oneshot-library.jpg"
 Restart=on-failure
 
 [Install]

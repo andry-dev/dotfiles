@@ -116,17 +116,21 @@ local device_settings = {
 }
 
 return {
-    color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
-
     color_schemes = {
         ['nofrils_acme'] = acme_colors,
         ['nofrils_dark'] = dark_colors,
         -- ['nofrils_light'] = light_colors,
     },
 
+    color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
+
+
+    freetype_load_target = 'Light',
+    freetype_render_target = 'HorizontalLcd',
+
     font = wezterm.font {
         family = 'Pragmasevka',
-        weight = 'Regular',
+        -- weight = 'Regular',
         -- stretch = 'Expanded',
         harfbuzz_features = {
             -- != == >= <=
@@ -137,6 +141,8 @@ return {
         },
     },
 
+    line_height = 0.90,
+
     use_resize_increments = true,
 
     window_padding = {
@@ -146,6 +152,7 @@ return {
         bottom = 0,
     },
 
+
     enable_wayland = true,
 
     window_background_opacity = 1,
@@ -153,6 +160,8 @@ return {
     font_size = device_settings.font_size,
 
     max_fps = 144,
+
+    animation_fps = 1,
 
     front_end = 'WebGpu',
 

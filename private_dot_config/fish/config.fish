@@ -1,7 +1,6 @@
 if status is-interactive
     alias ls='ls --color=never'
     alias ll='ls -lah --color=never'
-    # alias cargo='cargo --color=never'
     alias rsync='rsync --progress -r'
     alias gs='git status'
     alias gcm='git commit'
@@ -12,6 +11,10 @@ if status is-interactive
     alias gps='git push'
     alias mkdir='mkdir -p'
     alias pstop='podman_stop'
+    alias j='journalctl -efu'
+    alias ju='journalctl --user -efu'
+    alias sctlu='systemctl --user'
+    alias sctl='systemctl'
 
     alias sduo='sudo'
     alias suod='sudo'

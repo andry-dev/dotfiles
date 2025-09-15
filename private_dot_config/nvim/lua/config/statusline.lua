@@ -1,5 +1,3 @@
-local globals = require 'globals'
-
 local M = {}
 
 local function global_format_marker()
@@ -10,13 +8,7 @@ local function global_format_marker()
     return ""
 end
 
-local function local_format_marker()
-    if vim.b.disable_autoformat then
-        return "[f-]"
-    end
-
-    return ""
-end
+local local_format_marker = [[%{% exists('b:disable_autoformat') ? (b:disable_autoformat ? '[f-]' : '') : '' %}]]
 
 local function git_head()
     local head = vim.call("FugitiveHead")
@@ -28,19 +20,37 @@ local function git_head()
     end
 end
 
+local diagnostics = (function()
+    if vim.fn.has('nvim-0.12') == 1 then
+        return [[%(%{luaeval('(package.loaded[''vim.diagnostic''] and vim.diagnostic.status()) or '''' ')} %)]]
+    else
+        return ''
+    end
+end)()
+
+
+local ruler = [[%{% &ruler ? ( &rulerformat == '' ? '%-14.(%l,%c%V%) %P' : &rulerformat ) : '' %}]]
+
+local busy = (function ()
+    if vim.fn.has('nvim-0.12') == 1 then
+       return [[%{% &busy > 0 ? '◐ ' : '' %}]]
+    else
+        return ''
+    end
+end)()
+
+-- %<%f %h%w%m%r %=%{% &showcmdloc == 'statusline' ? '%-10.S ' : '' %}%{% exists('b:keymap_name') ? '<'..b:keymap_name..'> ' : '' %}%{% &busy > 0 ? '◐ ' : '' %}%(%{luaeval('(package.loaded[''vim.diagnostic''] and vim.diagnostic.status()) or '''' ')} %)%{% &ruler ? ( &rulerformat == '' ? '%-14.(%l,%c%V%) %P' : &rulerformat ) : '' %}
+
 function M.status_line()
     return table.concat {
-        "%<",
-        "%f ", -- Current file
-        "%h",  -- Help?
-        "%m",  -- Modified?
-        "%r",  -- RO?
+        "%<%f %h%w%m%r",
         global_format_marker(),
-        local_format_marker(),
+        local_format_marker,
         "%=",
         git_head() .. " ",
-        "%l,%c ", -- Line, Column
-        "%P",
+        busy,
+        diagnostics,
+        ruler,
     }
 end
 
