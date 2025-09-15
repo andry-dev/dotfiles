@@ -55,9 +55,8 @@ return {
             -- My colorschemes
             {
                 'andry-dev/nofrils',
-                -- dir = '~/prjs/anri/nofrils',
-                -- dev = true,
-                -- lazy = false,
+                dev = true,
+                lazy = false,
             },
 
             -- These color schemes are used for :SetupForScreens and :PrettyTheme

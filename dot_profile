@@ -29,7 +29,10 @@ export ZK_NOTEBOOK_DIR="$HOME/Sync/Notes"
 
 [ -f "$HOME/.config/m/$(hostname)/.profile" ] && . "$HOME/.config/m/$(hostname)/.profile"
 
-export PLAN9="/home/andry/prjs/other/plan9port"
-export PATH="$PATH:$PLAN9/bin"
+if [ -d "$HOME/prjs/other/plan9port" ];
+    export PLAN9="/home/andry/prjs/other/plan9port"
+    export PATH="$PATH:$PLAN9/bin"
+fi
+
 
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"

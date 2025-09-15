@@ -60,6 +60,4 @@ eval "$(direnv hook zsh)"
 
 [ -f "$HOME/.acme.sh/acme.sh.env" ] && . "$HOME/.acme.sh/acme.sh.env"
 
-
-. "$HOME/.local/share/../bin/env"
 eval "$(mise activate zsh)"

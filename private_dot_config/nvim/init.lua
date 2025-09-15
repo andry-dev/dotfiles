@@ -66,7 +66,7 @@ local base_plugin_path = vim.fn.stdpath('config') .. '/pack/andry/start/'
 require("lazy").setup('plugins', {
     dev = {
         path = '~/prj/anri',
-        patterns = { 'andry-dev' },
+        patterns = { 'andry-dev', 'anri' },
         fallback = true,
     },
 
