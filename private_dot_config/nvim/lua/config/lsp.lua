@@ -22,7 +22,7 @@ if vim.g.mason_enabled then
         ensure_installed = { "zk", },
         automatic_installation = {
             -- exclude = exclude_existing(),
-            exclude = { "rust_analyzer", "beancount", "ansible-lint", "elixir-ls" }
+            exclude = { "rust_analyzer", "beancount", "ansible-lint", "elixir-ls", "expert" }
         },
     })
 
@@ -46,10 +46,6 @@ if vim.g.mason_enabled then
 end
 
 local globals = require('globals')
-
-
--- nvim-java/nvim-java
-require('java').setup()
 
 
 local custom_attach = function(client)
@@ -342,26 +338,17 @@ vim.lsp.enable({
     'tinymist',
 })
 
--- vim.lsp.config('expert', {
---     cmd = { 'expert' },
---     root_markers = { 'mix.exs', '.git' },
---     filetypes = { 'elixir', 'eelixir', 'heex' },
--- })
-
-
 -- elixir-tools.nvim
--- require('elixir').setup({
---     elixirls = {
---         settings = require('elixir.elixirls').settings {
---             dialyzerEnabled = true,
---             fetchDeps = true,
---             enableTestLenses = true,
---             suggestSpecs = true,
---         }
---     },
--- })
-
-vim.lsp.enable('lexical')
+require('elixir').setup({
+    elixirls = {
+        settings = require('elixir.elixirls').settings {
+            dialyzerEnabled = true,
+            fetchDeps = true,
+            enableTestLenses = true,
+            suggestSpecs = true,
+        }
+    },
+})
 
 -- -- Try to disable LSP semantic tokens.
 -- vim.api.nvim_create_autocmd({ "ColorScheme" }, {

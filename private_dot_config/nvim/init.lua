@@ -17,6 +17,7 @@ vim.g.mapleader = ','
     vim.g.system_events = {
         listeners = {
             power = true,
+            colors = true,
         },
 
         sleep_delay = 1,
@@ -44,6 +45,14 @@ vim.g.mapleader = ','
             vim.g.is_discharging = (event.device_type == types.ACDevice.Battery) and
                 (event.status == types.BatteryStatus.Discharging)
         end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'AccentChanged',
+        group = group,
+        callback = function(data)
+            local event = data.data
+        end
     })
 end)()
 

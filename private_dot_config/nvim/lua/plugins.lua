@@ -95,36 +95,35 @@ return {
         }
     },
 
-    {
-        "rachartier/tiny-inline-diagnostic.nvim",
-        event = "VeryLazy",
-        priority = 1000, -- needs to be loaded in first
-        config = function()
-            require('tiny-inline-diagnostic').setup({
-                preset = "simple",
-
-                options = {
-                    multiple_diag_under_cursor = true,
-                    show_all_diags_on_cursorline = true,
-
-                    -- NOTE: Hack to allow diagnostics to fire
-                    --       for nvim-lint and similar.
-                    overwrite_events = { 'DiagnosticChanged' },
-
-                    multilines = {
-                        enabled = true,
-                        always_show = true,
-                    },
-                },
-
-
-                signs = {
-                    diag = "●",
-                },
-            })
-            -- vim.diagnostic.config({ virtual_text = false })
-        end
-    },
+    -- {
+    --     "rachartier/tiny-inline-diagnostic.nvim",
+    --     event = "VeryLazy",
+    --     priority = 1000, -- needs to be loaded in first
+    --     config = function()
+    --         require('tiny-inline-diagnostic').setup({
+    --             preset = "simple",
+    --
+    --             options = {
+    --                 multiple_diag_under_cursor = true,
+    --                 show_all_diags_on_cursorline = true,
+    --
+    --                 -- NOTE: Hack to allow diagnostics to fire
+    --                 --       for nvim-lint and similar.
+    --                 overwrite_events = { 'DiagnosticChanged' },
+    --
+    --                 multilines = {
+    --                     enabled = true,
+    --                     always_show = true,
+    --                 },
+    --             },
+    --
+    --
+    --             signs = {
+    --                 diag = "●",
+    --             },
+    --         })
+    --     end
+    -- },
 
     {
         'neovim/nvim-lspconfig',
@@ -133,14 +132,6 @@ return {
             'williamboman/mason-lspconfig.nvim',
             'WhoIsSethDaniel/mason-tool-installer.nvim',
             'ray-x/lsp_signature.nvim',
-            {
-                "elixir-tools/elixir-tools.nvim",
-                enabled = false,
-                version = "*",
-                event = { "BufReadPre", "BufNewFile" },
-                dependencies = { 'nvim-lua/plenary.nvim' },
-            },
-            'nvim-java/nvim-java',
             'b0o/SchemaStore.nvim',
             {
                 "barreiroleo/ltex_extra.nvim",
@@ -150,6 +141,28 @@ return {
         config = function()
             require('config.lsp')
         end,
+    },
+
+    {
+        'nvim-java/nvim-java',
+        ft = 'java',
+        config = function()
+            require('java').setup()
+        end,
+        dependencies = {
+            'neovim/nvim-lspconfig'
+        },
+    },
+
+    {
+        "elixir-tools/elixir-tools.nvim",
+        enabled = true,
+        version = "*",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+            'neovim/nvim-lspconfig',
+            'nvim-lua/plenary.nvim'
+        },
     },
 
     { "eraserhd/parinfer-rust", build = "cargo build --release" },

@@ -34,3 +34,4 @@ end
 
 set -g fish_history ""
 set -g EDITOR nvim
+set -g MIX_OS_DEPS_COMPILE_PARTITION_COUNT 5

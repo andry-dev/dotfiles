@@ -3,7 +3,6 @@ local languages = {
     "c",
     "cmake",
     "comment",
-    "cpp",
     "css",
     "cuda",
     "dockerfile",
