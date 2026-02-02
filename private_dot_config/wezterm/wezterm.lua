@@ -78,7 +78,7 @@ local function select_default_font_size()
     if hn == 'kosuzu' then
         return 18
     elseif hn == 'aya' then
-        return 14
+        return 13
     elseif hn == 'shiki' then
         return 24
     end

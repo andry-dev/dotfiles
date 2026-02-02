@@ -9,8 +9,6 @@ local languages = {
     "elixir",
     "gitcommit",
     "html",
-    "latex",
-    "bibtex",
     "lua",
     "markdown",
     "python",
@@ -21,7 +19,8 @@ local languages = {
 
 require('nvim-treesitter').install(languages)
 
-local ft_languages = vim.tbl_extend('force', languages, { "tex" })
+-- local ft_languages = vim.tbl_extend('force', languages, {})
+local ft_languages = languages
 
 local function query_status(lang, query_group)
     local tsq = vim.treesitter.query
@@ -43,18 +42,18 @@ vim.api.nvim_create_autocmd('FileType', {
             return
         end
 
-        if query_status(lang, 'highlights') then
-            vim.treesitter.start()
-        end
+        -- if query_status(lang, 'highlights') then
+        --     vim.treesitter.start()
+        -- end
 
         if query_status(lang, 'folds') then
             vim.wo.foldmethod = 'expr'
             vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
         end
 
-        if query_status(lang, 'indents') then
-            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end
+        -- if query_status(lang, 'indents') then
+        --     vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        -- end
     end,
 })
 

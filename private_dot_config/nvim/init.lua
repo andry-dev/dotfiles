@@ -171,6 +171,7 @@ vim.o.spelllang = 'en,it,cjk'
 vim.o.listchars = 'tab:> ,nbsp:!,trail:.'
 vim.o.list = true
 
+vim.o.cursorline = true
 vim.o.colorcolumn = '80,120'
 vim.o.smartindent = true
 vim.o.foldmethod = 'indent'
@@ -178,8 +179,9 @@ vim.o.foldenable = false
 vim.o.foldlevelstart = 99
 vim.o.foldopen = 'hor,mark,percent,quickfix,search,tag,undo'
 vim.o.cpoptions = table.concat({ vim.o.cpoptions, 'J' })
-vim.o.formatoptions = table.concat({ vim.o.formatoptions, 'p' })
 vim.o.completeopt = 'menu,menuone,noselect'
+vim.o.textwidth = 119
+vim.opt.formatoptions:append({ 'pro' })
 vim.o.ts = 4
 vim.o.sts = 4
 vim.o.sw = 4
@@ -187,6 +189,7 @@ vim.o.expandtab = true
 vim.o.updatetime = 1000
 vim.o.mouse = 'a'
 vim.go.mouse = 'a'
+
 
 if vim.fn.has('unix') == 1 then
     vim.opt.dictionary:append('/usr/share/hunspell/en_GB.dic')
@@ -196,7 +199,6 @@ end
 vim.o.statusline = [[%!luaeval("require 'config.statusline'.status_line()")]]
 
 
-vim.opt.formatoptions:append('cro')
 
 if vim.fn.executable('rg') then
     vim.o.grepprg = "rg --vimgrep --no-heading --smart-case --no-ignore-vcs --ignore-file ~/.config/.ignore"

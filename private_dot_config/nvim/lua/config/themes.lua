@@ -79,9 +79,9 @@ local theme_config_shim = {
 local function setup_theming()
     vim.opt.termguicolors = true
 
-    -- vim.g.nofrils_heavylinenumbers = 0
+    vim.g.nofrils_heavylinenumbers = 0
     vim.g.nofrils_heavycomments = 1
-    -- vim.g.nofrils_strbackgrounds = 0
+    vim.g.nofrils_strbackgrounds = 1
     -- vim.g.gruvbox_contrast_light = 'hard'
     -- vim.g.gruvbox_contrast_dark = 'hard'
 end

@@ -9,7 +9,7 @@
     defaultBranch = main
 
 [pull]
-    rebase = true
+    ff = only
 
 [alias]
     fpush = push --force-with-lease

@@ -41,11 +41,16 @@ if vim.g.mason_enabled then
             "ruff",
             "sqruff",
             "shfmt",
+            "kdlfmt",
         },
     })
 end
 
 local globals = require('globals')
+
+
+-- nvim-java/nvim-java
+-- require('java').setup()
 
 
 local custom_attach = function(client)
@@ -330,17 +335,19 @@ vim.lsp.enable({
     'jsonls',
     'nil_ls',
     'sqlls',
-    'systemd_ls',
+    'systemd_lsp',
     'texlab',
     'ts_ls',
     'yamlls',
     'jdtls',
     'tinymist',
+    'packet-generator'
 })
 
 -- elixir-tools.nvim
 require('elixir').setup({
     elixirls = {
+        cmd = 'elixir-ls',
         settings = require('elixir.elixirls').settings {
             dialyzerEnabled = true,
             fetchDeps = true,
@@ -349,6 +356,8 @@ require('elixir').setup({
         }
     },
 })
+
+-- vim.lsp.enable('lexical')
 
 -- -- Try to disable LSP semantic tokens.
 -- vim.api.nvim_create_autocmd({ "ColorScheme" }, {

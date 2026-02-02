@@ -122,6 +122,7 @@ return {
     --                 diag = "●",
     --             },
     --         })
+    --         -- vim.diagnostic.config({ virtual_text = false })
     --     end
     -- },
 
@@ -132,6 +133,14 @@ return {
             'williamboman/mason-lspconfig.nvim',
             'WhoIsSethDaniel/mason-tool-installer.nvim',
             'ray-x/lsp_signature.nvim',
+            {
+                "elixir-tools/elixir-tools.nvim",
+                enabled = true,
+                version = "*",
+                event = { "BufReadPre", "BufNewFile" },
+                dependencies = { 'nvim-lua/plenary.nvim' },
+            },
+            'nvim-java/nvim-java',
             'b0o/SchemaStore.nvim',
             {
                 "barreiroleo/ltex_extra.nvim",
@@ -144,25 +153,16 @@ return {
     },
 
     {
-        'nvim-java/nvim-java',
-        ft = 'java',
+        'lervag/vimtex',
         config = function()
-            require('java').setup()
-        end,
-        dependencies = {
-            'neovim/nvim-lspconfig'
-        },
-    },
+            -- TexLab provides both compilation and completion
+            vim.g.vimtex_compiler_enabled = 0
+            vim.g.vimtex_complete_enabled = 0
 
-    {
-        "elixir-tools/elixir-tools.nvim",
-        enabled = true,
-        version = "*",
-        event = { "BufReadPre", "BufNewFile" },
-        dependencies = {
-            'neovim/nvim-lspconfig',
-            'nvim-lua/plenary.nvim'
-        },
+            vim.keymap.set("n", "<localleader>lt", function()
+                return require("vimtex.fzf-lua").run()
+            end)
+        end
     },
 
     { "eraserhd/parinfer-rust", build = "cargo build --release" },

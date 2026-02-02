@@ -2,14 +2,14 @@
 # VERSION: 3.0
 SETUVAR EDITOR:nvim
 SETUVAR __fish_initialized:3800
-SETUVAR fish_color_autosuggestion:blue
+SETUVAR fish_color_autosuggestion:brblack
 SETUVAR fish_color_cancel:\x1d
 SETUVAR fish_color_command:\x1d
-SETUVAR fish_color_comment:yellow
+SETUVAR fish_color_comment:\x1d
 SETUVAR fish_color_cwd:normal
 SETUVAR fish_color_cwd_root:normal
 SETUVAR fish_color_end:\x1d
-SETUVAR fish_color_error:red
+SETUVAR fish_color_error:\x1d
 SETUVAR fish_color_escape:\x1d
 SETUVAR fish_color_history_current:\x1d
 SETUVAR fish_color_host:normal
@@ -31,8 +31,8 @@ SETUVAR fish_history:
 SETUVAR fish_key_bindings:fish_default_key_bindings
 SETUVAR fish_pager_color_background:\x1d
 SETUVAR fish_pager_color_completion:normal
-SETUVAR fish_pager_color_description:\x2d\x2ddim
-SETUVAR fish_pager_color_prefix:\x2d\x2dunderline
+SETUVAR fish_pager_color_description:brblack
+SETUVAR fish_pager_color_prefix:\x2d\x2dunderline\x3dsingle
 SETUVAR fish_pager_color_progress:brblack
 SETUVAR fish_pager_color_secondary_background:\x1d
 SETUVAR fish_pager_color_secondary_completion:\x1d

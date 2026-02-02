@@ -83,7 +83,6 @@ output "eDP-1" {
 
     // You can use integer or fractional scale, for example use 1.5 for 150% scale.
     scale 1.0
-    variable-refresh-rate on-demand=true
 
     // Transform allows to rotate the output counter-clockwise, valid values are:
     // normal, 90, 180, 270, flipped, flipped-90, flipped-180 and flipped-270.
@@ -104,7 +103,18 @@ output "eDP-1" {
 output "HP Inc. HP 727pk CN4421237X" {
     mode "3840x2160@60.000"
     position x=-2560 y=0
-    variable-refresh-rate
+}
+
+output "Dell Inc. DELL U2724D H5B3L04" {
+    mode "2560x1440@120.000"
+    position x=0 y=-1440
+}
+
+output "Eizo Nanao Corporation EV2736W 0x03C034A2" {
+    mode "1920x1200@59.950"
+    // position x=960 y=-1200
+    position x=0 y=-1200
+    scale 1.0
 }
 
 output "GIGA-BYTE TECHNOLOGY CO., LTD. Gigabyte M32U 0x01010101" {
@@ -439,10 +449,13 @@ binds {
 
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"; }
     XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+    XF86AudioPlay     allow-when-locked=true { spawn "mpc" "toggle"; }
+    XF86AudioNext     allow-when-locked=true { spawn "mpc" "next"; }
+    XF86AudioPrev     allow-when-locked=true { spawn "mpc" "prev"; }
 
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,
