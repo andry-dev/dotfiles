@@ -17,7 +17,6 @@ vim.g.mapleader = ','
     vim.g.system_events = {
         listeners = {
             power = true,
-            colors = true,
         },
 
         sleep_delay = 1,
@@ -46,14 +45,6 @@ vim.g.mapleader = ','
                 (event.status == types.BatteryStatus.Discharging)
         end,
     })
-
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'AccentChanged',
-        group = group,
-        callback = function(data)
-            local event = data.data
-        end
-    })
 end)()
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -75,7 +66,7 @@ local base_plugin_path = vim.fn.stdpath('config') .. '/pack/andry/start/'
 require("lazy").setup('plugins', {
     dev = {
         path = '~/prj/anri',
-        patterns = { 'andry-dev', 'anri' },
+        patterns = { 'andry-dev' },
         fallback = true,
     },
 

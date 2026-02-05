@@ -59,7 +59,34 @@ local dark_colors = {
         'lch(92.5% 20 25)',
         'lch(97.5% 20 25)',
     },
+
+    -- ansi = {
+    --     'lch(60.0% 0 0)', -- Black
+    --     'lch(65.0% 0 0)', -- Red
+    --     'lch(70.0% 0 0)',
+    --     'lch(75.0% 0 0)',
+    --     'lch(80.0% 0 0)',
+    --     'lch(85.0% 0 0)',
+    --     'lch(90.0% 0 0)',
+    --     'lch(95.0% 0 0)', -- White
+    -- },
+    --
+    -- brights = {
+    --     'lch(62.5% 0 0)', -- Black
+    --     'lch(67.5% 0 0)', -- Red
+    --     'lch(72.5% 0 0)',
+    --     'lch(77.5% 0 0)',
+    --     'lch(82.5% 0 0)',
+    --     'lch(87.5% 0 0)',
+    --     'lch(92.5% 0 0)',
+    --     'lch(97.5% 0 0)', -- White
+    -- },
+
 }
+
+local function get_hostname()
+    return wezterm.hostname()
+end
 
 local function scheme_for_appearance(appearance)
     -- if true then
@@ -74,11 +101,11 @@ local function scheme_for_appearance(appearance)
 end
 
 local function select_default_font_size()
-    local hn = wezterm.hostname()
+    local hn = get_hostname()
     if hn == 'kosuzu' then
         return 18
     elseif hn == 'aya' then
-        return 13
+        return 12
     elseif hn == 'shiki' then
         return 24
     end
@@ -92,6 +119,7 @@ return {
     color_schemes = {
         ['nofrils_acme'] = acme_colors,
         ['nofrils_dark'] = dark_colors,
+        -- ['nofrils_light'] = light_colors,
     },
 
     color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),

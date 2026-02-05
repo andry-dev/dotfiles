@@ -22,7 +22,7 @@ if vim.g.mason_enabled then
         ensure_installed = { "zk", },
         automatic_installation = {
             -- exclude = exclude_existing(),
-            exclude = { "rust_analyzer", "beancount", "ansible-lint", "elixir-ls", "expert" }
+            exclude = { "rust_analyzer", "beancount", "ansible-lint", "elixir-ls" }
         },
     })
 
@@ -343,6 +343,13 @@ vim.lsp.enable({
     'tinymist',
     'packet-generator'
 })
+
+-- vim.lsp.config('expert', {
+--     cmd = { 'expert' },
+--     root_markers = { 'mix.exs', '.git' },
+--     filetypes = { 'elixir', 'eelixir', 'heex' },
+-- })
+
 
 -- elixir-tools.nvim
 require('elixir').setup({
