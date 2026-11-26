@@ -65,8 +65,8 @@ vim.pack.add({
 
     --- FS
     -- 'https://github.com/stevearc/oil.nvim',
-    'https://git.barrettruth.com/barrettruth/canola.nvim',
-    -- 'https://github.com/barrettruth/canola.nvim',
+    -- 'https://git.barrettruth.com/barrettruth/canola.nvim',
+    'https://github.com/barrettruth/canola.nvim',
     'https://github.com/malewicz1337/oil-git.nvim',
 
     --- Git
