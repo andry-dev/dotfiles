@@ -105,7 +105,7 @@ local function select_default_font_size()
     if hn == 'kosuzu' then
         return 18
     elseif hn == 'aya' then
-        return 12
+        return 11
     elseif hn == 'shiki' then
         return 24
     end
@@ -130,6 +130,7 @@ return {
 
     font = wezterm.font {
         family = 'Pragmasevka',
+        -- family = 'Ioskeley Mono',
         -- weight = 'Regular',
         -- stretch = 'Expanded',
         harfbuzz_features = {

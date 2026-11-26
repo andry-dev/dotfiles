@@ -11,5 +11,14 @@
 [pull]
     ff = only
 
+[submodule]
+    recurse = true
+
+[sendemail]
+    annotate = yes
+
+[format]
+    signOff = yes
+
 [alias]
     fpush = push --force-with-lease

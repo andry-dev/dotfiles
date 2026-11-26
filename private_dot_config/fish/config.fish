@@ -34,4 +34,21 @@ end
 
 set -g fish_history ""
 set -g EDITOR nvim
-set -g MIX_OS_DEPS_COMPILE_PARTITION_COUNT 5
+
+# opencode
+fish_add_path /home/andry/.opencode/bin
+# >>> kache test runner >>>
+if test -z "$CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER"; set -gx CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER 'kache test-runner'; else; set -gx CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER $CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER; end
+# <<< kache test runner <<<
+# >>> kache compiler cache >>>
+if test "$PATH[1]" != '/home/andry/.local/lib/kache/shims'
+    set -gx PATH '/home/andry/.local/lib/kache/shims' $PATH
+end
+# <<< kache compiler cache <<<
+
+# >>> mamba initialize >>>
+# !! Contents within this block are managed by 'mamba shell init' !!
+set -gx MAMBA_EXE "/home/andry/miniforge3/bin/mamba"
+set -gx MAMBA_ROOT_PREFIX "/home/andry/.local/share/mamba"
+$MAMBA_EXE shell hook --shell fish --root-prefix $MAMBA_ROOT_PREFIX | source
+# <<< mamba initialize <<<

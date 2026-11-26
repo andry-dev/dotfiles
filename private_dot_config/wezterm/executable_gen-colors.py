@@ -44,13 +44,24 @@ def gen_colors_rgb(start: int, step: float):
         lch = spectra.lch(start + i * step, CHROMA, HUE)
         print(f'let g:terminal_color_{i} = "{lch.hexcode}"')
 
+def gen_colors_kitty_rgb(start: int, step: float):
+    for i in range(0, COLORS, 2):
+        lch = spectra.lch(start + i * step, CHROMA, HUE)
+        print(f'color{i} {lch.hexcode}')
+
+    for i in range(1, COLORS, 2):
+        lch = spectra.lch(start + i * step, CHROMA, HUE)
+        print(f'color{i} {lch.hexcode}')
+
 print(f'step: {LIGHT_STEP}\n')
 
 print("LIGHT:\n")
 gen_colors(LIGHT_START, LIGHT_STEP)
 gen_colors_rgb(LIGHT_START, LIGHT_STEP)
+gen_colors_kitty_rgb(LIGHT_START, LIGHT_STEP)
 
 print("\nDARK:\n")
 gen_colors(DARK_START, DARK_STEP)
 
 gen_colors_rgb(DARK_START, DARK_STEP)
+gen_colors_kitty_rgb(DARK_START, DARK_STEP)

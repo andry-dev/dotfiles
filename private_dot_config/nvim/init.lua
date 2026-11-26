@@ -1,3 +1,4 @@
+vim.loader.enable()
 vim.cmd.filetype('plugin indent on')
 
 local globals = require('globals')
@@ -6,96 +7,174 @@ vim.g.prefers_energy_efficiency = globals.is_device_low_powered()
 vim.g.is_discharging = false
 vim.g.mason_enabled = os.getenv("NVIM_USE_NIX") == nil
 
----@type andry.CompletionFramework
-vim.g.completion_framework = globals.CompletionFramework.Blink
-
-
 vim.g.mapleader = ','
 
-(function()
-    ---@type system_events.Config
-    vim.g.system_events = {
-        listeners = {
-            power = true,
-        },
 
-        sleep_delay = 1,
+-- Build instructions for plugins.
+-- Since `init.lua` is executed _before_ any other file in `plugin`, this
+-- should be at the top.
+vim.api.nvim_create_autocmd('PackChanged', {
+    callback = function(ev)
+        local name, kind = ev.data.spec.name, ev.data.kind
 
-        multi_threaded = true,
-    }
+        if kind ~= "install" and kind ~= "update" then
+            return
+        end
 
-    local group = vim.api.nvim_create_augroup('MyPowerStateChanged', { clear = true })
+        -- Treesitter files
+        if name == 'nvim-treesitter' then
+            if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+            vim.cmd('TSUpdate')
+        end
 
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'PowersaveStateChanged',
-        group = group,
-        callback = function(powersave_enabled)
-            vim.g.prefers_energy_efficiency = powersave_enabled.data
-        end,
-    })
+        if name == 'LuaSnip' and (vim.fn.has('win32') == 0 and vim.fn.executable('make') == 1) then
+            vim.system({ 'make', 'install_jsregexp' }, { cwd = ev.data.path }, function()
+                vim.notify('Completed build script for LuaSnip')
+            end)
+        end
 
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'ACStatusChanged',
-        group = group,
-        callback = function(data)
-            ---@type system_events.ACEvent.StatusChanged
-            local event = data.data
-            local types = require('system_events.types')
-            vim.g.is_discharging = (event.device_type == types.ACDevice.Battery) and
-                (event.status == types.BatteryStatus.Discharging)
-        end,
-    })
-end)()
+        if name == 'system_events.nvim' then
+            vim.system({ 'cargo', 'build', '--release' }, { cwd = ev.data.path }, function()
+                vim.notify('Completed build script for system_events.nvim')
+            end)
+        end
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
-        lazypath,
-    })
-end
-vim.opt.rtp:prepend(lazypath)
-
-
-local base_plugin_path = vim.fn.stdpath('config') .. '/pack/andry/start/'
-
-require("lazy").setup('plugins', {
-    dev = {
-        path = '~/prj/anri',
-        patterns = { 'andry-dev' },
-        fallback = true,
-    },
-
-    performance = {
-        rtp = {
-            paths = {
-                base_plugin_path .. 'lua-utils',
-                base_plugin_path .. 'focus',
-            }
-        }
-    },
-
-    ui = {
-        icons = {
-            cmd = "⌘",
-            config = "🛠",
-            event = "📅",
-            ft = "📂",
-            init = "⚙",
-            keys = "🗝",
-            plugin = "🔌",
-            runtime = "💻",
-            source = "📄",
-            start = "🚀",
-            task = "📌",
-            lazy = "💤 ",
-        },
-    },
+        if name == 'parinfer-rust' then
+            vim.system({ 'cargo', 'build', '--release' }, { cwd = ev.data.path }, function()
+                vim.notify('Completed build script for parinfer-rust')
+            end)
+        end
+    end
 })
+
+
+
+vim.pack.add({
+    -- 'https://git.sr.ht/~anri/system_events.nvim',
+    --- Theme
+    "https://github.com/f-person/auto-dark-mode.nvim",
+    "https://github.com/andry-dev/nofrils",
+    "https://github.com/ellisonleao/gruvbox.nvim",
+
+
+    --- Treesitter
+    'https://github.com/nvim-treesitter/nvim-treesitter',
+    'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
+    'https://github.com/windwp/nvim-ts-autotag',
+    'https://github.com/MeanderingProgrammer/treesitter-modules.nvim',
+
+    --- FS
+    -- 'https://github.com/stevearc/oil.nvim',
+    'https://git.barrettruth.com/barrettruth/canola.nvim',
+    -- 'https://github.com/barrettruth/canola.nvim',
+    'https://github.com/malewicz1337/oil-git.nvim',
+
+    --- Git
+    'https://github.com/tpope/vim-fugitive',
+    'https://github.com/lewis6991/gitsigns.nvim',
+    'https://github.com/pwntester/octo.nvim',
+
+    --- Picker
+    'https://github.com/ibhagwan/fzf-lua',
+
+    --- Lint
+    'https://github.com/mfussenegger/nvim-lint',
+
+    --- Formatter
+    'https://github.com/stevearc/conform.nvim',
+
+    --- LSP
+    "https://github.com/williamboman/mason.nvim",
+    "https://github.com/williamboman/mason-lspconfig.nvim",
+    "https://github.com/neovim/nvim-lspconfig",
+    "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+    "https://github.com/mrjones2014/codesettings.nvim",
+    "https://github.com/ray-x/lsp_signature.nvim",
+    "https://github.com/nvim-lua/plenary.nvim",
+    {
+        src = "https://github.com/elixir-tools/elixir-tools.nvim",
+        version = vim.version.range("*")
+    },
+
+    {
+        src = 'https://github.com/JavaHello/spring-boot.nvim',
+        version = '218c0c26c14d99feca778e4d13f5ec3e8b1b60f0',
+    },
+    'https://github.com/MunifTanjim/nui.nvim',
+    'https://github.com/mfussenegger/nvim-dap',
+
+
+    "https://github.com/nvim-java/nvim-java",
+
+    "https://github.com/b0o/SchemaStore.nvim",
+    "https://github.com/barreiroleo/ltex_extra.nvim",
+    {
+        src = "https://github.com/mrcjkb/rustaceanvim",
+        version = vim.version.range("*")
+    },
+    'https://github.com/hxueh/beancount.nvim',
+
+    --- Completions
+    'https://github.com/nvim-lua/plenary.nvim',
+    'https://github.com/folke/lazydev.nvim',
+    {
+        src = 'https://github.com/saghen/blink.cmp',
+        version = vim.version.range('*'),
+    },
+
+
+    --- DAP
+    'https://github.com/mfussenegger/nvim-dap',
+    'https://github.com/jay-babu/mason-nvim-dap.nvim',
+    'https://github.com/theHamsta/nvim-dap-virtual-text',
+    'https://github.com/mfussenegger/nvim-dap-python',
+    'https://github.com/rcarriga/nvim-dap-ui',
+    'https://github.com/nvim-neotest/nvim-nio',
+
+    --- Snippets
+    'https://github.com/L3MON4D3/LuaSnip',
+    'https://github.com/rafamadriz/friendly-snippets',
+
+    --- Latex
+    'https://github.com/lervag/vimtex',
+})
+
+require('oil').setup()
+
+-- if false then
+--     ---@type system_events.Config
+--     vim.g.system_events = {
+--         listeners = {
+--             power = true,
+--         },
+--
+--         sleep_delay = 1,
+--
+--         multi_threaded = true,
+--     }
+--
+--     local group = vim.api.nvim_create_augroup('MyPowerStateChanged', { clear = true })
+--
+--     vim.api.nvim_create_autocmd('User', {
+--         pattern = 'PowersaveStateChanged',
+--         group = group,
+--         callback = function(powersave_enabled)
+--             vim.g.prefers_energy_efficiency = powersave_enabled.data
+--         end,
+--     })
+--
+--     vim.api.nvim_create_autocmd('User', {
+--         pattern = 'ACStatusChanged',
+--         group = group,
+--         callback = function(data)
+--             ---@type system_events.ACEvent.StatusChanged
+--             local event = data.data
+--             local types = require('system_events.types')
+--             vim.g.is_discharging = (event.device_type == types.ACDevice.Battery) and
+--                 (event.status == types.BatteryStatus.Discharging)
+--         end,
+--     })
+-- end
 
 
 vim.g.anri = {
@@ -129,7 +208,11 @@ if vim.g.neovide then
 
     vim.g.neovide_refresh_rate_idle = 5
 
-    vim.o.guifont = "Pragmasevka Nerd Font:h14:#e-subpixelantialias"
+    if vim.fn.hostname() == 'aya' then
+        vim.o.guifont = "Pragmasevka Nerd Font:h11:#e-subpixelantialias"
+    else
+        vim.o.guifont = "Pragmasevka Nerd Font:h14:#e-subpixelantialias"
+    end
     -- vim.o.guifont = "Terminess Nerd Font:h14"
     if not vim.g.prefers_energy_efficiency then
         vim.g.neovide_refresh_rate = 144
@@ -149,6 +232,7 @@ vim.g.cmake_build_dir_location = 'build'
 
 
 
+-- vim.o.wrap = true
 vim.o.wildmenu = true
 vim.o.hlsearch = true
 vim.o.smartcase = true
@@ -196,16 +280,6 @@ if vim.fn.executable('rg') then
     vim.o.grepformat = '%f:%l:%c:%m,%f:%l:%m'
 end
 
--- Misc functions
-local function set_pretty_theme()
-    require('config.themes').set_pretty_theme()
-end
-
-local function set_default_theme()
-    require('config.themes').set_default_theme()
-end
-
-
 -- Mappings
 
 ---
@@ -220,8 +294,6 @@ local function map(mode, key, func, opts)
 
     vim.keymap.set(mode, key, func, opts)
 end
-
--- Io senza questi tre mapping sotto non vivo
 
 map('n', '<C-f>', function()
     require('fzf-lua').git_files()
@@ -303,7 +375,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local kmaps = vim.g.anri.keymaps
 
-        map('n', '<leader>qa', vim.diagnostic.setqflist, { buffer = true })
+        map('n', '<leader>qa', function()
+            vim.diagnostic.setqflist({
+                -- I don't need HINT or INFO for the quickfix.
+                severity = { min = vim.diagnostic.severity.WARN, max = vim.diagnostic.severity.ERROR }
+            })
+        end, { buffer = true })
 
         map({ 'v', 'n' }, kmaps.CodeAction, function()
             require('fzf-lua').lsp_code_actions()
@@ -352,13 +429,6 @@ map('v', '<leader>hg', '<Plug>FocusHL_green')
 map('v', '<leader>hb', '<Plug>FocusHL_blue')
 map('v', '<leader>hc', '<Plug>FocusHLClear')
 
-vim.api.nvim_create_user_command('DefaultTheme', function()
-    set_default_theme()
-end, {})
-
-vim.api.nvim_create_user_command('PrettyTheme', function()
-    set_pretty_theme()
-end, {})
 
 vim.api.nvim_create_user_command('Projects', function()
     require('fzf-lua').zoxide()
@@ -478,13 +548,13 @@ vim.api.nvim_create_user_command('NeotestFileRun', function()
     require('neotest').run.run(vim.fn.expand('%'))
 end, {})
 
-vim.api.nvim_create_user_command('DisableThemeTimer', function()
-    require('config.themes').stop_timer()
-end, {})
-
-vim.api.nvim_create_user_command('EnableThemeTimer', function()
-    require('config.themes').start_timer()
-end, {})
+-- vim.api.nvim_create_user_command('DisableThemeTimer', function()
+--     require('config.themes').stop_timer()
+-- end, {})
+--
+-- vim.api.nvim_create_user_command('EnableThemeTimer', function()
+--     require('config.themes').start_timer()
+-- end, {})
 
 -- vim.api.nvim_create_autocmd('BufWritePost', {
 --     group = vim.api.nvim_create_augroup("DotfilesSave", { clear = true }),
@@ -530,24 +600,6 @@ vim.api.nvim_create_user_command('SetExecutableFlag', function()
             args = { '+x', file }
         })
     )
-end, {})
-
-vim.api.nvim_create_user_command('SetupForScreens', function()
-    local lang = vim.v.lang
-    local spell = vim.opt.spell:get()
-
-    vim.cmd.language("en_US.UTF-8")
-    vim.opt.spell = false
-
-    set_pretty_theme()
-
-    vim.cmd.redraw()
-    vim.fn.getchar()
-
-    set_default_theme()
-
-    vim.cmd.language(lang)
-    vim.opt.spell = spell
 end, {})
 
 vim.opt.exrc = true
