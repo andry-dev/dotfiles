@@ -1,0 +1,24 @@
+# vim: ft=kitty
+
+update_check_interval 0
+cursor_shape block
+cursor_blink_interval 0
+input_delay 0
+repaint_delay 9
+sync_to_monitor no
+enable_audio_bell yes
+tab_bar_style separator
+tab_separator ""
+tab_activity_symbol " ⊚"
+tab_title_template " {title} "
+# font_family Pragmasevka Regular
+font_size 11.0
+disable_ligatures always
+
+
+# BEGIN_KITTY_FONTS
+font_family      family=Pragmasevka style=Regular features='-calt -dlig'
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS
